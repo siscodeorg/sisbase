@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
+using LA_RPbot.Discord.Attributes;
 
 namespace LA_RPbot.Discord.Utils
 {
@@ -29,6 +31,51 @@ namespace LA_RPbot.Discord.Utils
                 .WithAuthor($"Group : {cG?.Name} | Help")
                 .WithColor(DiscordColor.Gray);
             return groupHelpEmbed.Build();
+        }
+
+        public static DiscordEmbed HelpEmbed(this CommandsNextExtension cne)
+        {
+            List<Command> x = cne.RegisteredCommands.Values.ToList();
+            var groups = new List<CommandGroup>(); 
+            foreach (var command in x)
+            {
+                if (command is CommandGroup group)
+                {
+                    groups.Add(group);
+                }
+            }
+            var helpBuilder = new DiscordEmbedBuilder();
+            foreach (var commandGroup in groups)
+            {
+                List<Command> children = commandGroup.Children.ToList();
+                foreach (var command in children)
+                {
+                    x.Remove(command);
+                }
+
+                x.Remove(commandGroup);
+                List<Attribute> attributes = commandGroup.CustomAttributes.ToList();
+                foreach (var y in attributes)
+                {
+                    if (!(y is EmojiAttribute emoji)) continue;
+                    helpBuilder.AddField($"{emoji.Emoji} ・ {commandGroup.Name}", commandGroup.Description);
+                    break;
+                }
+            }
+
+            var misc = "";
+            foreach (var command in x)
+            {
+                misc += $"`{command.Name}` ";
+            }
+
+            helpBuilder.AddField("❓ ・ Miscellaneous ", misc);
+            helpBuilder
+                .WithDescription($"To see help for a group run {Program.Client.CurrentUser.Mention} `group name`")
+                .WithFooter("「lolibase」・ 0.1","https://i.imgur.com/6ovRzR9.png")
+                .WithAuthor("Help | Showing all groups")
+                .WithColor(DiscordColor.CornflowerBlue);
+            return helpBuilder.Build();
         }
 
         public static DiscordEmbed InputEmbed(string input)

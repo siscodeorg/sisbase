@@ -20,7 +20,7 @@ namespace LA_RPbot.Discord.Commands
         public async Task SetMaster(CommandContext ctx)
         {
             List<DiscordGuild> guilds = Program.Client.Guilds.Values.ToList();
-            List<ulong?> ids = new List<ulong?>();
+            var ids = new List<ulong?>();
             var embed = new DiscordEmbedBuilder();
             embed
                 .WithAuthor($"Set {ctx.Guild.Name} as MASTER")
@@ -36,8 +36,9 @@ namespace LA_RPbot.Discord.Commands
         }
     }
 
-    [OniiSan]
-    [Imouto]
+    [OniiSan] // Sets command to be only executable on the master server
+    [Imouto] // Sets command to be only executable by the staff (Modify Roles)
+    [Emoji(":wrench:")] // Sets the emoji for the group
     [Group("config")]
     [Description("This group configures the bot.")]
     public class Config : BaseCommandModule
@@ -57,6 +58,7 @@ namespace LA_RPbot.Discord.Commands
             await ctx.RespondAsync(embed:embed);
         }
 
+        // Sample of a command that uses interactivity and lolibase to input/output text data.
         [Command("prefix")]
         public async Task PrefixSuccess(CommandContext ctx, [Description("The operation to be executed [add/list/del] ")]
             string operation)
