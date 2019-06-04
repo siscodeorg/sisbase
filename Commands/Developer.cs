@@ -37,6 +37,7 @@ namespace LA_RPbot.Discord.Commands
     }
 
     [OniiSan]
+    [Imouto]
     [Group("config")]
     [Description("This group configures the bot.")]
     public class Config : BaseCommandModule
