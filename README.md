@@ -17,7 +17,7 @@ Puppet Server : Other servers the bot may get resources from (emoji servers)
  - Help system
  -  - [x] Category
  -  - [x] Commands
- - - [ ] Help Command
+ - - [x] Help Command
  
 
  - Consistant Embeds :
