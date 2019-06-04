@@ -36,8 +36,8 @@ namespace LA_RPbot.Discord.Commands
         }
     }
 
-    [OniiSan] // Sets command to be only executable on the master server
-    [Imouto] // Sets command to be only executable by the staff (Modify Roles)
+    [OniiSan] // Sets group to be only executable on the master server
+    [Imouto] // Sets group to be only executable by the staff (Modify Roles)
     [Emoji(":wrench:")] // Sets the emoji for the group
     [Group("config")]
     [Description("This group configures the bot.")]
