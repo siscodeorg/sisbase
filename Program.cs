@@ -74,54 +74,26 @@ namespace LA_RPbot.Discord
             });
             foreach (var system in systems)
             {
-                if (!system.GetInterfaces().Contains(typeof(IApplyToInteractivity))) continue;
-                var instance = (IApplyToInteractivity)Activator.CreateInstance(system);
-                instance.ApplyToInteractivity(Interactivity);
-                Console.WriteLine($"[System] {system.Name} Loaded");
+                if (system.GetInterfaces().Contains(typeof(IApplyToInteractivity)))
+                {
+                    var instance = (IApplyToInteractivity) Activator.CreateInstance(system);
+                    instance.ApplyToInteractivity(Interactivity);
+                    Console.WriteLine($"[System] {system.Name} Loaded");
+                }
+                else if (system.GetInterfaces().Contains(typeof(IApplyToClient)))
+                {
+                    var instance = (IApplyToClient) Activator.CreateInstance(system);
+                    instance.ApplyToClient(Client);
+                    Console.WriteLine($"[System] {system.Name} Loaded");
+                }
             }
             CommandsNext.RegisterCommands(GetExecutingAssembly());
-            Client.GuildDownloadCompleted += GuildFinished;
         }
-
-        private static async Task GuildFinished(GuildDownloadCompletedEventArgs e)
-        {
-            if (Config.MasterId == 0)
-            {
-                if (Client.Guilds.Count > 1)
-                {
-                    var names = Client.Guilds.Aggregate("", (current, guild) => current + $"{guild.Value.Name}, ");
-
-                    foreach (KeyValuePair<ulong, DiscordGuild> guild in Client.Guilds)
-                    {
-                        var ch = guild.Value.GetDefaultChannel();
-                        var builder = new DiscordEmbedBuilder();
-                        
-                        builder
-                            .AddField("List of Servers", names)
-                            .WithDescription($"Bot is loaded on multiple servers, please use {Client.CurrentUser.Mention}setMaster on the MASTER guild.")
-                            .WithAuthor("Error on determining MASTER server")
-                            .WithColor(DiscordColor.Red);
-                        await ch.SendMessageAsync(embed:builder);
-                    }
-                    
-                }
-                else
-                {
-                    var ch = Client.Guilds.Values.ToList()[0].GetDefaultChannel();
-                    var builder = new DiscordEmbedBuilder();
-                    builder
-                        .WithAuthor("Guild set as MASTER guild")
-                        .WithColor(DiscordColor.PhthaloGreen);
-                    Config.MasterId = Client.Guilds.Values.ToList()[0].Id;
-                    File.WriteAllText(Directory.GetCurrentDirectory()+"Config.json",JsonConvert.SerializeObject(Config, Formatting.Indented));
-                }
-            }
-            
-        }
+        
 
         private static Config TUI_cfg()
         {
-            Config c = new Config();
+            var c = new Config();
             Console.WriteLine("Please Input the TOKEN :");
             c.Token = Console.ReadLine();
             c.MasterId = 0;
