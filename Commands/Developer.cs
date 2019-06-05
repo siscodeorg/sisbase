@@ -1,5 +1,6 @@
-using System;
+
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,11 +37,36 @@ namespace LA_RPbot.Discord.Commands
         }
     }
 
+
+    [OniiSan]
+    [Imouto]
+    [Emoji(":computer:")]
+    [Group("system")]
+    [DSharpPlus.CommandsNext.Attributes.Description("This group configures the systems.")]
+    public class System : BaseCommandModule
+    {
+        [GroupCommand]
+        public async Task Command(CommandContext ctx)
+        {
+            var embed = EmbedBase.GroupHelpEmbed(ctx.Command);
+            await ctx.RespondAsync(embed: embed);
+        }
+        
+        [Command("list")]
+        [DSharpPlus.CommandsNext.Attributes.Description("Lists all active systems")]
+        public async Task List(CommandContext ctx)
+        {
+            var allSystems = new List<string>();
+            Program.systems.ForEach(x => allSystems.Add(x.Name));
+            var embed = EmbedBase.ListEmbed(allSystems, "Systems");
+            await ctx.RespondAsync(embed: embed);
+        }
+    }
     [OniiSan] // Sets group to be only executable on the master server
     [Imouto] // Sets group to be only executable by the staff (Modify Roles)
     [Emoji(":wrench:")] // Sets the emoji for the group
     [Group("config")]
-    [Description("This group configures the bot.")]
+    [DSharpPlus.CommandsNext.Attributes.Description("This group configures the bot.")]
     public class Config : BaseCommandModule
     {
         [GroupCommand]
@@ -50,8 +76,10 @@ namespace LA_RPbot.Discord.Commands
             await ctx.RespondAsync(embed:embed);
         }
 
+
+
         [Command("prefix")]
-        [Description("Changes the custom prefixes")]
+        [DSharpPlus.CommandsNext.Attributes.Description("Changes the custom prefixes")]
         public async Task PrefixError(CommandContext ctx)
         {
             var embed = EmbedBase.CommandHelpEmbed(ctx.Command);
@@ -60,7 +88,7 @@ namespace LA_RPbot.Discord.Commands
 
         // Sample of a command that uses interactivity and lolibase to input/output text data.
         [Command("prefix")]
-        public async Task PrefixSuccess(CommandContext ctx, [Description("The operation to be executed [add/list/del] ")]
+        public async Task PrefixSuccess(CommandContext ctx, [DSharpPlus.CommandsNext.Attributes.Description("The operation to be executed [add/list/del] ")]
             string operation)
         {
             switch (operation.ToLowerInvariant())

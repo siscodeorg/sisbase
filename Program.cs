@@ -11,31 +11,38 @@ using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using LA_RPbot.Discord;
+using LA_RPbot.Discord.Utils;
 using Newtonsoft.Json;
+using static System.Reflection.Assembly;
 
 namespace LA_RPbot.Discord
 {
-    internal class Program
+    public class Program
     {
         public static DiscordClient Client { get; set; }
         public static CommandsNextExtension CommandsNext { get; set; }
         public static InteractivityExtension Interactivity { get; set; }
         public static Config Config { get; set; }
 
+        public static List<Type> systems = new List<Type>();
         public static Program Instance { get; set; }
         static void Main(string[] args)
         {
             if (File.Exists(Directory.GetCurrentDirectory() + "/Config.json"))
             {
                 Config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(Directory.GetCurrentDirectory() + "/Config.json"));
+                systems = GetExecutingAssembly().GetTypes().Where(x => x.GetInterfaces().Contains(typeof(IApplicableSystem))).ToList();
                 Instance = new Program();
+                
                 Init().GetAwaiter().GetResult();
             }
             else
             {
                 Config = TUI_cfg();
                 File.WriteAllText(Directory.GetCurrentDirectory()+"/Config.json",JsonConvert.SerializeObject(Config, Formatting.Indented));
+                systems = GetExecutingAssembly().GetTypes().Where(x => x.GetInterfaces().Contains(typeof(IApplicableSystem))).ToList();
                 Instance = new Program();
+                
                 Init().GetAwaiter().GetResult();
             }
             
@@ -65,7 +72,14 @@ namespace LA_RPbot.Discord
                 Timeout = TimeSpan.FromMinutes(10),
                 PaginationDeletion = PaginationDeletion.DeleteEmojis
             });
-            CommandsNext.RegisterCommands(Assembly.GetExecutingAssembly());
+            foreach (var system in systems)
+            {
+                if (!system.GetInterfaces().Contains(typeof(IApplyToInteractivity))) continue;
+                var instance = (IApplyToInteractivity)Activator.CreateInstance(system);
+                instance.ApplyToInteractivity(Interactivity);
+                Console.WriteLine($"[System] {system.Name} Loaded");
+            }
+            CommandsNext.RegisterCommands(GetExecutingAssembly());
             Client.GuildDownloadCompleted += GuildFinished;
         }
 
