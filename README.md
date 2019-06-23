@@ -1,4 +1,4 @@
-# LoliBase
+# ![](https://i.imgur.com/0eFiSuH.png)
 A Simple to use Discord Bot Base based on DSharpPlus.
 
 # Project Structure
