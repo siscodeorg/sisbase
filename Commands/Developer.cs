@@ -85,7 +85,7 @@ namespace sisbase.Commands
             await ctx.RespondAsync(embed: embed);
         }
 
-        // Sample of a command that uses interactivity and lolibase to input/output text data.
+        // Sample of a command that uses interactivity and sisbase to input/output text data.
         [Command("prefix")]
         public async Task PrefixSuccess(CommandContext ctx, [DSharpPlus.CommandsNext.Attributes.Description("The operation to be executed [add/list/del] ")]
             string operation)
