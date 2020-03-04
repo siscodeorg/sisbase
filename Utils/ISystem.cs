@@ -1,5 +1,8 @@
 ﻿namespace sisbase.Utils
 {
+    /// <summary>
+    /// The base interface for all systems
+    /// </summary>
     public interface ISystem
     {
         string Name { get; set; }
