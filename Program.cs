@@ -75,9 +75,9 @@ namespace sisbase
                 instance.Activate();
                 instance.Log("System started");
                 instance.Execute();
-                if (system.GetInterfaces().Contains(typeof(IApplyToClient)))
+                if (system.GetInterfaces().Contains(typeof(IClientSystem)))
                 {
-                    ((IApplyToClient)instance).ApplyToClient(Client);
+                    ((IClientSystem)instance).ApplyToClient(Client);
                     instance.Log("System applied to client");
                     Console.WriteLine($"[System] {system.Name} Loaded");
                 }

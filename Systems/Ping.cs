@@ -6,7 +6,7 @@ using System;
 namespace sisbase.Systems
 {
     // Example on how to implement the custom systems
-    public class Ping : IApplyToClient
+    public class Ping : IClientSystem
     {
         public string Name {get;set;}
         public string Description {get;set;}

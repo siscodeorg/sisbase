@@ -9,7 +9,7 @@ using System;
 
 namespace sisbase.Systems
 {
-    public class MasterServer : IApplyToClient
+    public class MasterServer : IClientSystem
     {
         public string Name {get;set;}
         public string Description {get;set;}
