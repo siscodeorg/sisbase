@@ -22,8 +22,9 @@ Puppet Server : Other servers the bot may get resources from (emoji servers)
  - Custom Systems!
  - - With IApplicableSystem you can create custom systems (ReactRole, etc) outside of the main file 
  - - Available Interfaces :
- - - - IApplyToInteractivity (InteractivityExtension)
- - - - IApplyToClient (DiscordClient)
+ - - - IApplyToInteractivity (InteractivityExtension) (unavaliable)
+ - - - IClientSystem (DiscordClient)
+ - - - IStaticSystem
 
  - Consistant Embeds :
  - - Ordered List
