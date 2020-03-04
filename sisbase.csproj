@@ -7,6 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="sisbase.Test\**" />
+      <EmbeddedResource Remove="sisbase.Test\**" />
+      <None Remove="sisbase.Test\**" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00629" />
       <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00629" />
       <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00629" />
