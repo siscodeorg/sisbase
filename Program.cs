@@ -1,21 +1,18 @@
-﻿using System;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
+using DSharpPlus.Interactivity;
+using DSharpPlus.Interactivity.Enums;
+using sisbase.Utils;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using DSharpPlus;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
-using DSharpPlus.Interactivity;
-using DSharpPlus.Interactivity.Enums;
-using LA_RPbot.Discord;
-using LA_RPbot.Discord.Utils;
-using Newtonsoft.Json;
 using static System.Reflection.Assembly;
 
-namespace LA_RPbot.Discord
+namespace sisbase
 {
     public class Program
     {
@@ -26,26 +23,27 @@ namespace LA_RPbot.Discord
 
         public static List<Type> systems = new List<Type>();
         public static Program Instance { get; set; }
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
             if (File.Exists(Directory.GetCurrentDirectory() + "/Config.json"))
             {
                 Config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(Directory.GetCurrentDirectory() + "/Config.json"));
                 systems = GetExecutingAssembly().GetTypes().Where(x => x.GetInterfaces().Contains(typeof(IApplicableSystem))).ToList();
                 Instance = new Program();
-                
+
                 Init().GetAwaiter().GetResult();
             }
             else
             {
                 Config = TUI_cfg();
-                File.WriteAllText(Directory.GetCurrentDirectory()+"/Config.json",JsonConvert.SerializeObject(Config, Formatting.Indented));
+                File.WriteAllText(Directory.GetCurrentDirectory() + "/Config.json", JsonConvert.SerializeObject(Config, Formatting.Indented));
                 systems = GetExecutingAssembly().GetTypes().Where(x => x.GetInterfaces().Contains(typeof(IApplicableSystem))).ToList();
                 Instance = new Program();
-                
+
                 Init().GetAwaiter().GetResult();
             }
-            
+
         }
 
         private Program()
@@ -54,7 +52,6 @@ namespace LA_RPbot.Discord
             {
                 Token = Config.Token,
                 AutoReconnect = true,
-                AutomaticGuildSync = true,
                 UseInternalLogHandler = true,
                 TokenType = TokenType.Bot
             });
@@ -76,20 +73,20 @@ namespace LA_RPbot.Discord
             {
                 if (system.GetInterfaces().Contains(typeof(IApplyToInteractivity)))
                 {
-                    var instance = (IApplyToInteractivity) Activator.CreateInstance(system);
+                    var instance = (IApplyToInteractivity)Activator.CreateInstance(system);
                     instance.ApplyToInteractivity(Interactivity);
                     Console.WriteLine($"[System] {system.Name} Loaded");
                 }
                 else if (system.GetInterfaces().Contains(typeof(IApplyToClient)))
                 {
-                    var instance = (IApplyToClient) Activator.CreateInstance(system);
+                    var instance = (IApplyToClient)Activator.CreateInstance(system);
                     instance.ApplyToClient(Client);
                     Console.WriteLine($"[System] {system.Name} Loaded");
                 }
             }
             CommandsNext.RegisterCommands(GetExecutingAssembly());
         }
-        
+
 
         private static Config TUI_cfg()
         {
@@ -109,13 +106,15 @@ namespace LA_RPbot.Discord
             await Task.Delay(-1);
         }
 
+#pragma warning disable CS1998 
         private async Task<int> PrefixResolver(DiscordMessage msg)
+#pragma warning restore CS1998 
         {
             switch (msg.GetMentionPrefixLength(Client.CurrentUser))
             {
                 case -1:
                     int x;
-                    foreach (var prefix in Config.Prefixes)
+                    foreach (string prefix in Config.Prefixes)
                     {
                         x = msg.GetStringPrefixLength(prefix);
                         if (x != -1)

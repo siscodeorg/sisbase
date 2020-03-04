@@ -1,17 +1,14 @@
-using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using LA_RPbot.Discord.Utils;
+using sisbase.Utils;
+using System.Threading.Tasks;
 
-namespace LA_RPbot.Discord.Commands
+namespace sisbase.Commands
 {
-    public class Help : BaseCommandModule
-    {
-        // This is a sample help command.
-        [Command("help")]
-        public async Task helpCommand(CommandContext ctx)
-        {
-            await ctx.RespondAsync(embed:ctx.CommandsNext.HelpEmbed());
-        }
-    }
+	public class Help : BaseCommandModule
+	{
+		// This is a sample help command.
+		[Command("help")]
+		public async Task helpCommand(CommandContext ctx) => await ctx.RespondAsync(embed: ctx.CommandsNext.HelpEmbed());
+	}
 }

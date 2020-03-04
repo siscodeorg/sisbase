@@ -1,15 +1,12 @@
-using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using System.Threading.Tasks;
 
-namespace LA_RPbot.Discord.Attributes
+namespace sisbase.Attributes
 {
-    public class ImoutoAttribute : CheckBaseAttribute
-    {
-        public async override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
-        {
-            return ctx.Member.PermissionsIn(ctx.Channel).HasPermission(Permissions.ManageRoles);
-        }
-    }
+	public class ImoutoAttribute : CheckBaseAttribute
+	{
+		public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help) => ctx.Member.PermissionsIn(ctx.Channel).HasPermission(Permissions.ManageRoles);
+	}
 }
