@@ -38,7 +38,7 @@ namespace sisbase
             {
                 Config = TUI_cfg();
                 File.WriteAllText(Directory.GetCurrentDirectory() + "/Config.json", JsonConvert.SerializeObject(Config, Formatting.Indented));
-                systems = GetExecutingAssembly().GetTypes().Where(x => x.GetInterfaces().Contains(typeof(ISystem))).ToList();
+                systems = GetExecutingAssembly().GetTypes().Where(x => x.GetInterfaces().Contains(typeof(ISystem)) && x.IsClass).ToList();
                 Instance = new Program();
 
                 Init().GetAwaiter().GetResult();
