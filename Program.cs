@@ -29,7 +29,7 @@ namespace sisbase
             if (File.Exists(Directory.GetCurrentDirectory() + "/Config.json"))
             {
                 Config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(Directory.GetCurrentDirectory() + "/Config.json"));
-                systems = GetExecutingAssembly().GetTypes().Where(x => x.GetInterfaces().Contains(typeof(IApplicableSystem))).ToList();
+                systems = GetExecutingAssembly().GetTypes().Where(x => x.GetInterfaces().Contains(typeof(ISystem)) && x.IsClass ).ToList();
                 Instance = new Program();
 
                 Init().GetAwaiter().GetResult();
@@ -38,7 +38,7 @@ namespace sisbase
             {
                 Config = TUI_cfg();
                 File.WriteAllText(Directory.GetCurrentDirectory() + "/Config.json", JsonConvert.SerializeObject(Config, Formatting.Indented));
-                systems = GetExecutingAssembly().GetTypes().Where(x => x.GetInterfaces().Contains(typeof(IApplicableSystem))).ToList();
+                systems = GetExecutingAssembly().GetTypes().Where(x => x.GetInterfaces().Contains(typeof(ISystem))).ToList();
                 Instance = new Program();
 
                 Init().GetAwaiter().GetResult();
@@ -71,16 +71,14 @@ namespace sisbase
             });
             foreach (var system in systems)
             {
-                if (system.GetInterfaces().Contains(typeof(IApplyToInteractivity)))
+                var instance = (ISystem)Activator.CreateInstance(system);
+                instance.Activate();
+                instance.Log("System started");
+                instance.Execute();
+                if (system.GetInterfaces().Contains(typeof(IApplyToClient)))
                 {
-                    var instance = (IApplyToInteractivity)Activator.CreateInstance(system);
-                    instance.ApplyToInteractivity(Interactivity);
-                    Console.WriteLine($"[System] {system.Name} Loaded");
-                }
-                else if (system.GetInterfaces().Contains(typeof(IApplyToClient)))
-                {
-                    var instance = (IApplyToClient)Activator.CreateInstance(system);
-                    instance.ApplyToClient(Client);
+                    ((IApplyToClient)instance).ApplyToClient(Client);
+                    instance.Log("System applied to client");
                     Console.WriteLine($"[System] {system.Name} Loaded");
                 }
             }

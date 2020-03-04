@@ -5,11 +5,22 @@ using sisbase.Utils;
 using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
+using System;
 
 namespace sisbase.Systems
 {
-    public class MasterServer : IApplyToClient, IApplicableSystem
+    public class MasterServer : IApplyToClient
     {
+        public string Name {get;set;}
+        public string Description {get;set;}
+        public bool Status {get;set;}
+
+        public void Activate() 
+        {
+            Name = "MasterServer";
+            Description = "MasterServer System";
+            Status = true;
+        }
         public void ApplyToClient(DiscordClient client) => client.GuildDownloadCompleted += async delegate (GuildDownloadCompletedEventArgs args)
         {
 
@@ -45,5 +56,13 @@ namespace sisbase.Systems
                 }
             }
         };
+        public void Deactivate() 
+        {
+            Name = null;
+            Description = null;
+            Status = false;
+            GC.SuppressFinalize(this);
+        }
+        public void Execute() { }
     }
 }
