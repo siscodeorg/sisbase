@@ -5,3 +5,5 @@
 + Feature parity with [`old lolibase`](https://github.com/lolidevs/lolibase) project
 
 + Added SMC (System Management Controller) for disabling and enabling of systems
+
++ Project works as a standalone library
