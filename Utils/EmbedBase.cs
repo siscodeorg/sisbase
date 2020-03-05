@@ -71,7 +71,7 @@ namespace sisbase.Utils
 
 			helpBuilder.AddField("❓ ・ Miscellaneous ", misc);
 			helpBuilder
-				.WithDescription($"To see help for a group run {Program.Client.CurrentUser.Mention} `group name`")
+				.WithDescription($"To see help for a group run {SisbaseBot.Instance.Client.CurrentUser.Mention} `group name`")
 				.WithFooter("「sisbase」・ 0.1", "https://i.imgur.com/6ovRzR9.png")
 				.WithAuthor("Help | Showing all groups")
 				.WithColor(DiscordColor.CornflowerBlue);
