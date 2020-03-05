@@ -51,6 +51,16 @@ namespace sisbase.Commands
             await ctx.RespondAsync(embed: embed);
         }
 
+        [Command("list")]
+        [Description("Lists all active systems")]
+        public async Task List(CommandContext ctx)
+        {
+            var allSystems = new List<string>();
+            SMC.RegisteredSystems.ToList().ForEach(x => allSystems.Add($"{x.Value.Name} - `{x.Key.Assembly.GetName().Name}`"));
+            var embed = EmbedBase.ListEmbed(allSystems, "Systems");
+            await ctx.RespondAsync(embed: embed);
+        }
+
     }
     [OniiSan] // Sets group to be only executable on the master server
     [Imouto] // Sets group to be only executable by the staff (Modify Roles)
