@@ -51,9 +51,9 @@ namespace sisbase
 			);
 			
 			CommandsNext.RegisterCommands(typeof(SisbaseBot).Assembly);
+
 			Systems = new SMC();
 			Systems.RegisterSystems(typeof(SisbaseBot).Assembly);
-
 		}
 
 		public Task StartAsync()

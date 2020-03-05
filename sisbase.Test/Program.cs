@@ -22,7 +22,8 @@ namespace sisbase.Test
 			var sisbase = new SisbaseBot(
 				new Sisbase(Directory.GetCurrentDirectory())
 			);
-
+			sisbase.CommandsNext.RegisterCommands(typeof(Program).Assembly);
+			sisbase.Systems.RegisterSystems(typeof(Program).Assembly);
 			await sisbase.StartAsync();
 			while (!cts.IsCancellationRequested)
 				await Task.Delay(1);
