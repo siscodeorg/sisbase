@@ -1,10 +1,12 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using sisbase.Configuration;
 using sisbase.Utils;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace sisbase
@@ -36,8 +38,8 @@ namespace sisbase
 			CommandsNext = Client.UseCommandsNext(
 				new CommandsNextConfiguration
 				{
-					StringPrefixes = SisbaseConfiguration.Config.Prefixes,
-					EnableDefaultHelp = false
+					EnableDefaultHelp = false,
+					PrefixResolver = RTPR
 				}
 			);
 			Interactivity = Client.UseInteractivity(
@@ -55,6 +57,35 @@ namespace sisbase
 			Systems = new SMC();
 			Systems.RegisterSystems(typeof(SisbaseBot).Assembly);
 		}
+
+
+		/// <summary>
+		/// Real-Time Prefix Resolver
+		/// </summary>
+		/// <param name="msg"></param>
+		/// <returns></returns>
+#pragma warning disable CS1998
+		private async Task<int> RTPR(DiscordMessage msg)
+		{
+			switch (msg.GetMentionPrefixLength(Instance.Client.CurrentUser))
+			{
+				case -1:
+					int x;
+					foreach (var prefix in Instance.SisbaseConfiguration.Config.Prefixes)
+					{
+						x = msg.GetStringPrefixLength(prefix);
+						if (x != -1)
+							return x;
+					}
+
+					break;
+				default:
+					return msg.GetMentionPrefixLength(Instance.Client.CurrentUser);
+			}
+
+			return -1;
+		}
+#pragma warning restore CS1998 
 
 		public Task StartAsync()
 			=> Client.ConnectAsync();
