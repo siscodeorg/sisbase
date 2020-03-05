@@ -1,18 +1,19 @@
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.EventArgs;
 using sisbase.Utils;
 using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace sisbase.Systems
+namespace sisbase.Test.Systems
 {
-    // Example on how to implement the custom systems
-    public class Ping : IClientSystem
-    {
-        public string Name {get;set;}
-        public string Description {get;set;}
-        public bool Status {get;set;}
+	public class Ping : IClientSystem
+	{
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public bool Status { get; set; }
 
-        public void Activate() 
+        public void Activate()
         {
             Name = "Ping";
             Description = "Dummy System for teaching how systems work";
@@ -25,7 +26,7 @@ namespace sisbase.Systems
                 await args.Message.RespondAsync($"Ping : **{client.Ping}ms**");
             }
         };
-        public void Deactivate() 
+        public void Deactivate()
         {
             Name = null;
             Description = null;
