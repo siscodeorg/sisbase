@@ -3,6 +3,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using sisbase.Configuration;
+using sisbase.Utils;
 using System;
 using System.Threading.Tasks;
 
@@ -15,6 +16,7 @@ namespace sisbase
 		public DiscordClient Client { get; private set; }
 		public CommandsNextExtension CommandsNext { get; private set; }
 		public InteractivityExtension Interactivity { get; private set; }
+		public SMC Systems { get; private set; }
 
 		public SisbaseBot(Sisbase sisbaseConfiguration)
 		{
@@ -49,6 +51,9 @@ namespace sisbase
 			);
 			
 			CommandsNext.RegisterCommands(typeof(SisbaseBot).Assembly);
+			Systems = new SMC();
+			Systems.RegisterSystems(typeof(SisbaseBot).Assembly);
+
 		}
 
 		public Task StartAsync()
