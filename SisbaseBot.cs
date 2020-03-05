@@ -62,8 +62,6 @@ namespace sisbase
 		/// <summary>
 		/// Real-Time Prefix Resolver
 		/// </summary>
-		/// <param name="msg"></param>
-		/// <returns></returns>
 #pragma warning disable CS1998
 		private async Task<int> RTPR(DiscordMessage msg)
 		{
