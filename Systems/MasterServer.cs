@@ -52,7 +52,8 @@ namespace sisbase.Systems
                         .WithAuthor("Guild set as MASTER guild")
                         .WithColor(DiscordColor.PhthaloGreen);
                     SisbaseBot.Instance.SisbaseConfiguration.Config.MasterId = client.Guilds.Values.ToList()[0].Id;
-                    File.WriteAllText(Directory.GetCurrentDirectory() + "Config.json", JsonConvert.SerializeObject(SisbaseBot.Instance.SisbaseConfiguration, Formatting.Indented));
+                    File.WriteAllText(SisbaseBot.Instance.SisbaseConfiguration.JsonPath, JsonConvert.SerializeObject(SisbaseBot.Instance.SisbaseConfiguration.Config, Formatting.Indented));
+                    await ch.SendMessageAsync(embed: builder);
                 }
             }
         };

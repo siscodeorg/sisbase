@@ -1,4 +1,4 @@
-
+﻿
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -31,7 +31,7 @@ namespace sisbase.Commands
             guilds.ForEach(x => ids.Add(x.Id));
             SisbaseBot.Instance.SisbaseConfiguration.Config.PuppetId = ids;
             File.WriteAllText(Directory.GetCurrentDirectory() + "/Config.json",
-                JsonConvert.SerializeObject(SisbaseBot.Instance.SisbaseConfiguration, Formatting.Indented));
+                JsonConvert.SerializeObject(SisbaseBot.Instance.SisbaseConfiguration.Config, Formatting.Indented));
             await ctx.RespondAsync(embed: embed);
         }
     }
@@ -51,15 +51,6 @@ namespace sisbase.Commands
             await ctx.RespondAsync(embed: embed);
         }
 
-        // [Command("list")]
-        // [Description("Lists all active systems")]
-        // public async Task List(CommandContext ctx)
-        // {
-            // var allSystems = new List<string>();
-            // SisbaseBot.Instance.Systems.ForEach(x => allSystems.Add(x.Name));
-            // var embed = EmbedBase.ListEmbed(allSystems, "Systems");
-            // await ctx.RespondAsync(embed: embed);
-        // }
     }
     [OniiSan] // Sets group to be only executable on the master server
     [Imouto] // Sets group to be only executable by the staff (Modify Roles)
@@ -103,8 +94,8 @@ namespace sisbase.Commands
                     else
                     {
                         SisbaseBot.Instance.SisbaseConfiguration.Config.Prefixes.Add(prefix.ToLowerInvariant());
-                        File.WriteAllText(Directory.GetCurrentDirectory() + "/Config.json",
-                            JsonConvert.SerializeObject(SisbaseBot.Instance.SisbaseConfiguration, Formatting.Indented));
+                        File.WriteAllText(SisbaseBot.Instance.SisbaseConfiguration.JsonPath,
+                            JsonConvert.SerializeObject(SisbaseBot.Instance.SisbaseConfiguration.Config, Formatting.Indented));
                         await msg.ModifyAsync(embed: EmbedBase.OutputEmbed($"Prefix added without errors."));
                     }
 
@@ -120,8 +111,8 @@ namespace sisbase.Commands
                     else
                     {
                         SisbaseBot.Instance.SisbaseConfiguration.Config.Prefixes.Remove(prefix2.ToLowerInvariant());
-                        File.WriteAllText(Directory.GetCurrentDirectory() + "/Config.json",
-                            JsonConvert.SerializeObject(SisbaseBot.Instance.SisbaseConfiguration, Formatting.Indented));
+                        File.WriteAllText(SisbaseBot.Instance.SisbaseConfiguration.JsonPath ,
+                            JsonConvert.SerializeObject(SisbaseBot.Instance.SisbaseConfiguration.Config, Formatting.Indented));
                         await msg2.ModifyAsync(embed: EmbedBase.OutputEmbed($"Prefix removed without errors."));
                     }
                     break;
