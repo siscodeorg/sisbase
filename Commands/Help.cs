@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace sisbase.Commands
 {
+	/// <summary>
+	/// Base's Help Command
+	/// </summary>
 	public class Help : BaseCommandModule
 	{
 		// This is a sample help command.

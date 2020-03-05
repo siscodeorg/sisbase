@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace sisbase.Attributes
 {
+	/// <summary>
+	/// Attrribute that checks if the user is a staff member (Has Modify Roles permission)
+	/// </summary>
 	public class ImoutoAttribute : CheckBaseAttribute
 	{
 #pragma warning disable CS1998

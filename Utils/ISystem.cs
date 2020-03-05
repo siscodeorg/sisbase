@@ -6,8 +6,17 @@
 
     public interface ISystem
     {
+        /// <summary>
+        /// Name of the system
+        /// </summary>
         string Name { get; set; }
+        /// <summary>
+        /// Description of the system
+        /// </summary>
         string Description { get; set; }
+        /// <summary>
+        /// Status of the system
+        /// </summary>
         bool Status { get; set; }
         /// <summary>
         /// Pre-initiazation code.

@@ -12,6 +12,13 @@
         <Copyright>© siscode , All Rights Registered, 2020</Copyright>
         <NeutralLanguage>en</NeutralLanguage>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <AssemblyVersion>1.0.1.0</AssemblyVersion>
+        <FileVersion>1.0.1.0</FileVersion>
+        <Version>1.0.1</Version>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <DocumentationFile>C:\Users\roridev\Documents\GitHub\sisbase\sisbase.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>

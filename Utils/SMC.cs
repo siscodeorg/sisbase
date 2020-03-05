@@ -13,6 +13,9 @@ namespace sisbase.Utils
     /// </summary>
     public class SMC
     {
+        /// <summary>
+        /// All of the current registerred systems on the SMC
+        /// </summary>
         public static ConcurrentDictionary<Type,ISystem> RegisteredSystems { get; set; } = new ConcurrentDictionary<Type, ISystem>();
         public static void Register<T>() where T : IStaticSystem
         {

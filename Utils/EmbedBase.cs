@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace sisbase.Utils
 {
+	/// <summary>
+	/// Utility for generating consistant embeds
+	/// </summary>
 	public static class EmbedBase
 	{
 

@@ -5,6 +5,9 @@ using Newtonsoft.Json;
 using sisbase.Utils;
 namespace sisbase.Configuration
 {
+	/// <summary>
+	/// The configuration class for the bot.
+	/// </summary>
 	public class Sisbase
 	{
 		public string JsonPath { get; private set; }

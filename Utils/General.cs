@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace sisbase.Utils
 {
+    /// <summary>
+    /// General utilities class
+    /// </summary>
 	public class General
 	{
         public static Json TUI_cfg()

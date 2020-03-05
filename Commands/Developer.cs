@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace sisbase.Commands
 {
+    /// <summary>
+    /// Bot-Owner Only Commands
+    /// </summary>
     public class Developer : BaseCommandModule
     {
         [Command("setMaster")]

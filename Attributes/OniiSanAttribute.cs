@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace sisbase.Attributes
 {
+	/// <summary>
+	/// Attribute that checks if the command is run on the MASTER guild
+	/// </summary>
 	public class OniiSanAttribute : CheckBaseAttribute
 	{
 #pragma warning disable CS1998

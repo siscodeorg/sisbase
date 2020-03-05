@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace sisbase
 {
+	/// <summary>
+	/// The class all sisbase bots derive from
+	/// </summary>
 	public class SisbaseBot : IDisposable
 	{
 		public static SisbaseBot Instance { get; private set; }

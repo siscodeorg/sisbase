@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>sisbase</name>
+    </assembly>
+    <members>
+        <member name="T:sisbase.Attributes.EmojiAttribute">
+            <summary>
+            Atribute that sets the emoji for the group help
+            </summary>
+        </member>
+        <member name="T:sisbase.Attributes.ImoutoAttribute">
+            <summary>
+            Attrribute that checks if the user is a staff member (Has Modify Roles permission)
+            </summary>
+        </member>
+        <member name="T:sisbase.Attributes.OniiSanAttribute">
+            <summary>
+            Attribute that checks if the command is run on the MASTER guild
+            </summary>
+        </member>
+        <member name="T:sisbase.Commands.Developer">
+            <summary>
+            Bot-Owner Only Commands
+            </summary>
+        </member>
+        <member name="T:sisbase.Commands.Help">
+            <summary>
+            Base's Help Command
+            </summary>
+        </member>
+        <member name="T:sisbase.Json">
+            <summary>
+            The configuration whichs is saved to the config.json file
+            </summary>
+        </member>
+        <member name="T:sisbase.Configuration.Sisbase">
+            <summary>
+            The configuration class for the bot.
+            </summary>
+        </member>
+        <member name="T:sisbase.SisbaseBot">
+            <summary>
+            The class all sisbase bots derive from
+            </summary>
+        </member>
+        <member name="M:sisbase.SisbaseBot.RTPR(DSharpPlus.Entities.DiscordMessage)">
+            <summary>
+            Real-Time Prefix Resolver
+            </summary>
+        </member>
+        <member name="T:sisbase.Systems.MasterServer">
+            <summary>
+            The guild the bot is supossed to run
+            </summary>
+        </member>
+        <member name="T:sisbase.Utils.EmbedBase">
+            <summary>
+            Utility for generating consistant embeds
+            </summary>
+        </member>
+        <member name="T:sisbase.Utils.General">
+            <summary>
+            General utilities class
+            </summary>
+        </member>
+        <member name="T:sisbase.Utils.IClientSystem">
+            <summary>
+            Interface for <see cref="T:sisbase.Utils.ISystem"/> that can be applied to <see cref="T:DSharpPlus.DiscordClient"/>
+            </summary>
+        </member>
+        <member name="M:sisbase.Utils.IClientSystem.ApplyToClient(DSharpPlus.DiscordClient)">
+            <summary>
+            Applies the current system to the current <see cref="T:DSharpPlus.DiscordClient"/>
+            </summary>
+            <param name="client">The currrent client</param>
+        </member>
+        <member name="T:sisbase.Utils.IStaticSystem">
+            <summary>
+            Interface for systems that don't require connection to <see cref="N:DSharpPlus"/>
+            </summary>
+        </member>
+        <member name="T:sisbase.Utils.ISystem">
+            <summary>
+            The base interface for all systems
+            </summary>
+        </member>
+        <member name="P:sisbase.Utils.ISystem.Name">
+            <summary>
+            Name of the system
+            </summary>
+        </member>
+        <member name="P:sisbase.Utils.ISystem.Description">
+            <summary>
+            Description of the system
+            </summary>
+        </member>
+        <member name="P:sisbase.Utils.ISystem.Status">
+            <summary>
+            Status of the system
+            </summary>
+        </member>
+        <member name="M:sisbase.Utils.ISystem.Activate">
+            <summary>
+            Pre-initiazation code.
+            </summary>
+        </member>
+        <member name="M:sisbase.Utils.ISystem.Deactivate">
+            <summary>
+            Disables the system.
+            </summary>
+        </member>
+        <member name="M:sisbase.Utils.ISystem.Execute">
+            <summary>
+            Will be executed before any attachment (if exists)
+            </summary>
+        </member>
+        <member name="T:sisbase.Utils.Logger">
+            <summary>
+            The Logger
+            </summary>
+        </member>
+        <member name="M:sisbase.Utils.Logger.Log(sisbase.Utils.ISystem,System.String)">
+            <summary>
+            Logs to the console from a system. Level : Log
+            </summary>
+            <param name="s">The system , usually used as an extension method</param>
+            <param name="message">The message that would be logged</param>
+        </member>
+        <member name="M:sisbase.Utils.Logger.Warn(sisbase.Utils.ISystem,System.String)">
+            <summary>
+            Logs to the console from a system. Level : Warning
+            </summary>
+            <param name="s">The system , usually used as an extension method</param>
+            <param name="message">The message that would be logged</param>
+        </member>
+        <member name="M:sisbase.Utils.Logger.Log(System.String,System.String)">
+            <summary>
+            Logs to the console from a system. Level : Log
+            </summary>
+            <param name="source">The source from where the log is called</param>
+            <param name="message">The message that would be logged</param>
+        </member>
+        <member name="M:sisbase.Utils.Logger.Warn(System.String,System.String)">
+            <summary>
+            Logs to the console from a system. Level : Warn
+            </summary>
+            <param name="source">The source from where the log is called</param>
+            <param name="message">The message that would be logged</param>
+        </member>
+        <member name="M:sisbase.Utils.Logger.Write(System.Boolean)">
+            <summary>
+            Simple utility to log booleans nicely
+            </summary>
+            <param name="b">The boolean</param>
+        </member>
+        <member name="T:sisbase.Utils.SMC">
+            <summary>
+            The System Management Controller
+            Now with 100% less PPBUS_G3H
+            </summary>
+        </member>
+        <member name="P:sisbase.Utils.SMC.RegisteredSystems">
+            <summary>
+            All of the current registerred systems on the SMC
+            </summary>
+        </member>
+    </members>
+</doc>
