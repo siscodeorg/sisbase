@@ -6,6 +6,12 @@
         <RootNamespace>sisbase</RootNamespace>
         <ApplicationIcon />
         <StartupObject />
+        <Authors>roridev1,wffirilat</Authors>
+        <Company>siscode</Company>
+        <Description>A D#+ Discord Bot Base</Description>
+        <Copyright>© siscode , All Rights Registered, 2020</Copyright>
+        <NeutralLanguage>en</NeutralLanguage>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
