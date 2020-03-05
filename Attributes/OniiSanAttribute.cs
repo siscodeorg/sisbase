@@ -6,6 +6,6 @@ namespace sisbase.Attributes
 {
 	public class OniiSanAttribute : CheckBaseAttribute
 	{
-		public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help) => ctx.Guild.Id.Equals(Program.Config.MasterId);
+		public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help) => ctx.Guild.Id.Equals(SisbaseBot.Instance.SisbaseConfiguration.Config.MasterId);
 	}
 }

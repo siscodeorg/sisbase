@@ -24,7 +24,7 @@ namespace sisbase.Systems
         public void ApplyToClient(DiscordClient client) => client.GuildDownloadCompleted += async delegate (GuildDownloadCompletedEventArgs args)
         {
 
-            if (Program.Config.MasterId == 0)
+            if (SisbaseBot.Instance.SisbaseConfiguration.Config.MasterId == 0)
             {
                 if (client.Guilds.Count > 1)
                 {
@@ -51,8 +51,8 @@ namespace sisbase.Systems
                     builder
                         .WithAuthor("Guild set as MASTER guild")
                         .WithColor(DiscordColor.PhthaloGreen);
-                    Program.Config.MasterId = client.Guilds.Values.ToList()[0].Id;
-                    File.WriteAllText(Directory.GetCurrentDirectory() + "Config.json", JsonConvert.SerializeObject(Program.Config, Formatting.Indented));
+                    SisbaseBot.Instance.SisbaseConfiguration.Config.MasterId = client.Guilds.Values.ToList()[0].Id;
+                    File.WriteAllText(Directory.GetCurrentDirectory() + "Config.json", JsonConvert.SerializeObject(SisbaseBot.Instance.SisbaseConfiguration, Formatting.Indented));
                 }
             }
         };

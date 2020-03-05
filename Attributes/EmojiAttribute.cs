@@ -9,8 +9,8 @@ namespace sisbase.Attributes
 
 		public EmojiAttribute(DiscordEmoji emoji) => Emoji = emoji;
 
-		public EmojiAttribute(string unicode) => Emoji = DiscordEmoji.FromUnicode(Program.Client, unicode) ?? DiscordEmoji.FromName(Program.Client, unicode);
+		public EmojiAttribute(string unicode) => Emoji = DiscordEmoji.FromUnicode(SisbaseBot.Instance.Client, unicode) ?? DiscordEmoji.FromName(SisbaseBot.Instance.Client, unicode);
 
-		public EmojiAttribute(ulong id) => Emoji = DiscordEmoji.FromGuildEmote(Program.Client, id);
+		public EmojiAttribute(ulong id) => Emoji = DiscordEmoji.FromGuildEmote(SisbaseBot.Instance.Client, id);
 	}
 }
