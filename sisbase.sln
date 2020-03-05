@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sisbase", "sisbase.csproj", "{491F23BF-AB09-461C-942C-54E8BE235CFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sisbase.Test", "sisbase.Test\sisbase.Test.csproj", "{471C0E3D-599C-4529-BA69-82731E99AC3A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sisbase.Test", "sisbase.Test\sisbase.Test.csproj", "{19090970-3EA2-4EDD-865D-158A1682E6AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{491F23BF-AB09-461C-942C-54E8BE235CFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{491F23BF-AB09-461C-942C-54E8BE235CFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{491F23BF-AB09-461C-942C-54E8BE235CFA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{471C0E3D-599C-4529-BA69-82731E99AC3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{471C0E3D-599C-4529-BA69-82731E99AC3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{471C0E3D-599C-4529-BA69-82731E99AC3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{471C0E3D-599C-4529-BA69-82731E99AC3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19090970-3EA2-4EDD-865D-158A1682E6AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19090970-3EA2-4EDD-865D-158A1682E6AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19090970-3EA2-4EDD-865D-158A1682E6AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19090970-3EA2-4EDD-865D-158A1682E6AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

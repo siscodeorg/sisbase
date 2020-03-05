@@ -18,21 +18,23 @@ namespace sisbase
 
 		public SisbaseBot(Sisbase sisbaseConfiguration)
 		{
+
 			if(Instance != null)
 				throw new InvalidOperationException("Instance is already running");
 			Instance = this;
+			SisbaseConfiguration = sisbaseConfiguration;
 			Client = new DiscordClient(
 				new DiscordConfiguration
 				{
 					AutoReconnect = true,
-					Token = sisbaseConfiguration.Config.Token,
+					Token = SisbaseConfiguration.Config.Token,
 					UseInternalLogHandler = false
 				}
 			);
 			CommandsNext = Client.UseCommandsNext(
 				new CommandsNextConfiguration
 				{
-					StringPrefixes = sisbaseConfiguration.Config.Prefixes,
+					StringPrefixes = SisbaseConfiguration.Config.Prefixes,
 					EnableDefaultHelp = false
 				}
 			);
@@ -45,7 +47,7 @@ namespace sisbase
 					PollBehaviour = PollBehaviour.DeleteEmojis
 				}
 			);
-
+			
 			CommandsNext.RegisterCommands(typeof(SisbaseBot).Assembly);
 		}
 
