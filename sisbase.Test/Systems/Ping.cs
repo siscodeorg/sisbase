@@ -24,6 +24,7 @@ namespace sisbase.Test.Systems
             if (args.Message.Content == "bot gives ping")
             {
                 await args.Message.RespondAsync($"Ping : **{client.Ping}ms**");
+                this.Log($"{args.Author.Username} requested the ping");
             }
         };
         public void Deactivate()
