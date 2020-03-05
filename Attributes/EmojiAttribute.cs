@@ -3,6 +3,9 @@ using System;
 
 namespace sisbase.Attributes
 {
+	/// <summary>
+	/// Atribute that sets the emoji for the group help
+	/// </summary>
 	public class EmojiAttribute : Attribute
 	{
 		public DiscordEmoji Emoji;

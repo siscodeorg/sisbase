@@ -7,6 +7,10 @@ namespace sisbase.Utils
 	/// </summary>
 	public interface IClientSystem : ISystem
 	{
+		/// <summary>
+		/// Applies the current system to the current <see cref="DiscordClient"/>
+		/// </summary>
+		/// <param name="client">The currrent client</param>
 		void ApplyToClient(DiscordClient client);
 	}
 }

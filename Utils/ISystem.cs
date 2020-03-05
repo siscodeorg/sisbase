@@ -9,7 +9,13 @@
         string Name { get; set; }
         string Description { get; set; }
         bool Status { get; set; }
+        /// <summary>
+        /// Pre-initiazation code.
+        /// </summary>
         void Activate();
+        /// <summary>
+        /// Disables the system.
+        /// </summary>
         void Deactivate();
 
         /// <summary>
