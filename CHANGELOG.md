@@ -15,3 +15,8 @@
 + Adds documentation to nupkg.
 
 + + [sisbase.1.0.1.nupkg](/uploads/7759e3270ecd828989df41463456a385/sisbase.1.0.1.nupkg)
+
+#### What broke : 
+
+- Nothing This version is fully backwards compatible 
+
