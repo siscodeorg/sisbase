@@ -1,3 +1,4 @@
+using System;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using sisbase.Attributes;
@@ -172,6 +173,13 @@ namespace sisbase.Utils
 					.WithColor(DiscordColor.Gray);
 				return commandHelpEmbed.Build();
 			}
+		}
+
+		public static DiscordEmbed Mutate(this DiscordEmbed embed, Action<DiscordEmbedBuilder> func)
+		{
+			var builder = new DiscordEmbedBuilder(embed);
+			func(builder);
+			return builder.Build();
 		}
 	}
 }
