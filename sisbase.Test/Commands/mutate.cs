@@ -20,10 +20,11 @@ namespace sisbase.Test
 			await ctx.RespondAsync(embed: embed);
 			await ctx.RespondAsync(embed:embed.Mutate(x => x.WithTitle("Mutated Embed")));
 			await ctx.RespondAsync(embed:embed
-											.Mutate(x => { x
-											   .WithTitle("Fancy - Mutated Embed")
-											   .WithColor(DiscordColor.Red)
-											   .AddField("Yeah","That was fancy!");
-											 }));
+					.Mutate(x => { x
+					   .WithTitle("Fancy - Mutated Embed")
+					   .WithColor(DiscordColor.Red)
+					   .AddField("Yeah","That was fancy!");
+					 }));
+		}
 	}
 }
