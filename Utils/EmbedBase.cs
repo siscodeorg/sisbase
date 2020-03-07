@@ -4,6 +4,7 @@ using DSharpPlus.Entities;
 using sisbase.Attributes;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace sisbase.Utils
 {
@@ -36,7 +37,7 @@ namespace sisbase.Utils
 			return groupHelpEmbed.Build();
 		}
 
-		public static DiscordEmbed HelpEmbed(this CommandsNextExtension cne)
+		public static async Task<DiscordEmbed> HelpEmbed(this CommandsNextExtension cne, CommandContext ctx, bool showHidden = false)
 		{
 			var x = cne.RegisteredCommands.Values.ToList();
 			var groups = new List<CommandGroup>();
@@ -44,7 +45,11 @@ namespace sisbase.Utils
 			{
 				if (command is CommandGroup group)
 				{
-					groups.Add(group);
+					if (group.IsHidden && showHidden)
+						groups.Add(group);
+					else if (group.IsHidden && !showHidden) continue;
+					else
+						groups.Add(group);
 				}
 			}
 			var helpBuilder = new DiscordEmbedBuilder();
@@ -69,7 +74,11 @@ namespace sisbase.Utils
 			string misc = "";
 			foreach (var command in x)
 			{
-				misc += $"`{command.Name}` ";
+				if (command.IsHidden && showHidden)
+					misc += $"`{command.Name}` ";
+				else if (command.IsHidden && !showHidden) continue;
+				else
+					misc += $"`{command.Name}` ";
 			}
 
 			helpBuilder.AddField("❓ ・ Miscellaneous ", misc);
