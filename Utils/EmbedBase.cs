@@ -11,8 +11,7 @@ namespace sisbase.Utils
 	/// Utility for generating consistant embeds
 	/// </summary>
 	public static class EmbedBase
-	{
-
+	{		
 		public static DiscordEmbed GroupHelpEmbed(Command Command)
 		{
 			var commands = new List<Command>();
@@ -29,7 +28,7 @@ namespace sisbase.Utils
 			}
 			var groupHelpEmbed = new DiscordEmbedBuilder();
 			groupHelpEmbed
-				.WithFooter("「sisbase」・ 0.1", "https://i.imgur.com/6ovRzR9.png")
+				.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
 				.WithDescription(cG?.Description)
 				.AddField("Commands", string.IsNullOrWhiteSpace(commandList) ? "No sub-commands found" : commandList)
 				.WithAuthor($"Group : {cG?.Name} | Help")
@@ -76,7 +75,7 @@ namespace sisbase.Utils
 			helpBuilder.AddField("❓ ・ Miscellaneous ", misc);
 			helpBuilder
 				.WithDescription($"To see help for a group run {SisbaseBot.Instance.Client.CurrentUser.Mention} `group name`")
-				.WithFooter("「sisbase」・ 0.1", "https://i.imgur.com/6ovRzR9.png")
+				.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
 				.WithAuthor("Help | Showing all groups")
 				.WithColor(DiscordColor.CornflowerBlue);
 			return helpBuilder.Build();
@@ -86,7 +85,7 @@ namespace sisbase.Utils
 		{
 			var inputEmbedBuilder = new DiscordEmbedBuilder();
 			inputEmbedBuilder
-				.WithFooter("「sisbase」・ 0.1", "https://i.imgur.com/6ovRzR9.png")
+				.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
 				.WithDescription($"Please type : {input}")
 				.WithColor(DiscordColor.MidnightBlue);
 			return inputEmbedBuilder.Build();
@@ -96,7 +95,7 @@ namespace sisbase.Utils
 		{
 			var outputEmbedBuilder = new DiscordEmbedBuilder();
 			outputEmbedBuilder
-				.WithFooter("「sisbase」・ 0.1", "https://i.imgur.com/6ovRzR9.png")
+				.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
 				.WithDescription($"{output}")
 				.WithColor(DiscordColor.SpringGreen);
 			return outputEmbedBuilder.Build();
@@ -112,7 +111,7 @@ namespace sisbase.Utils
 			var orderedListBuilder = new DiscordEmbedBuilder();
 			orderedListBuilder
 				.WithAuthor($"List of : {name}")
-				.WithFooter("「sisbase」・ 0.1", "https://i.imgur.com/6ovRzR9.png")
+				.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
 				.WithDescription(string.IsNullOrWhiteSpace(data) ? "No data" : data)
 				.WithColor(DiscordColor.Orange);
 			return orderedListBuilder.Build();
@@ -124,7 +123,7 @@ namespace sisbase.Utils
 			var listBuilder = new DiscordEmbedBuilder();
 			listBuilder
 				.WithAuthor($"List of : {name}")
-				.WithFooter("「sisbase」・ 0.1", "https://i.imgur.com/6ovRzR9.png")
+				.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
 				.WithDescription(string.IsNullOrWhiteSpace(data) ? "No data" : data)
 				.WithColor(DiscordColor.Orange);
 			return listBuilder.Build();
@@ -156,7 +155,7 @@ namespace sisbase.Utils
 				arguments.ForEach(x => argumentExplanation += $"{x.Name} - {x.Description}\n");
 				var commandHelpEmbed = new DiscordEmbedBuilder();
 				commandHelpEmbed
-					.WithFooter("「sisbase」・ 0.1", "https://i.imgur.com/6ovRzR9.png")
+					.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
 					.AddField("Arguments", argumentExplanation)
 					.WithDescription($"Use : {use}")
 					.WithAuthor($"Command : {command.Name} | Help")
@@ -167,7 +166,7 @@ namespace sisbase.Utils
 			{
 				var commandHelpEmbed = new DiscordEmbedBuilder();
 				commandHelpEmbed
-					.WithFooter("「sisbase」・ 0.1", "https://i.imgur.com/6ovRzR9.png")
+					.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
 					.WithDescription("This command is a stub and was not implemented yet.")
 					.WithAuthor($"Command : {command.Name} | Help")
 					.WithColor(DiscordColor.Gray);

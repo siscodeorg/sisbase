@@ -6,8 +6,18 @@ namespace sisbase.Utils
     /// <summary>
     /// General utilities class
     /// </summary>
-	public class General
+	public static class General
 	{
+
+        public static Version Version = typeof(SisbaseBot)
+            .Assembly
+            .GetName()
+            .Version;
+
+
+        public static string Format(this Version v) => $"{v.Major}.{v.Minor}.{v.Build}";
+
+        public static string GetVersion() => Format(Version);
         public static Json TUI_cfg()
         {
             var c = new Json();
