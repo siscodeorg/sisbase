@@ -46,11 +46,8 @@ namespace sisbase.Utils
 				if (command is CommandGroup group)
 				{
 					if ((await group.RunChecksAsync(ctx, true)).Count() > 0) continue;
-					if (group.IsHidden && showHidden)
-						groups.Add(group);
-					else if (group.IsHidden && !showHidden) continue;
-					else
-						groups.Add(group);
+					if (group.IsHidden && !showHidden) continue;
+					groups.Add(group);
 				}
 			}
 			var helpBuilder = new DiscordEmbedBuilder();
@@ -76,11 +73,8 @@ namespace sisbase.Utils
 			foreach (var command in x)
 			{
 				if ((await command.RunChecksAsync(ctx, true)).Count() > 0) continue;
-				if (command.IsHidden && showHidden)
-					misc += $"`{command.Name}` ";
-				else if (command.IsHidden && !showHidden) continue;
-				else
-					misc += $"`{command.Name}` ";
+				if (command.IsHidden && !showHidden) continue;
+				misc += $"`{command.Name}` ";
 			}
 
 			helpBuilder.AddField("❓ ・ Miscellaneous ", misc);
