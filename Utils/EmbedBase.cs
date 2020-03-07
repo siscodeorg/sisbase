@@ -45,6 +45,7 @@ namespace sisbase.Utils
 			{
 				if (command is CommandGroup group)
 				{
+					if ((await group.RunChecksAsync(ctx, true)).Count() > 0) continue;
 					if (group.IsHidden && showHidden)
 						groups.Add(group);
 					else if (group.IsHidden && !showHidden) continue;
@@ -74,6 +75,7 @@ namespace sisbase.Utils
 			string misc = "";
 			foreach (var command in x)
 			{
+				if ((await command.RunChecksAsync(ctx, true)).Count() > 0) continue;
 				if (command.IsHidden && showHidden)
 					misc += $"`{command.Name}` ";
 				else if (command.IsHidden && !showHidden) continue;
