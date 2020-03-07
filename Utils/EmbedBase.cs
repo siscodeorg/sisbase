@@ -5,6 +5,7 @@ using sisbase.Attributes;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static sisbase.Utils.Behaviours;
 
 namespace sisbase.Utils
 {
@@ -106,12 +107,14 @@ namespace sisbase.Utils
 			return outputEmbedBuilder.Build();
 		}
 
-		public static DiscordEmbed OrderedListEmbed<T>(List<T> list, string name)
+		public static DiscordEmbed OrderedListEmbed<T>(List<T> list, string name, 
+			CountingBehaviour behaviour = CountingBehaviour.Default)
 		{
 			string data = "";
 			foreach (var item in list)
 			{
-				data += $"{list.IndexOf(item)}・{item.ToString()}\n";
+				if(behaviour == CountingBehaviour.Ordinal) data += $"{list.IndexOf(item) + 1}・{item.ToString()}\n";
+				else data += $"{list.IndexOf(item)}・{item.ToString()}\n";
 			}
 			var orderedListBuilder = new DiscordEmbedBuilder();
 			orderedListBuilder
