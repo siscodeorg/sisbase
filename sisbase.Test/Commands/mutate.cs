@@ -10,7 +10,7 @@ using sisbase.Utils;
 namespace sisbase.Test
 {
 	//Example on how to use the new mutate function.
-	//You can use it on every DiscordEmbed. We only used ot 
+	//You can use it on every DiscordEmbed. We only used on a EmbedBase' embed for simplicity sake.
 	public class mutate : BaseCommandModule
 	{
 		[Command("mutate")]
