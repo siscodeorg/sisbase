@@ -19,7 +19,7 @@
 #### What broke : 
 
 - `Nothing` This version is fully backwards compatible 
-## sisbase `Kasugano Sora` 1.1.0
+## sisbase `Kasugano Sora` 1.1.0 `Now Available on nuget!`
 
 + Added mutation to DiscordEmbeds via the `Mutate` extension method.
 + Added `PrefixAttribute` for commands to only be executed with a specific prefix
