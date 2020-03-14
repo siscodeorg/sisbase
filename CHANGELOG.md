@@ -1,6 +1,6 @@
 # The Main Changelog File
 
-## sisbase `Himenokōji Akiko` 1.0.0.0 
+## sisbase `Himenokōji Akiko` 1.0.0 
 
 + Feature parity with [`old lolibase`](https://github.com/lolidevs/lolibase) project
 
@@ -19,4 +19,14 @@
 #### What broke : 
 
 - `Nothing` This version is fully backwards compatible 
+## sisbase `Kasugano Sora` 1.1.0
+
++ Added mutation to DiscordEmbeds via the `Mutate` extension method.
++ Added `PrefixAttribute` for commands to only be executed with a specific prefix
++ Added `Behaviour System`
++ Help command now `hides` commands with the `HiddenAttribute` **(Unless -h is added to the end of the command)**
++ Fixed help command showing commands to unauthorized users
+
+### What broke :
+- `Nothing` This version is fully backwards compatible with 1.0.1
 
