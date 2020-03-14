@@ -1,4 +1,4 @@
-# ![](https://i.imgur.com/0eFiSuH.png)
+# ![](https://i.imgur.com/D6rTqWW.png)
 A Simple to use Discord Bot Base based on DSharpPlus.
 
 # Project Structure
