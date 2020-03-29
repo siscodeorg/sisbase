@@ -66,18 +66,18 @@
         </member>
         <member name="T:sisbase.Utils.IClientSystem">
             <summary>
-            Interface for <see cref="T:sisbase.Utils.ISystem"/> that can be applied to <see cref="T:DSharpPlus.DiscordClient"/>
+            Interface for <see cref="T:sisbase.Utils.ISystem" /> that can be applied to <see cref="T:DSharpPlus.DiscordClient" />
             </summary>
         </member>
         <member name="M:sisbase.Utils.IClientSystem.ApplyToClient(DSharpPlus.DiscordClient)">
             <summary>
-            Applies the current system to the current <see cref="T:DSharpPlus.DiscordClient"/>
+            Applies the current system to the current <see cref="T:DSharpPlus.DiscordClient" />
             </summary>
             <param name="client">The currrent client</param>
         </member>
         <member name="T:sisbase.Utils.IStaticSystem">
             <summary>
-            Interface for systems that don't require connection to <see cref="N:DSharpPlus"/>
+            Interface for systems that don't require connection to <see cref="N:DSharpPlus" />
             </summary>
         </member>
         <member name="T:sisbase.Utils.ISystem">

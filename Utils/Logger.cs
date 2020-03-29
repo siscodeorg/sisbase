@@ -1,6 +1,6 @@
 ﻿using System;
-using stdout = System.Console;
 using color = System.ConsoleColor;
+using stdout = System.Console;
 
 namespace sisbase.Utils
 {
@@ -14,6 +14,7 @@ namespace sisbase.Utils
 			stdout.ResetColor();
 			stdout.Write($"<{DateTime.Now.ToString("MM/dd - HH:mm:ss")}> ");
 		}
+
 		/// <summary>
 		/// Logs to the console from a system. Level : Log
 		/// </summary>
@@ -51,6 +52,7 @@ namespace sisbase.Utils
 			stdout.ForegroundColor = color.Cyan;
 			stdout.Write($" {source} | {message} \n");
 		}
+
 		/// <summary>
 		/// Logs to the console from a system. Level : Warn
 		/// </summary>
@@ -62,6 +64,7 @@ namespace sisbase.Utils
 			stdout.ForegroundColor = color.Yellow;
 			stdout.Write($" {source} | {message} \n");
 		}
+
 		/// <summary>
 		/// Simple utility to log booleans nicely
 		/// </summary>
