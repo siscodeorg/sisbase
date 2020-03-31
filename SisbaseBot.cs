@@ -6,6 +6,7 @@ using DSharpPlus.Interactivity.Enums;
 using sisbase.Configuration;
 using sisbase.Utils;
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace sisbase
@@ -84,6 +85,9 @@ namespace sisbase
 
 			return -1;
 		}
+
+		public void RegisterBot(Assembly asm)
+		{ Systems.RegisterSystems(asm); CommandsNext.RegisterCommands(asm); }
 
 #pragma warning restore CS1998
 

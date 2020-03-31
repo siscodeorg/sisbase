@@ -54,7 +54,7 @@ namespace sisbase.Utils
 			}
 		}
 
-		public void RegisterSystems(Assembly assembly)
+		internal void RegisterSystems(Assembly assembly)
 		{
 			var Ts = assembly.ExportedTypes.Where(T => T.GetTypeInfo().IsSystemCandidate());
 			foreach (var T in Ts)
