@@ -23,8 +23,7 @@ namespace sisbase.Test
 				new Sisbase(Directory.GetCurrentDirectory())
 			);
 
-			sisbase.Systems.RegisterSystems(typeof(Program).Assembly);
-			sisbase.CommandsNext.RegisterCommands(typeof(Program).Assembly);
+			sisbase.RegisterBot(typeof(Program).Assembly);
 			await sisbase.StartAsync();
 			while (!cts.IsCancellationRequested)
 				await Task.Delay(1);
