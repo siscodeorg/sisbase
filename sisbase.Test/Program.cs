@@ -20,12 +20,11 @@ namespace sisbase.Test
 				e.Cancel = true;
 			};
 			var config = new Sisbase(Directory.GetCurrentDirectory());
-			config.AddCustomConfiguration<Json>("another config", new Json());
 
+			config.AddCustomConfiguration<Json>("another config", new Json());
 			var sisbase = new SisbaseBot(
 				config
 			);
-
 			sisbase.RegisterBot(typeof(Program).Assembly);
 			await sisbase.StartAsync();
 			while (!cts.IsCancellationRequested)
