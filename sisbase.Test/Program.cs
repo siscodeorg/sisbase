@@ -1,4 +1,5 @@
 ﻿using sisbase.Configuration;
+using sisbase.Utils;
 using System;
 using System.IO;
 using System.Threading;
@@ -18,9 +19,11 @@ namespace sisbase.Test
 					cts.Cancel();
 				e.Cancel = true;
 			};
+			var config = new Sisbase(Directory.GetCurrentDirectory());
+			config.AddCustomConfiguration<Json>("another config", new Json());
 
 			var sisbase = new SisbaseBot(
-				new Sisbase(Directory.GetCurrentDirectory())
+				config
 			);
 
 			sisbase.RegisterBot(typeof(Program).Assembly);
