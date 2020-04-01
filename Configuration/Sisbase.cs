@@ -40,5 +40,7 @@ namespace sisbase.Configuration
 				throw new InvalidOperationException("The path specified is not a Directory.");
 			}
 		}
+
+		public void Update() => File.WriteAllText(JsonPath, JsonConvert.SerializeObject(Config, Formatting.Indented));
 	}
 }
