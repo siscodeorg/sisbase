@@ -72,7 +72,7 @@ namespace sisbase.Utils
 		public static void Write(this bool b)
 		{
 			stdout.ForegroundColor = b ? color.Green : color.DarkRed;
-			stdout.Write($"{(b ? "🗸" : "✖")}");
+			stdout.Write($"{(b ? "O" : "X")}");
 		}
 	}
 }
