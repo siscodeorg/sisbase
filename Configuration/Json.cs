@@ -8,10 +8,10 @@ namespace sisbase
 	/// </summary>
 	public class Json
 	{
-		[JsonProperty] public string Token { get; set; }
+		[JsonProperty] internal string Token { get; set; }
 		[JsonProperty] public ulong MasterId { get; set; }
 		[JsonProperty] public List<ulong?> PuppetId { get; set; }
 		[JsonProperty] public List<string> Prefixes { get; set; }
-		[JsonProperty] public Dictionary<string, object> CustomSettings { get; set; }
+		[JsonProperty] internal Dictionary<string, object> CustomSettings { get; set; }
 	}
 }
