@@ -45,7 +45,7 @@ will only be executed **if** said system exists.
 
 + Simplified way to register a bot.
 
-Now you need to register a bot with `sisbase.RegisterBot()` isntead of manually registering the commands and systems.
+Now you need to register a bot with `#SisbaseBot.RegisterBot()` isntead of manually registering the commands and systems.
 
 ### What broke :
 
