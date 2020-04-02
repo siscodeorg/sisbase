@@ -51,3 +51,7 @@ Now you need to register a bot with `#SisbaseBot.RegisterBot()` isntead of manua
 
 - If you used the token value anywhere in your bot (which of course you shouldn't do anyways), you now can't since that property is `internal`.
 - Registering all systems from an assembly is now inaccessible since its `internal` , just replace it with the new unified way.
+
+### Patch `1.2.1`
++ Fixes system registration in order to follow `RequireSystemAttribute` logic.
++ Adds more documentation
