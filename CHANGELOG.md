@@ -30,3 +30,20 @@
 ### What broke :
 - `Nothing` This version is fully backwards compatible with 1.0.1
 
+## sisbase `Hashima Chihiro` 1.2.0
+
++ Added `Custom Settings` to `Sisbase`
+
+Ever wanted to add your own settings to the config.json file? Now you **can!**
+
+Using the new Extesion Methods from `sisbase.Utils` you too can add anything onto the configuration file and request at will.
+
++ Added `RequireSystemAttribute`
+
+IF you need that a system be active for a command to execute, you now can just add this simple attribute to it (providing the  `Type` of said system of course) and it
+will only be executed **if** said system exists.
+
+### What broke :
+
+- If you used the token anywhere if your bot (which of course you shouldn't do anyways), you now can't since that property is `internal`.
+
