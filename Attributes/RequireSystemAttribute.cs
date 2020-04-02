@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace sisbase.Attributes
 {
+	/// <summary>
+	/// Attribute that checks if an specified system is registered on the <see cref="SMC"/>.<br></br>
+	/// If the system exists the command is executed.
+	/// </summary>
 	public class RequireSystemAttribute : CheckBaseAttribute
 	{
 		public ISystem System;

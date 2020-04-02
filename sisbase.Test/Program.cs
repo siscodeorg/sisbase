@@ -9,14 +9,14 @@ namespace sisbase.Test
 {
 	internal class Program
 	{
-		private static CancellationTokenSource cts { get; } = new CancellationTokenSource();
+		private static CancellationTokenSource Cts { get; } = new CancellationTokenSource();
 
 		private static async Task Main()
 		{
 			Console.CancelKeyPress += (sender, e) =>
 			{
-				if (!cts.IsCancellationRequested)
-					cts.Cancel();
+				if (!Cts.IsCancellationRequested)
+					Cts.Cancel();
 				e.Cancel = true;
 			};
 			var config = new Sisbase(Directory.GetCurrentDirectory());
@@ -27,7 +27,7 @@ namespace sisbase.Test
 			);
 			sisbase.RegisterBot(typeof(Program).Assembly);
 			await sisbase.StartAsync();
-			while (!cts.IsCancellationRequested)
+			while (!Cts.IsCancellationRequested)
 				await Task.Delay(1);
 		}
 	}

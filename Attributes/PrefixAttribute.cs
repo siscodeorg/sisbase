@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace sisbase.Attributes
 {
+	/// <summary>
+	/// Attribute that checks if a command was executed with an specified prefix
+	/// </summary>
 	public class PrefixAttribute : CheckBaseAttribute
 	{
 		public string Prefix { get; private set; }

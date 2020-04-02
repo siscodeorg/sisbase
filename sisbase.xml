@@ -19,6 +19,17 @@
             Attribute that checks if the command is run on the MASTER guild
             </summary>
         </member>
+        <member name="T:sisbase.Attributes.PrefixAttribute">
+            <summary>
+            Attribute that checks if a command was executed with an specified prefix
+            </summary>
+        </member>
+        <member name="T:sisbase.Attributes.RequireSystemAttribute">
+            <summary>
+            Attribute that checks if an specified system is registered on the <see cref="T:sisbase.Utils.SMC"/>.<br></br>
+            If the system exists the command is executed.
+            </summary>
+        </member>
         <member name="T:sisbase.Commands.Developer">
             <summary>
             Bot-Owner Only Commands
@@ -34,9 +45,45 @@
             The configuration whichs is saved to the config.json file
             </summary>
         </member>
+        <member name="P:sisbase.Json.MasterId">
+            <summary>
+            The Id of the master server
+            </summary>
+        </member>
+        <member name="P:sisbase.Json.PuppetId">
+            <summary>
+            The Ids of the puppet servers
+            </summary>
+        </member>
+        <member name="P:sisbase.Json.Prefixes">
+            <summary>
+            The prefixes that are going to be usedby the bot.
+            </summary>
+        </member>
         <member name="T:sisbase.Configuration.Sisbase">
             <summary>
             The configuration class for the bot.
+            </summary>
+        </member>
+        <member name="P:sisbase.Configuration.Sisbase.JsonPath">
+            <summary>
+            Path of the configuration
+            </summary>
+        </member>
+        <member name="P:sisbase.Configuration.Sisbase.Config">
+            <summary>
+            The configuration
+            </summary>
+        </member>
+        <member name="M:sisbase.Configuration.Sisbase.#ctor(System.String)">
+            <summary>
+            Creates a new configuration from a provided path
+            </summary>
+            <param name="path">The path. Must be a directory.</param>
+        </member>
+        <member name="M:sisbase.Configuration.Sisbase.Update">
+            <summary>
+            Updates the file of the config with the currently running config
             </summary>
         </member>
         <member name="T:sisbase.SisbaseBot">
@@ -44,14 +91,67 @@
             The class all sisbase bots derive from
             </summary>
         </member>
+        <member name="P:sisbase.SisbaseBot.Instance">
+            <summary>
+            The currently running Instance
+            </summary>
+        </member>
+        <member name="P:sisbase.SisbaseBot.SisbaseConfiguration">
+            <summary>
+            The configuration for the bot.
+            </summary>
+        </member>
+        <member name="P:sisbase.SisbaseBot.Client">
+            <summary>
+            The DiscordClient
+            </summary>
+        </member>
         <member name="M:sisbase.SisbaseBot.RTPR(DSharpPlus.Entities.DiscordMessage)">
             <summary>
             Real-Time Prefix Resolver
             </summary>
         </member>
+        <member name="M:sisbase.SisbaseBot.RegisterBot(System.Reflection.Assembly)">
+            <summary>
+            Registers all systems and commands from a given assembly. The System and Command classes need to be public for registration
+            </summary>
+            <param name="asm">The assembly</param>
+        </member>
+        <member name="M:sisbase.SisbaseBot.StartAsync">
+            <summary>
+            Starts the bot instance
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:sisbase.SisbaseBot.DisconnectAsync">
+            <summary>
+            Disconnects the bot
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:sisbase.Systems.MasterServer">
             <summary>
             The guild the bot is supossed to run
+            </summary>
+        </member>
+        <member name="T:sisbase.Utils.Behaviours">
+            <summary>
+            Stores all of the currently available behaviours
+            </summary>
+        </member>
+        <member name="T:sisbase.Utils.Behaviours.CountingBehaviour">
+            <summary>
+            The counting behaviour for ListEmbeds
+            </summary>
+        </member>
+        <member name="F:sisbase.Utils.Behaviours.CountingBehaviour.Ordinal">
+            <summary>
+            Counts from 1.
+            </summary>
+        </member>
+        <member name="F:sisbase.Utils.Behaviours.CountingBehaviour.Default">
+            <summary>
+            Counts from 0.
             </summary>
         </member>
         <member name="T:sisbase.Utils.EmbedBase">
@@ -59,10 +159,67 @@
             Utility for generating consistant embeds
             </summary>
         </member>
+        <member name="M:sisbase.Utils.EmbedBase.GroupHelpEmbed(DSharpPlus.CommandsNext.Command)">
+            <summary>
+            Generates a new group help embed from an specified command <br></br>
+            The comand must be a GroupCommand.
+            </summary>
+            <param name="Command"></param>
+            <returns></returns>
+        </member>
+        <member name="M:sisbase.Utils.EmbedBase.HelpEmbed(DSharpPlus.CommandsNext.CommandsNextExtension,DSharpPlus.CommandsNext.CommandContext,System.Boolean)">
+            <summary>
+            Generates the bot help command embed.
+            </summary>
+            <param name="cne"></param>
+            <param name="ctx"></param>
+            <param name="showHidden"></param>
+            <returns></returns>
+        </member>
+        <member name="M:sisbase.Utils.EmbedBase.CommandHelpEmbed(DSharpPlus.CommandsNext.Command)">
+            <summary>
+            Generates a new command help embed from a specified command.
+            </summary>
+            <param name="command">The command</param>
+            <returns></returns>
+        </member>
         <member name="T:sisbase.Utils.General">
             <summary>
             General utilities class
             </summary>
+        </member>
+        <member name="M:sisbase.Utils.General.AddCustomConfiguration``1(sisbase.Configuration.Sisbase,System.String,``0)">
+            <summary>
+            Adds a new custom configuration onto the bot config.
+            </summary>
+            <typeparam name="T"> Type of the custom configuration</typeparam>
+            <param name="s"></param>
+            <param name="key">The name of the custom configuration</param>
+            <param name="value"></param>
+        </member>
+        <member name="M:sisbase.Utils.General.RemoveCustomConfiguration(sisbase.Configuration.Sisbase,System.String)">
+            <summary>
+            Removes an existing custom configuration from the bot config.
+            </summary>
+            <param name="s"></param>
+            <param name="key">The name of the custom configuration</param>
+        </member>
+        <member name="M:sisbase.Utils.General.UpdateCustomConfiguration``1(sisbase.Configuration.Sisbase,System.String,``0)">
+            <summary>
+            Updates an existing custom configuration from the bot config.
+            </summary>
+            <typeparam name="T">Type of the custom configuration</typeparam>
+            <param name="s"></param>
+            <param name="key">The name of the custom configuration</param>
+            <param name="newValue">The updated value</param>
+        </member>
+        <member name="M:sisbase.Utils.General.GetCustomConfiguration``1(sisbase.Configuration.Sisbase,System.String)">
+            <summary>
+            Gets the value of an existing custom configuration from the bot config.
+            </summary>
+            <typeparam name="T"> Type of the custom configuration</typeparam>
+            <param name="s"></param>
+            <param name="key">The name of the custom configuration</param>
         </member>
         <member name="T:sisbase.Utils.IClientSystem">
             <summary>

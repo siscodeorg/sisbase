@@ -12,7 +12,7 @@ namespace sisbase.Utils
 		private static void WriteDate()
 		{
 			stdout.ResetColor();
-			stdout.Write($"<{DateTime.Now.ToString("MM/dd - HH:mm:ss")}> ");
+			stdout.Write($"<{DateTime.Now:MM/dd - HH:mm:ss}> ");
 		}
 
 		/// <summary>

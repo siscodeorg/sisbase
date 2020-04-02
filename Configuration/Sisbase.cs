@@ -11,9 +11,20 @@ namespace sisbase.Configuration
 	/// </summary>
 	public class Sisbase
 	{
+		/// <summary>
+		/// Path of the configuration
+		/// </summary>
 		public string JsonPath { get; private set; }
+
+		/// <summary>
+		/// The configuration
+		/// </summary>
 		public Json Config { get; private set; }
 
+		/// <summary>
+		/// Creates a new configuration from a provided path
+		/// </summary>
+		/// <param name="path">The path. Must be a directory.</param>
 		public Sisbase(string path)
 		{
 			var x = File.GetAttributes(path);
@@ -41,6 +52,9 @@ namespace sisbase.Configuration
 			}
 		}
 
+		/// <summary>
+		/// Updates the file of the config with the currently running config
+		/// </summary>
 		public void Update() => File.WriteAllText(JsonPath, JsonConvert.SerializeObject(Config, Formatting.Indented));
 	}
 }

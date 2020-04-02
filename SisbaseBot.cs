@@ -16,10 +16,23 @@ namespace sisbase
 	/// </summary>
 	public class SisbaseBot : IDisposable
 	{
+		/// <summary>
+		/// The currently running Instance
+		/// </summary>
 		public static SisbaseBot Instance { get; private set; }
+
+		/// <summary>
+		/// The configuration for the bot.
+		/// </summary>
 		public Sisbase SisbaseConfiguration { get; private set; }
+
+		/// <summary>
+		/// The DiscordClient
+		/// </summary>
 		public DiscordClient Client { get; private set; }
+
 		public CommandsNextExtension CommandsNext { get; private set; }
+
 		public InteractivityExtension Interactivity { get; private set; }
 		public SMC Systems { get; private set; }
 
@@ -70,7 +83,7 @@ namespace sisbase
 			{
 				case -1:
 					int x;
-					foreach (var prefix in Instance.SisbaseConfiguration.Config.Prefixes)
+					foreach (string prefix in Instance.SisbaseConfiguration.Config.Prefixes)
 					{
 						x = msg.GetStringPrefixLength(prefix);
 						if (x != -1)
@@ -86,14 +99,26 @@ namespace sisbase
 			return -1;
 		}
 
+		/// <summary>
+		/// Registers all systems and commands from a given assembly. The System and Command classes need to be public for registration
+		/// </summary>
+		/// <param name="asm">The assembly</param>
 		public void RegisterBot(Assembly asm)
 		{ Systems.RegisterSystems(asm); CommandsNext.RegisterCommands(asm); }
 
 #pragma warning restore CS1998
 
+		/// <summary>
+		/// Starts the bot instance
+		/// </summary>
+		/// <returns></returns>
 		public Task StartAsync()
 			=> Client.ConnectAsync();
 
+		/// <summary>
+		/// Disconnects the bot
+		/// </summary>
+		/// <returns></returns>
 		public Task DisconnectAsync()
 			=> Client.DisconnectAsync();
 

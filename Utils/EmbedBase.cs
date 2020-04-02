@@ -14,6 +14,12 @@ namespace sisbase.Utils
 	/// </summary>
 	public static class EmbedBase
 	{
+		/// <summary>
+		/// Generates a new group help embed from an specified command <br></br>
+		/// The comand must be a GroupCommand.
+		/// </summary>
+		/// <param name="Command"></param>
+		/// <returns></returns>
 		public static DiscordEmbed GroupHelpEmbed(Command Command)
 		{
 			var commands = new List<Command>();
@@ -38,6 +44,13 @@ namespace sisbase.Utils
 			return groupHelpEmbed.Build();
 		}
 
+		/// <summary>
+		/// Generates the bot help command embed.
+		/// </summary>
+		/// <param name="cne"></param>
+		/// <param name="ctx"></param>
+		/// <param name="showHidden"></param>
+		/// <returns></returns>
 		public static async Task<DiscordEmbed> HelpEmbed(this CommandsNextExtension cne, CommandContext ctx, bool showHidden = false)
 		{
 			var x = cne.RegisteredCommands.Values.ToList();
@@ -137,6 +150,11 @@ namespace sisbase.Utils
 			return listBuilder.Build();
 		}
 
+		/// <summary>
+		/// Generates a new command help embed from a specified command.
+		/// </summary>
+		/// <param name="command">The command</param>
+		/// <returns></returns>
 		public static DiscordEmbed CommandHelpEmbed(Command command)
 		{
 			if (command.Overloads?.Any() == true)
