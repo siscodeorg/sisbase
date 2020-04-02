@@ -1,7 +1,7 @@
-using System;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using sisbase.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,7 +13,7 @@ namespace sisbase.Utils
 	/// Utility for generating consistant embeds
 	/// </summary>
 	public static class EmbedBase
-	{		
+	{
 		public static DiscordEmbed GroupHelpEmbed(Command Command)
 		{
 			var commands = new List<Command>();
@@ -107,13 +107,13 @@ namespace sisbase.Utils
 			return outputEmbedBuilder.Build();
 		}
 
-		public static DiscordEmbed OrderedListEmbed<T>(List<T> list, string name, 
+		public static DiscordEmbed OrderedListEmbed<T>(List<T> list, string name,
 			CountingBehaviour behaviour = CountingBehaviour.Default)
 		{
 			string data = "";
 			foreach (var item in list)
 			{
-				if(behaviour == CountingBehaviour.Ordinal) data += $"{list.IndexOf(item) + 1}・{item.ToString()}\n";
+				if (behaviour == CountingBehaviour.Ordinal) data += $"{list.IndexOf(item) + 1}・{item.ToString()}\n";
 				else data += $"{list.IndexOf(item)}・{item.ToString()}\n";
 			}
 			var orderedListBuilder = new DiscordEmbedBuilder();
@@ -136,6 +136,7 @@ namespace sisbase.Utils
 				.WithColor(DiscordColor.Orange);
 			return listBuilder.Build();
 		}
+
 		public static DiscordEmbed CommandHelpEmbed(Command command)
 		{
 			if (command.Overloads?.Any() == true)

@@ -1,15 +1,16 @@
-﻿using System;
+﻿using sisbase.Configuration;
+using sisbase.Utils;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using sisbase;
-using sisbase.Configuration;
 
 namespace sisbase.Test
 {
-	class Program
+	internal class Program
 	{
 		private static CancellationTokenSource cts { get; } = new CancellationTokenSource();
+
 		private static async Task Main()
 		{
 			Console.CancelKeyPress += (sender, e) =>
@@ -18,12 +19,13 @@ namespace sisbase.Test
 					cts.Cancel();
 				e.Cancel = true;
 			};
+			var config = new Sisbase(Directory.GetCurrentDirectory());
 
+			config.AddCustomConfiguration<Json>("another config", new Json());
 			var sisbase = new SisbaseBot(
-				new Sisbase(Directory.GetCurrentDirectory())
+				config
 			);
-			sisbase.CommandsNext.RegisterCommands(typeof(Program).Assembly);
-			sisbase.Systems.RegisterSystems(typeof(Program).Assembly);
+			sisbase.RegisterBot(typeof(Program).Assembly);
 			await sisbase.StartAsync();
 			while (!cts.IsCancellationRequested)
 				await Task.Delay(1);

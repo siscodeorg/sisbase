@@ -6,7 +6,7 @@ using DSharpPlus.Interactivity.Enums;
 using sisbase.Configuration;
 using sisbase.Utils;
 using System;
-using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace sisbase
@@ -25,8 +25,7 @@ namespace sisbase
 
 		public SisbaseBot(Sisbase sisbaseConfiguration)
 		{
-
-			if(Instance != null)
+			if (Instance != null)
 				throw new InvalidOperationException("Instance is already running");
 			Instance = this;
 			SisbaseConfiguration = sisbaseConfiguration;
@@ -54,18 +53,17 @@ namespace sisbase
 					PollBehaviour = PollBehaviour.DeleteEmojis
 				}
 			);
-			
-			CommandsNext.RegisterCommands(typeof(SisbaseBot).Assembly);
 
 			Systems = new SMC();
 			Systems.RegisterSystems(typeof(SisbaseBot).Assembly);
+			CommandsNext.RegisterCommands(typeof(SisbaseBot).Assembly);
 		}
-
 
 		/// <summary>
 		/// Real-Time Prefix Resolver
 		/// </summary>
 #pragma warning disable CS1998
+
 		private async Task<int> RTPR(DiscordMessage msg)
 		{
 			switch (msg.GetMentionPrefixLength(Instance.Client.CurrentUser))
@@ -80,18 +78,25 @@ namespace sisbase
 					}
 
 					break;
+
 				default:
 					return msg.GetMentionPrefixLength(Instance.Client.CurrentUser);
 			}
 
 			return -1;
 		}
-#pragma warning restore CS1998 
+
+		public void RegisterBot(Assembly asm)
+		{ Systems.RegisterSystems(asm); CommandsNext.RegisterCommands(asm); }
+
+#pragma warning restore CS1998
 
 		public Task StartAsync()
 			=> Client.ConnectAsync();
+
 		public Task DisconnectAsync()
 			=> Client.DisconnectAsync();
+
 		~SisbaseBot() =>
 			Dispose(false);
 
@@ -108,7 +113,5 @@ namespace sisbase
 				Client.Dispose();
 			}
 		}
-
-
 	}
 }

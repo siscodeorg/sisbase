@@ -1,16 +1,17 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using sisbase.Utils;
+using System.Threading.Tasks;
 
 namespace sisbase.Test
 {
 	//Example on how to use the new mutate function.
+<<<<<<< HEAD
 	//You can use it on every DiscordEmbed. We only used on a EmbedBase' embed for simplicity sake.
+=======
+	//You can use it on every DiscordEmbed. We only used ot
+>>>>>>> develop
 	public class mutate : BaseCommandModule
 	{
 		[Command("mutate")]
