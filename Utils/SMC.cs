@@ -18,7 +18,7 @@ namespace sisbase.Utils
 		/// </summary>
 		public static ConcurrentDictionary<Type, ISystem> RegisteredSystems { get; set; } = new ConcurrentDictionary<Type, ISystem>();
 
-		public static void Register<T>() where T : IStaticSystem
+		internal static void Register<T>() where T : IStaticSystem
 		{
 			if (RegisteredSystems.ContainsKey(typeof(T)))
 			{
@@ -32,12 +32,19 @@ namespace sisbase.Utils
 				system.Activate();
 				system.Log("System Started");
 				system.Execute();
-				system.Log("System Loaded");
-				RegisteredSystems.AddOrUpdate(typeof(T), system, (key, old) => system);
+				if (system.Status == true)
+				{
+					system.Log("System Loaded");
+					RegisteredSystems.AddOrUpdate(typeof(T), system, (key, old) => system);
+				}
+				else
+				{
+					Logger.Warn("SMC", $"A system was unloaded.");
+				}
 			}
 		}
 
-		public static void Unregister<T>() where T : IStaticSystem
+		internal static void Unregister<T>() where T : IStaticSystem
 		{
 			if (RegisteredSystems.ContainsKey(typeof(T)))
 			{
@@ -70,7 +77,7 @@ namespace sisbase.Utils
 			}
 		}
 
-		private void Register(Type t)
+		internal void Register(Type t)
 		{
 			if (RegisteredSystems.ContainsKey(t))
 			{
@@ -92,7 +99,7 @@ namespace sisbase.Utils
 
 	public static class SMCExtensions
 	{
-		public static void Register<T>(this DiscordClient client) where T : IClientSystem
+		internal static void Register<T>(this DiscordClient client) where T : IClientSystem
 		{
 			if (SMC.RegisteredSystems.ContainsKey(typeof(T)))
 			{
@@ -106,14 +113,21 @@ namespace sisbase.Utils
 				system.Activate();
 				system.Log("System Started");
 				system.Execute();
-				system.ApplyToClient(client);
-				system.Log("System applied to client");
-				system.Log("System Loaded");
-				SMC.RegisteredSystems.AddOrUpdate(typeof(T), system, (key, old) => system);
+				if (system.Status == true)
+				{
+					system.ApplyToClient(client);
+					system.Log("System applied to client");
+					system.Log("System Loaded");
+					SMC.RegisteredSystems.AddOrUpdate(typeof(T), system, (key, old) => system);
+				}
+				else
+				{
+					Logger.Warn("SMC", $"A system was unloaded.");
+				}
 			}
 		}
 
-		public static void Register(this DiscordClient client, Type t)
+		internal static void Register(this DiscordClient client, Type t)
 		{
 			if (SMC.RegisteredSystems.ContainsKey(t))
 			{
@@ -126,16 +140,22 @@ namespace sisbase.Utils
 
 				system.Activate();
 				system.Log("System Started");
-				system.ApplyToClient(client);
-				system.Log("System applied to client");
 				system.Execute();
-
-				SMC.RegisteredSystems.AddOrUpdate(t, system, (key, old) => system);
-				system.Log("System Loaded");
+				if (system.Status == true)
+				{
+					system.ApplyToClient(client);
+					system.Log("System applied to client");
+					SMC.RegisteredSystems.AddOrUpdate(t, system, (key, old) => system);
+					system.Log("System Loaded");
+				}
+				else
+				{
+					Logger.Warn("SMC", $"A system was unloaded.");
+				}
 			}
 		}
 
-		public static void Unregister<T>() where T : IClientSystem
+		internal static void Unregister<T>() where T : IClientSystem
 		{
 			if (SMC.RegisteredSystems.ContainsKey(typeof(T)))
 			{
