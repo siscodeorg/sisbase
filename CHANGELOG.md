@@ -43,7 +43,11 @@ Using the new Extesion Methods from `sisbase.Utils` you too can add anything ont
 IF you need that a system be active for a command to execute, you now can just add this simple attribute to it (providing the  `Type` of said system of course) and it
 will only be executed **if** said system exists.
 
++ Simplified way to register a bot.
+
+Now you need to register a bot with `sisbase.RegisterBot()` isntead of manually registering the commands and systems.
+
 ### What broke :
 
 - If you used the token anywhere if your bot (which of course you shouldn't do anyways), you now can't since that property is `internal`.
-
+- Registering all systems from an assembly is now inaccessible since its `internal` , just replace it with the new unified way.
