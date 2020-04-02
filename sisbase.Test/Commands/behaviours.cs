@@ -10,14 +10,14 @@ namespace sisbase.Test.Commands
 	/// <summary>
 	/// Examples on how to use the new behaviours
 	/// </summary>
-	public class behaviours : BaseCommandModule
+	public class Behaviours : BaseCommandModule
 	{
 		[Command("counting")]
-		public async Task countingCommandFailed(CommandContext ctx) =>
+		public async Task CountingCommandFailed(CommandContext ctx) =>
 			await ctx.RespondAsync(embed: EmbedBase.CommandHelpEmbed(ctx.Command));
 
 		[Command("counting")]
-		public async Task countingCommand(CommandContext ctx, [Description("Ordinal Flag")] bool useOrdinal = false)
+		public async Task CountingCommand(CommandContext ctx, [Description("Ordinal Flag")] bool useOrdinal = false)
 		{
 			var list = new List<string> { "One", "Two", "Three" };
 			await ctx.RespondAsync(embed: EmbedBase.OrderedListEmbed(list,

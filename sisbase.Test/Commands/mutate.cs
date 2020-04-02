@@ -8,10 +8,10 @@ namespace sisbase.Test
 {
 	//Example on how to use the new mutate function.
 	//You can use it on every DiscordEmbed. We only used on a EmbedBase' embed for simplicity sake.
-	public class mutate : BaseCommandModule
+	public class Mutate : BaseCommandModule
 	{
 		[Command("mutate")]
-		public async Task mutateCmd(CommandContext ctx)
+		public async Task MutateCmd(CommandContext ctx)
 		{
 			var embed = EmbedBase.OutputEmbed("Starting Embed");
 			await ctx.RespondAsync(embed: embed);
