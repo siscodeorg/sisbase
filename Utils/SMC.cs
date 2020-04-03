@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace sisbase.Utils
 {
@@ -20,8 +19,7 @@ namespace sisbase.Utils
 		/// </summary>
 		public static ConcurrentDictionary<Type, ISystem> RegisteredSystems { get; set; } = new ConcurrentDictionary<Type, ISystem>();
 
-		public static ConcurrentDictionary<Type, CancellableTask> RegisteredTimers { get; set; } = new ConcurrentDictionary<Type, CancellableTask>();
-
+		public static ConcurrentDictionary<Type, Timer> RegisteredTimers { get; set; } = new ConcurrentDictionary<Type, Timer>();
 
 		internal void RegisterSystems(Assembly assembly)
 		{
@@ -53,21 +51,24 @@ namespace sisbase.Utils
 				system.Activate();
 				system.Log("System Started");
 				system.Execute();
-				if (typeof(ISchedule).IsAssignableFrom(t))
+				if (system.Status == true)
 				{
-					var cts = new CancellationTokenSource();
-					RegisteredTimers.TryAdd(t,
-						new CancellableTask(GenerateNewTimer(
+					if (typeof(ISchedule).IsAssignableFrom(t))
+					{
+						RegisteredTimers.TryAdd(t, CreateNewTimer(
 							((ISchedule)system).Timeout,
-							((ISchedule)system).RunContinuous(),
-							cts
-						), cts));
-
-					RegisteredTimers[t].Task.Start();
-					system.Log("Timer Created");
+							((ISchedule)system).RunContinuous()
+							));
+						RegisteredTimers[t].Change(TimeSpan.FromSeconds(1), ((ISchedule)system).Timeout);
+						system.Log("Timer started");
+					}
+					RegisteredSystems.AddOrUpdate(t, system, (key, old) => system);
+					system.Log("System Loaded");
 				}
-				system.Log("System Loaded");
-				RegisteredSystems.AddOrUpdate(t, system, (key, old) => system);
+				else
+				{
+					Logger.Warn("SMC", $"A system was unloaded.");
+				}
 			}
 		}
 
@@ -78,13 +79,12 @@ namespace sisbase.Utils
 				ISystem system;
 				RegisteredSystems.TryGetValue(t, out system);
 				system.Warn("System is disabling...");
-				system.Deactivate();
 				if (typeof(ISchedule).IsAssignableFrom(t))
 				{
-					RegisteredTimers[t].Cts.Cancel();
-					RegisteredTimers.TryRemove(t, out _);
-					Logger.Log("SMC", "A Timer was destroyed");
+					RegisteredTimers[t].Dispose();
+					system.Warn("Timer stopped");
 				}
+				system.Deactivate();
 				RegisteredSystems.TryRemove(t, out system);
 				Logger.Log("SMC", $"A System was disabled : {system.Name}");
 			}
@@ -93,6 +93,9 @@ namespace sisbase.Utils
 				Logger.Warn("SMC", "An unregistered system has attemped unregistering.");
 			}
 		}
+
+		internal static Timer CreateNewTimer(TimeSpan timeout, Action action) =>
+			new Timer(new TimerCallback(x => action()), null, TimeSpan.FromSeconds(1), timeout);
 	}
 
 	public static class SMCExtensions
@@ -117,18 +120,13 @@ namespace sisbase.Utils
 					system.Log("System applied to client");
 					if (typeof(ISchedule).IsAssignableFrom(t))
 					{
-						var cts = new CancellationTokenSource();
-						SMC.RegisteredTimers.TryAdd(t,
-							new CancellableTask(SMC.GenerateNewTimer(
-								((ISchedule)system).Timeout,
-								((ISchedule)system).RunContinuous(),
-								cts
-							), cts));
-
-						SMC.RegisteredTimers[t].Task.Start();
-						Logger.Log(system, "Timer Created");
+						SMC.RegisteredTimers.TryAdd(t, SMC.CreateNewTimer(
+							((ISchedule)system).Timeout,
+							((ISchedule)system).RunContinuous()
+							));
+						SMC.RegisteredTimers[t].Change(TimeSpan.FromMilliseconds(-1), ((ISchedule)system).Timeout);
+						system.Log("Timer started");
 					}
-
 					SMC.RegisteredSystems.AddOrUpdate(t, system, (key, old) => system);
 					system.Log("System Loaded");
 				}
