@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace sisbase.Utils
 {
 	/// <summary>
-	/// Interface for running scheduled functions
+	/// Interface for running a scheduled function on systems
 	/// </summary>
+
 	public interface ISchedule : ISystem
 	{
 		/// <summary>
