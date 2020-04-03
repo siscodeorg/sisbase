@@ -1,7 +1,5 @@
 ﻿using sisbase.Utils;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace sisbase.Test.Systems
 {
@@ -18,7 +16,7 @@ namespace sisbase.Test.Systems
 			Name = "TimedSystem";
 			Description = "A dummy System to test the scheduler";
 			Status = true;
-			Timeout = TimeSpan.FromMinutes(2);
+			Timeout = TimeSpan.FromSeconds(10);
 		}
 
 		public void Deactivate()
