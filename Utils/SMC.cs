@@ -22,80 +22,6 @@ namespace sisbase.Utils
 
 		public static ConcurrentDictionary<Type, CancellableTask> RegisteredTimers { get; set; } = new ConcurrentDictionary<Type, CancellableTask>();
 
-		internal static void Register<T>() where T : IStaticSystem
-		{
-			if (RegisteredSystems.ContainsKey(typeof(T)))
-			{
-				ISystem system;
-				RegisteredSystems.TryGetValue(typeof(T), out system);
-				system.Warn("This system is already registered");
-			}
-			else
-			{
-				var system = Activator.CreateInstance<T>();
-				system.Activate();
-				system.Log("System Started");
-				system.Execute();
-				if (system.Status == true)
-				{
-					system.Log("System Loaded");
-					if (typeof(ISchedule).IsAssignableFrom(typeof(T)))
-					{
-						var cts = new CancellationTokenSource();
-						RegisteredTimers.TryAdd(typeof(T),
-							new CancellableTask(GenerateNewTimer(
-								((ISchedule)system).Timeout,
-								((ISchedule)system).RunContinuous(),
-								cts
-							), cts));
-
-						RegisteredTimers[typeof(T)].Task.Start();
-						Logger.Log(system, "Timer Created");
-					}
-					RegisteredSystems.AddOrUpdate(typeof(T), system, (key, old) => system);
-				}
-				else
-				{
-					Logger.Warn("SMC", $"A system was unloaded.");
-				}
-			}
-		}
-
-		internal static Task GenerateNewTimer(TimeSpan timeout, Action Function, CancellationTokenSource cts)
-		{
-			var k = new Task(() =>
-			{
-				while (!cts.IsCancellationRequested)
-				{
-					Task.Delay(timeout).Wait();
-					Function();
-				}
-			});
-			return k;
-		}
-
-		internal static void Unregister<T>() where T : IStaticSystem
-		{
-			if (RegisteredSystems.ContainsKey(typeof(T)))
-			{
-				ISystem system;
-				RegisteredSystems.TryGetValue(typeof(T), out system);
-				system.Warn("System is disabling...");
-				system.Deactivate();
-				if (typeof(ISchedule).IsAssignableFrom(typeof(T)))
-				{
-					RegisteredTimers[typeof(T)].Cts.Cancel();
-					RegisteredTimers.TryRemove(typeof(T), out _);
-					Logger.Log("SMC", "A Timer was destroyed");
-				}
-				RegisteredSystems.TryRemove(typeof(T), out system);
-				Logger.Log("SMC", $"A System was disabled : {system.Name}");
-			}
-			else
-			{
-				Logger.Warn("SMC", "An unregistered system has attemped unregistering.");
-			}
-		}
 
 		internal void RegisterSystems(Assembly assembly)
 		{
@@ -171,48 +97,6 @@ namespace sisbase.Utils
 
 	public static class SMCExtensions
 	{
-		internal static void Register<T>(this DiscordClient client) where T : IClientSystem
-		{
-			if (SMC.RegisteredSystems.ContainsKey(typeof(T)))
-			{
-				ISystem system;
-				SMC.RegisteredSystems.TryGetValue(typeof(T), out system);
-				system.Warn("This system is already registered");
-			}
-			else
-			{
-				var system = Activator.CreateInstance<T>();
-				system.Activate();
-				system.Log("System Started");
-				system.Execute();
-				if (system.Status == true)
-				{
-					system.ApplyToClient(client);
-					system.Log("System applied to client");
-					if (typeof(ISchedule).IsAssignableFrom(typeof(T)))
-					{
-						var cts = new CancellationTokenSource();
-						SMC.RegisteredTimers.TryAdd(typeof(T),
-							new CancellableTask(SMC.GenerateNewTimer(
-								((ISchedule)system).Timeout,
-								((ISchedule)system).RunContinuous(),
-								cts
-							), cts));
-
-						SMC.RegisteredTimers[typeof(T)].Task.Start();
-						Logger.Log(system, "Timer Created");
-					}
-
-					system.Log("System Loaded");
-					SMC.RegisteredSystems.AddOrUpdate(typeof(T), system, (key, old) => system);
-				}
-				else
-				{
-					Logger.Warn("SMC", $"A system was unloaded.");
-				}
-			}
-		}
-
 		internal static void Register(this DiscordClient client, Type t)
 		{
 			if (SMC.RegisteredSystems.ContainsKey(t))
@@ -252,52 +136,6 @@ namespace sisbase.Utils
 				{
 					Logger.Warn("SMC", $"A system was unloaded.");
 				}
-			}
-		}
-
-		internal static void Unregister<T>() where T : IClientSystem
-		{
-			if (SMC.RegisteredSystems.ContainsKey(typeof(T)))
-			{
-				ISystem system;
-				SMC.RegisteredSystems.TryGetValue(typeof(T), out system);
-				system.Warn("System is disabling...");
-				system.Deactivate();
-				if (typeof(ISchedule).IsAssignableFrom(typeof(T)))
-				{
-					SMC.RegisteredTimers[typeof(T)].Cts.Cancel();
-					SMC.RegisteredTimers.TryRemove(typeof(T), out _);
-					Logger.Log("SMC", "A Timer was destroyed");
-				}
-				SMC.RegisteredSystems.TryRemove(typeof(T), out system);
-				Logger.Log("SMC", $"A System was disabled : {system.Name}");
-			}
-			else
-			{
-				Logger.Warn("SMC", "An unregistered system has attemped unregistering.");
-			}
-		}
-
-		internal static void Unregister(Type t)
-		{
-			if (SMC.RegisteredSystems.ContainsKey(t))
-			{
-				ISystem system;
-				SMC.RegisteredSystems.TryGetValue(t, out system);
-				system.Warn("System is disabling...");
-				system.Deactivate();
-				if (typeof(ISchedule).IsAssignableFrom(t))
-				{
-					SMC.RegisteredTimers[t].Cts.Cancel();
-					SMC.RegisteredTimers.TryRemove(t, out _);
-					Logger.Log("SMC", "A Timer was destroyed");
-				}
-				SMC.RegisteredSystems.TryRemove(t, out system);
-				Logger.Log("SMC", $"A System was disabled : {system.Name}");
-			}
-			else
-			{
-				Logger.Warn("SMC", "An unregistered system has attemped unregistering.");
 			}
 		}
 
