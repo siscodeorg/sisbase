@@ -61,6 +61,23 @@ namespace sisbase.Commands
 			var embed = EmbedBase.ListEmbed(allSystems, "Systems");
 			await ctx.RespondAsync(embed: embed);
 		}
+
+		[Command("disable")]
+		[Description("Disables and unregisters a system")]
+		public async Task Disable(CommandContext ctx)
+		{
+			var allSystems = SMC.RegisteredSystems.Select(k => k.Value.Name).ToList();
+			var embed = EmbedBase.OrderedListEmbed(allSystems, "Systems").Mutate(x =>
+			x.WithTitle("Please select the system you want to disable [number]")
+			 .WithAuthor(null)
+			 .WithColor(DiscordColor.Red));
+			var message = await ctx.RespondAsync(embed: embed);
+			var response = await ctx.Message.GetNextMessageAsync();
+			int.TryParse(response.Result.Content.Split(" ").Where(x => int.TryParse(x, out _)).ToList()[0], out int select);
+			var systemType = SMC.RegisteredSystems.Where(x => x.Value.Name == allSystems[select]).FirstOrDefault();
+			SMC.Unregister(systemType.Key);
+			await message.ModifyAsync(embed: EmbedBase.OutputEmbed($"Sucesfully unregistered {allSystems[select]}"));
+		}
 	}
 
 	[OniiSan] // Sets group to be only executable on the master server
