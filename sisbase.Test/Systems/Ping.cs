@@ -2,6 +2,7 @@
 using DSharpPlus.EventArgs;
 using sisbase.Utils;
 using System;
+using System.Threading.Tasks;
 
 namespace sisbase.Test.Systems
 {
@@ -18,21 +19,26 @@ namespace sisbase.Test.Systems
 			Status = true;
 		}
 
-		public void ApplyToClient(DiscordClient client) => client.MessageCreated += async delegate (MessageCreateEventArgs args)
+		public void ApplyToClient(DiscordClient client)
 		{
-			if (args.Message.Content == "bot gives ping")
+			client.MessageCreated += MessageCreated;
+		}
+
+		private async Task MessageCreated(MessageCreateEventArgs e)
+		{
+			if (e.Message.Content == "bot gives ping")
 			{
-				await args.Message.RespondAsync($"Ping : **{client.Ping}ms**");
-				this.Log($"{args.Author.Username} requested the ping");
+				await e.Message.RespondAsync($"Ping : **{e.Client.Ping}ms**");
+				this.Log($"{e.Message.Author.Username} requested the ping");
 			}
-		};
+		}
 
 		public void Deactivate()
 		{
 			Name = null;
 			Description = null;
 			Status = false;
-			GC.SuppressFinalize(this);
+			SisbaseBot.Instance.Client.MessageCreated -= MessageCreated;
 		}
 
 		public void Execute() => Console.WriteLine("This was called inside of an Execute Block");
