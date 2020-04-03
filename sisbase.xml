@@ -232,6 +232,21 @@
             </summary>
             <param name="client">The currrent client</param>
         </member>
+        <member name="T:sisbase.Utils.ISchedule">
+            <summary>
+            Interface for running a scheduled function on systems
+            </summary>
+        </member>
+        <member name="P:sisbase.Utils.ISchedule.Timeout">
+            <summary>
+            Timeout for the schedule
+            </summary>
+        </member>
+        <member name="M:sisbase.Utils.ISchedule.RunContinuous">
+            <summary>
+            What will be run after the timeout elapses
+            </summary>
+        </member>
         <member name="T:sisbase.Utils.IStaticSystem">
             <summary>
             Interface for systems that don't require connection to <see cref="N:DSharpPlus"/>
