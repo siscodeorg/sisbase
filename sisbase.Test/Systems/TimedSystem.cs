@@ -29,6 +29,9 @@ namespace sisbase.Test.Systems
 
 		public void Execute() => Logger.Log(this, "Command Executed from Execute()");
 
-		public Action RunContinuous() => new Action(() => Logger.Log(this, "Command Executed from RunContinuous()"));
+		public Action RunContinuous => new Action(() =>
+		{
+			Logger.Log(this, "Executed RunContinuous");
+		});
 	}
 }
