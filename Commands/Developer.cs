@@ -5,9 +5,11 @@ using DSharpPlus.Interactivity;
 using Newtonsoft.Json;
 using sisbase.Attributes;
 using sisbase.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace sisbase.Commands
@@ -79,6 +81,50 @@ namespace sisbase.Commands
 			var systemType = SMC.RegisteredSystems.Where(x => x.Value.Name == allSystems[select]).FirstOrDefault();
 			SMC.Unregister(systemType.Key);
 			await message.ModifyAsync(embed: EmbedBase.OutputEmbed($"Sucesfully unregistered {allSystems[select]}"));
+		}
+
+		[Command("reload")]
+		[Description("Reloads the SMC and registers any Systems that weren't registered")]
+		public async Task Reload(CommandContext ctx)
+		{
+			var allSystems = new Func<Assembly, List<Type>>(
+				(x) => x.ExportedTypes.Where(T => T.GetTypeInfo().IsSystemCandidate()).ToList()
+			);
+			var Data = new Dictionary<Assembly, List<Type>>();
+			foreach (var x in SMC.RegisteredAssemblies)
+			{
+				var data = allSystems(x).Where(t => !SMC.RegisteredSystems.ContainsKey(t)).ToList();
+				Data.Add(x, data);
+			}
+
+			var typeToStrBool = new Func<Type, KeyValuePair<string, bool>>(
+					(T) => new KeyValuePair<string, bool>($"`{T.Name}`", SisbaseBot.Instance.Systems.Register(T)));
+			var convert = new Func<KeyValuePair<Assembly, List<Type>>,
+				KeyValuePair<Assembly, Dictionary<string, bool>>
+				>(
+					(kvp) => new KeyValuePair<Assembly, Dictionary<string, bool>>(
+						kvp.Key,
+						kvp.Value.Select(x => typeToStrBool(x)).ToDictionary(x => x.Key, x => x.Value)
+				));
+
+			if (Data.Any(k => k.Value.Count > 0))
+			{
+				var Embed = EmbedBase.OutputEmbed("SMC Reloaded. ΔSystem Status:");
+				var Information = Data.Select(dict => convert(dict)).ToDictionary(x => x.Key, x => x.Value);
+				foreach (var kvp in Information)
+				{
+					var i1 = kvp.Value.Select(_kvp => $"{(_kvp.Value ? "✅" : "❌")} - {_kvp.Key}").ToList();
+					string i0 = string.Join("\n", i1);
+					string i2 = kvp.Key.GetName().Name;
+					if (string.IsNullOrEmpty(i0)) continue;
+					Embed = Embed.Mutate(x => x.AddField(i2, i0));
+				}
+				await ctx.RespondAsync(embed: Embed);
+			}
+			else
+			{
+				await ctx.RespondAsync(embed: EmbedBase.OutputEmbed("All Systems were already loaded. No new systems were registerd"));
+			}
 		}
 	}
 
