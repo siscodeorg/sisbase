@@ -12,9 +12,12 @@
         <Copyright>© siscode , All Rights Registered, 2020</Copyright>
         <NeutralLanguage>en</NeutralLanguage>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <AssemblyVersion>1.2.1.0</AssemblyVersion>
-        <FileVersion>1.2.1.0</FileVersion>
-        <Version>1.2.1</Version>
+        <AssemblyVersion>1.2.2.0</AssemblyVersion>
+        <FileVersion>1.2.2.0</FileVersion>
+        <Version>1.2.2-pre</Version>
+        <RepositoryUrl>https://gitlab.com/siscode/sisbase/</RepositoryUrl>
+        <PackageProjectUrl>https://gitlab.com/siscode/sisbase/-/</PackageProjectUrl>
+        <PackageIcon>sisbase.png</PackageIcon>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -25,6 +28,10 @@
       <Compile Remove="sisbase.Test\**" />
       <EmbeddedResource Remove="sisbase.Test\**" />
       <None Remove="sisbase.Test\**" />
+      <None Include="..\..\..\Pictures\sisbase.png">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
