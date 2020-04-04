@@ -1,6 +1,7 @@
 ﻿using DSharpPlus;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -24,8 +25,11 @@ namespace sisbase.Utils
 		/// </summary>
 		public static ConcurrentDictionary<Type, Timer> RegisteredTimers { get; set; } = new ConcurrentDictionary<Type, Timer>();
 
+		internal static List<Assembly> RegisteredAssemblies { get; set; } = new List<Assembly>();
+
 		internal void RegisterSystems(Assembly assembly)
 		{
+			if (!RegisteredAssemblies.Contains(assembly)) RegisteredAssemblies.Add(assembly);
 			var Ts = assembly.ExportedTypes.Where(T => T.GetTypeInfo().IsSystemCandidate());
 			foreach (var T in Ts)
 			{
