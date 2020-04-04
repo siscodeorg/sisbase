@@ -6,8 +6,32 @@
     <members>
         <member name="T:sisbase.Attributes.EmojiAttribute">
             <summary>
-            Atribute that sets the emoji for the group help
+            Atribute that sets the emoji for the command group
             </summary>
+        </member>
+        <member name="F:sisbase.Attributes.EmojiAttribute.Emoji">
+            <summary>
+            The emoji that will be used by the command group
+            </summary>
+        </member>
+        <member name="M:sisbase.Attributes.EmojiAttribute.#ctor(DSharpPlus.Entities.DiscordEmoji)">
+            <summary>
+            Constructs a new EmojiAttribute from a <see cref="T:DSharpPlus.Entities.DiscordEmoji"/>
+            </summary>
+            <param name="emoji">The emoji</param>
+        </member>
+        <member name="M:sisbase.Attributes.EmojiAttribute.#ctor(System.String)">
+            <summary>
+            Constructs a new EmojiAttribute from an unicode name <br></br>
+            Eg. :computer: , :white_check_mark:
+            </summary>
+            <param name="unicode">The unicode string  (requires being surrounded by colons)</param>
+        </member>
+        <member name="M:sisbase.Attributes.EmojiAttribute.#ctor(System.UInt64)">
+            <summary>
+            Constructs a new EmojiAttribute from an known guild emoji id.
+            </summary>
+            <param name="id">The id</param>
         </member>
         <member name="T:sisbase.Attributes.ImoutoAttribute">
             <summary>
@@ -24,11 +48,35 @@
             Attribute that checks if a command was executed with an specified prefix
             </summary>
         </member>
+        <member name="P:sisbase.Attributes.PrefixAttribute.Prefix">
+            <summary>
+            The prefix
+            </summary>
+        </member>
+        <member name="M:sisbase.Attributes.PrefixAttribute.#ctor(System.String)">
+            <summary>
+            Constructs a new PrefixAttribute from a given prefix
+            </summary>
+            <param name="prefix">The prefix</param>
+        </member>
         <member name="T:sisbase.Attributes.RequireSystemAttribute">
             <summary>
             Attribute that checks if an specified system is registered on the <see cref="T:sisbase.Utils.SMC"/>.<br></br>
             If the system exists the command is executed.
             </summary>
+        </member>
+        <member name="F:sisbase.Attributes.RequireSystemAttribute.System">
+            <summary>
+            The System
+            </summary>
+        </member>
+        <member name="M:sisbase.Attributes.RequireSystemAttribute.#ctor(System.Type)">
+            <summary>
+            Constructs a new RequireSystemAttribute from a given system type.
+            </summary>
+            <param name="t">The system type <br></br>
+            Must inherits <see cref="T:sisbase.Utils.ISystem"/>
+            </param>
         </member>
         <member name="T:sisbase.Commands.Developer">
             <summary>
@@ -106,6 +154,28 @@
             The DiscordClient
             </summary>
         </member>
+        <member name="P:sisbase.SisbaseBot.CommandsNext">
+            <summary>
+            The CommandsNextExtension for the <see cref="P:sisbase.SisbaseBot.Client"/>
+            </summary>
+        </member>
+        <member name="P:sisbase.SisbaseBot.Interactivity">
+            <summary>
+            The InteractivityExtension for the <see cref="P:sisbase.SisbaseBot.Client"/>
+            </summary>
+        </member>
+        <member name="P:sisbase.SisbaseBot.Systems">
+            <summary>
+            The System Managment Controller<br></br>
+            Responsible for registry and unregistry of all Systems.
+            </summary>
+        </member>
+        <member name="M:sisbase.SisbaseBot.#ctor(sisbase.Configuration.Sisbase)">
+            <summary>
+            Constructs a new <see cref="T:sisbase.SisbaseBot"/> from a given configuration
+            </summary>
+            <param name="sisbaseConfiguration"> The configuration used by the bot.</param>
+        </member>
         <member name="M:sisbase.SisbaseBot.RTPR(DSharpPlus.Entities.DiscordMessage)">
             <summary>
             Real-Time Prefix Resolver
@@ -176,11 +246,54 @@
             <param name="showHidden"></param>
             <returns></returns>
         </member>
+        <member name="M:sisbase.Utils.EmbedBase.InputEmbed(System.String)">
+            <summary>
+            Generates a new <see cref="T:DSharpPlus.Entities.DiscordEmbed"/> from a given query string. <br></br>
+            Prepends "Please Type : " to the given string.
+            /// </summary>
+            <param name="input">The string</param>
+            <returns></returns>
+        </member>
+        <member name="M:sisbase.Utils.EmbedBase.OutputEmbed(System.String)">
+            <summary>
+            Generates a new <see cref="T:DSharpPlus.Entities.DiscordEmbed"/> from a given string
+            </summary>
+            <param name="output">The string that will be set as the description</param>
+            <returns></returns>
+        </member>
+        <member name="M:sisbase.Utils.EmbedBase.OrderedListEmbed``1(System.Collections.Generic.List{``0},System.String,sisbase.Utils.Behaviours.CountingBehaviour)">
+            <summary>
+            Generates a new <see cref="T:DSharpPlus.Entities.DiscordEmbed"/> with all the items on that list <br></br>
+            with an index added to each entry.
+            </summary>
+            <typeparam name="T">The type of said list</typeparam>
+            <param name="list">The list</param>
+            <param name="name">Name that will be displayed on the embed.</param>
+            <param name="behaviour">An <see cref="T:sisbase.Utils.Behaviours.CountingBehaviour"/>, defaults to <see cref="F:sisbase.Utils.Behaviours.CountingBehaviour.Default"/></param>
+            <returns></returns>
+        </member>
+        <member name="M:sisbase.Utils.EmbedBase.ListEmbed``1(System.Collections.Generic.IEnumerable{``0},System.String)">
+            <summary>
+            Generates a new <see cref="T:DSharpPlus.Entities.DiscordEmbed"/> with all the items on that list
+            </summary>
+            <typeparam name="T">The type of said list</typeparam>
+            <param name="list">The list</param>
+            <param name="name">Name that will be displayed on the embed.</param>
+            <returns></returns>
+        </member>
         <member name="M:sisbase.Utils.EmbedBase.CommandHelpEmbed(DSharpPlus.CommandsNext.Command)">
             <summary>
             Generates a new command help embed from a specified command.
             </summary>
             <param name="command">The command</param>
+            <returns></returns>
+        </member>
+        <member name="M:sisbase.Utils.EmbedBase.Mutate(DSharpPlus.Entities.DiscordEmbed,System.Action{DSharpPlus.Entities.DiscordEmbedBuilder})">
+            <summary>
+            Mutates a given <see cref="T:DSharpPlus.Entities.DiscordEmbed"/> with an given transformation
+            </summary>
+            <param name="embed">The embed that will be mutated</param>
+            <param name="func">The transformation</param>
             <returns></returns>
         </member>
         <member name="T:sisbase.Utils.General">
@@ -335,6 +448,16 @@
         <member name="P:sisbase.Utils.SMC.RegisteredSystems">
             <summary>
             All of the current registerred systems on the SMC
+            </summary>
+        </member>
+        <member name="P:sisbase.Utils.SMC.RegisteredTimers">
+            <summary>
+            All of the current registered timers on the SMC
+            </summary>
+        </member>
+        <member name="T:sisbase.Utils.SMCExtensions">
+            <summary>
+            Provides extension methods for the <see cref="T:sisbase.Utils.SMC"/>
             </summary>
         </member>
     </members>
