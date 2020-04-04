@@ -355,7 +355,7 @@
             Timeout for the schedule
             </summary>
         </member>
-        <member name="M:sisbase.Utils.ISchedule.RunContinuous">
+        <member name="P:sisbase.Utils.ISchedule.RunContinuous">
             <summary>
             What will be run after the timeout elapses
             </summary>
