@@ -40,12 +40,13 @@ namespace sisbase.Utils
 			}
 		}
 
-		internal void Register(Type t)
+		internal bool Register(Type t)
 		{
 			if (RegisteredSystems.ContainsKey(t))
 			{
 				RegisteredSystems.TryGetValue(t, out var system);
 				system.Warn("This system is already registered");
+				return true;
 			}
 			else
 			{
@@ -67,15 +68,17 @@ namespace sisbase.Utils
 					}
 					RegisteredSystems.AddOrUpdate(t, system, (key, old) => system);
 					system.Log("System Loaded");
+					return true;
 				}
 				else
 				{
 					Logger.Warn("SMC", $"A system was unloaded.");
+					return false;
 				}
 			}
 		}
 
-		internal static void Unregister(Type t)
+		internal static bool Unregister(Type t)
 		{
 			if (RegisteredSystems.ContainsKey(t))
 			{
@@ -90,10 +93,12 @@ namespace sisbase.Utils
 				system.Deactivate();
 				RegisteredSystems.TryRemove(t, out system);
 				Logger.Log("SMC", $"A System was disabled : {system.Name}");
+				return true;
 			}
 			else
 			{
 				Logger.Warn("SMC", "An unregistered system has attemped unregistering.");
+				return false;
 			}
 		}
 
@@ -106,12 +111,13 @@ namespace sisbase.Utils
 	/// </summary>
 	public static class SMCExtensions
 	{
-		internal static void Register(this DiscordClient client, Type t)
+		internal static bool Register(this DiscordClient client, Type t)
 		{
 			if (SMC.RegisteredSystems.ContainsKey(t))
 			{
 				SMC.RegisteredSystems.TryGetValue(t, out var system);
 				system.Warn("This system is already registered");
+				return true;
 			}
 			else
 			{
@@ -135,10 +141,12 @@ namespace sisbase.Utils
 					}
 					SMC.RegisteredSystems.AddOrUpdate(t, system, (key, old) => system);
 					system.Log("System Loaded");
+					return true;
 				}
 				else
 				{
 					Logger.Warn("SMC", $"A system was unloaded.");
+					return false;
 				}
 			}
 		}
