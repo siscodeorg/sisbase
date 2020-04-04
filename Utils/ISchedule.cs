@@ -16,6 +16,6 @@ namespace sisbase.Utils
 		/// <summary>
 		/// What will be run after the timeout elapses
 		/// </summary>
-		Action RunContinuous();
+		Action RunContinuous { get; }
 	}
 }

@@ -60,7 +60,7 @@ namespace sisbase.Utils
 					{
 						RegisteredTimers.TryAdd(t, CreateNewTimer(
 							((ISchedule)system).Timeout,
-							((ISchedule)system).RunContinuous()
+							((ISchedule)system).RunContinuous
 							));
 						RegisteredTimers[t].Change(TimeSpan.FromSeconds(1), ((ISchedule)system).Timeout);
 						system.Log("Timer started");
@@ -128,7 +128,7 @@ namespace sisbase.Utils
 					{
 						SMC.RegisteredTimers.TryAdd(t, SMC.CreateNewTimer(
 							((ISchedule)system).Timeout,
-							((ISchedule)system).RunContinuous()
+							((ISchedule)system).RunContinuous
 							));
 						SMC.RegisteredTimers[t].Change(TimeSpan.FromMilliseconds(-1), ((ISchedule)system).Timeout);
 						system.Log("Timer started");
