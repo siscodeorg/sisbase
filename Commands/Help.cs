@@ -12,6 +12,7 @@ namespace sisbase.Commands
 	{
 		// This is a sample help command.
 		[Command("help")]
+#pragma warning disable CS1591
 		public async Task helpCommand(CommandContext ctx) => await ctx.RespondAsync(embed: await ctx.CommandsNext.HelpEmbed(ctx));
 
 		[Command("help")]

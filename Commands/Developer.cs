@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 
 namespace sisbase.Commands
 {
+#pragma warning disable CS1591
+
 	/// <summary>
 	/// Bot-Owner Only Commands
 	/// </summary>

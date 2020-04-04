@@ -100,6 +100,12 @@ namespace sisbase.Utils
 			return helpBuilder.Build();
 		}
 
+		/// <summary>
+		/// Generates a new <see cref="DiscordEmbed"/> from a given query string. <br></br>
+		/// Prepends "Please Type : " to the given string.
+		/// /// </summary>
+		/// <param name="input">The string</param>
+		/// <returns></returns>
 		public static DiscordEmbed InputEmbed(string input)
 		{
 			var inputEmbedBuilder = new DiscordEmbedBuilder();
@@ -110,6 +116,11 @@ namespace sisbase.Utils
 			return inputEmbedBuilder.Build();
 		}
 
+		/// <summary>
+		/// Generates a new <see cref="DiscordEmbed"/> from a given string
+		/// </summary>
+		/// <param name="output">The string that will be set as the description</param>
+		/// <returns></returns>
 		public static DiscordEmbed OutputEmbed(string output)
 		{
 			var outputEmbedBuilder = new DiscordEmbedBuilder();
@@ -120,6 +131,15 @@ namespace sisbase.Utils
 			return outputEmbedBuilder.Build();
 		}
 
+		/// <summary>
+		/// Generates a new <see cref="DiscordEmbed"/> with all the items on that list <br></br>
+		/// with an index added to each entry.
+		/// </summary>
+		/// <typeparam name="T">The type of said list</typeparam>
+		/// <param name="list">The list</param>
+		/// <param name="name">Name that will be displayed on the embed.</param>
+		/// <param name="behaviour">An <see cref="CountingBehaviour"/>, defaults to <see cref="CountingBehaviour.Default"/></param>
+		/// <returns></returns>
 		public static DiscordEmbed OrderedListEmbed<T>(List<T> list, string name,
 			CountingBehaviour behaviour = CountingBehaviour.Default)
 		{
@@ -138,6 +158,13 @@ namespace sisbase.Utils
 			return orderedListBuilder.Build();
 		}
 
+		/// <summary>
+		/// Generates a new <see cref="DiscordEmbed"/> with all the items on that list
+		/// </summary>
+		/// <typeparam name="T">The type of said list</typeparam>
+		/// <param name="list">The list</param>
+		/// <param name="name">Name that will be displayed on the embed.</param>
+		/// <returns></returns>
 		public static DiscordEmbed ListEmbed<T>(IEnumerable<T> list, string name)
 		{
 			string data = list.Aggregate("", (current, item) => current + $"・{item.ToString()}\n");
@@ -201,6 +228,12 @@ namespace sisbase.Utils
 			}
 		}
 
+		/// <summary>
+		/// Mutates a given <see cref="DiscordEmbed"/> with an given transformation
+		/// </summary>
+		/// <param name="embed">The embed that will be mutated</param>
+		/// <param name="func">The transformation</param>
+		/// <returns></returns>
 		public static DiscordEmbed Mutate(this DiscordEmbed embed, Action<DiscordEmbedBuilder> func)
 		{
 			var builder = new DiscordEmbedBuilder(embed);

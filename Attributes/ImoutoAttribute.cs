@@ -11,7 +11,7 @@ namespace sisbase.Attributes
 	/// </summary>
 	public class ImoutoAttribute : CheckBaseAttribute
 	{
-#pragma warning disable CS1998
+#pragma warning disable CS1998, CS1591
 
 		public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help) => ctx.Member.Roles.Any(x => x.Permissions.HasPermission(Permissions.ManageRoles));
 

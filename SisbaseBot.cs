@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 
 namespace sisbase
 {
+#pragma warning disable CS1591
+
 	/// <summary>
 	/// The class all sisbase bots derive from
 	/// </summary>
@@ -31,11 +33,26 @@ namespace sisbase
 		/// </summary>
 		public DiscordClient Client { get; private set; }
 
+		/// <summary>
+		/// The CommandsNextExtension for the <see cref="Client"/>
+		/// </summary>
 		public CommandsNextExtension CommandsNext { get; private set; }
 
+		/// <summary>
+		/// The InteractivityExtension for the <see cref="Client"/>
+		/// </summary>
 		public InteractivityExtension Interactivity { get; private set; }
+
+		/// <summary>
+		/// The System Managment Controller<br></br>
+		/// Responsible for registry and unregistry of all Systems.
+		/// </summary>
 		public SMC Systems { get; private set; }
 
+		/// <summary>
+		/// Constructs a new <see cref="SisbaseBot"/> from a given configuration
+		/// </summary>
+		/// <param name="sisbaseConfiguration"> The configuration used by the bot.</param>
 		public SisbaseBot(Sisbase sisbaseConfiguration)
 		{
 			if (Instance != null)

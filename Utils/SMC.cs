@@ -19,6 +19,9 @@ namespace sisbase.Utils
 		/// </summary>
 		public static ConcurrentDictionary<Type, ISystem> RegisteredSystems { get; set; } = new ConcurrentDictionary<Type, ISystem>();
 
+		/// <summary>
+		/// All of the current registered timers on the SMC
+		/// </summary>
 		public static ConcurrentDictionary<Type, Timer> RegisteredTimers { get; set; } = new ConcurrentDictionary<Type, Timer>();
 
 		internal void RegisterSystems(Assembly assembly)
@@ -98,6 +101,9 @@ namespace sisbase.Utils
 			new Timer(new TimerCallback(x => action()), null, TimeSpan.FromSeconds(1), timeout);
 	}
 
+	/// <summary>
+	/// Provides extension methods for the <see cref="SMC"/>
+	/// </summary>
 	public static class SMCExtensions
 	{
 		internal static void Register(this DiscordClient client, Type t)

@@ -9,7 +9,7 @@ namespace sisbase.Attributes
 	/// </summary>
 	public class OniiSanAttribute : CheckBaseAttribute
 	{
-#pragma warning disable CS1998
+#pragma warning disable CS1998, CS1591
 
 		public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help) => ctx.Guild.Id.Equals(SisbaseBot.Instance.SisbaseConfiguration.Config.MasterId);
 

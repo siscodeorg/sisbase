@@ -9,16 +9,16 @@ namespace sisbase.Utils
 	/// </summary>
 	public static class General
 	{
-		public static Version Version = typeof(SisbaseBot)
+		internal static Version Version = typeof(SisbaseBot)
 			.Assembly
 			.GetName()
 			.Version;
 
-		public static string Format(this Version v) => $"{v.Major}.{v.Minor}.{v.Build}";
+		internal static string Format(this Version v) => $"{v.Major}.{v.Minor}.{v.Build}";
 
-		public static string GetVersion() => Format(Version);
+		internal static string GetVersion() => Format(Version);
 
-		public static Json TUI_cfg()
+		internal static Json TUI_cfg()
 		{
 			var c = new Json();
 			Console.WriteLine("Please Input the TOKEN :");

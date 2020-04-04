@@ -12,6 +12,8 @@ namespace sisbase.Systems
 	/// <summary>
 	/// The guild the bot is supossed to run
 	/// </summary>
+#pragma warning disable CS1591
+
 	public class MasterServer : IClientSystem
 	{
 		public string Name { get; set; }

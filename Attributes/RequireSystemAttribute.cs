@@ -13,8 +13,17 @@ namespace sisbase.Attributes
 	/// </summary>
 	public class RequireSystemAttribute : CheckBaseAttribute
 	{
+		/// <summary>
+		/// The System
+		/// </summary>
 		public ISystem System;
 
+		/// <summary>
+		/// Constructs a new RequireSystemAttribute from a given system type.
+		/// </summary>
+		/// <param name="t">The system type <br></br>
+		/// Must inherits <see cref="ISystem"/>
+		/// </param>
 		public RequireSystemAttribute(Type t)
 		{
 			if (t.GetInterfaces().Any(x => x == typeof(ISystem)))
@@ -23,7 +32,7 @@ namespace sisbase.Attributes
 			}
 		}
 
-#pragma warning disable CS1998
+#pragma warning disable CS1998, CS1591
 
 		public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help) => System != null;
 	}
