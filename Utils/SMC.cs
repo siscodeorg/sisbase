@@ -27,21 +27,40 @@ namespace sisbase.Utils
 
 		internal static List<Assembly> RegisteredAssemblies { get; set; } = new List<Assembly>();
 
-		internal void RegisterSystems(Assembly assembly)
+		internal Dictionary<Type, bool> RegisterSystems(Assembly assembly)
 		{
+			var response = new Dictionary<Type, bool>();
 			if (!RegisteredAssemblies.Contains(assembly)) RegisteredAssemblies.Add(assembly);
 			var Ts = assembly.ExportedTypes.Where(T => T.GetTypeInfo().IsSystemCandidate());
 			foreach (var T in Ts)
 			{
+				if (RegisteredSystems.ContainsKey(T)) continue;
 				if (T.GetInterfaces().Contains(typeof(IClientSystem)))
 				{
-					SisbaseBot.Instance.Client.Register(T);
+					response.Add(T, SisbaseBot.Instance.Client.Register(T));
 				}
 				else
 				{
-					Register(T);
+					response.Add(T, Register(T));
 				}
 			}
+			return response;
+		}
+
+		internal Dictionary<Assembly, Dictionary<string, bool>> Reload()
+		{
+			var data = new Dictionary<Assembly, Dictionary<string, bool>>();
+			foreach (var asm in RegisteredAssemblies)
+			{
+				var systems = RegisterSystems(asm);
+				var nDict = systems.Select(x =>
+				new KeyValuePair<string, bool>(
+					x.Key.Name,
+					x.Value)).ToDictionary(x => x.Key, x => x.Value);
+
+				data.Add(asm, nDict);
+			}
+			return data;
 		}
 
 		internal bool Register(Type t)
@@ -67,7 +86,6 @@ namespace sisbase.Utils
 							((ISchedule)system).Timeout,
 							((ISchedule)system).RunContinuous
 							));
-						RegisteredTimers[t].Change(TimeSpan.FromSeconds(1), ((ISchedule)system).Timeout);
 						system.Log("Timer started");
 					}
 					RegisteredSystems.AddOrUpdate(t, system, (key, old) => system);
@@ -92,6 +110,7 @@ namespace sisbase.Utils
 				if (typeof(ISchedule).IsAssignableFrom(t))
 				{
 					RegisteredTimers[t].Dispose();
+					RegisteredTimers.TryRemove(t, out _);
 					system.Warn("Timer stopped");
 				}
 				system.Deactivate();
