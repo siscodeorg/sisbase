@@ -55,3 +55,28 @@ Now you need to register a bot with `#SisbaseBot.RegisterBot()` isntead of manua
 ### Patch `1.2.1`
 + Fixes system registration in order to follow `RequireSystemAttribute` logic.
 + Adds more documentation
+
+## sisbase `Chigusa Asuha` 1.3.0
+
++ Added `IScheduler`
+
+If you need that a system executes something every other `X (hours/minutes/seconds)` you now can set an `Action` and a 
+`TimeSpan` on your systems and let the SNC do the dirty job for you.
+
+`IScheduler` is fully compatible with all available `ISystem` interfaces.
+
++ Added `disable` and `reload` commands for managing the systems insude Discord
+
++ + If your pre initialization checks `At Initialize() of course!` fails, you can now reload all the unregistered systems once the conditions could be met.
+
++ + + Eg : A system depends on a connection to a database, but such connection could not be made at run time since the database were offline.
+
+To reload the systems, the `owner` of the bot's application must run `[prefix]system reload`.
+
++ + If you ever need to disable a system you also can do that.
+
+To disable a system, the `owner` of the bot's application must run `[prefix]system disable` and follow the instructions sent to chat by the bot.
+
+### What broke
+
+TBA.
