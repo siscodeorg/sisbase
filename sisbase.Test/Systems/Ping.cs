@@ -41,6 +41,6 @@ namespace sisbase.Test.Systems
 			SisbaseBot.Instance.Client.MessageCreated -= MessageCreated;
 		}
 
-		public void Execute() => Console.WriteLine("This was called inside of an Execute Block");
+		public void Execute() => Logger.Log(this, "This was called inside of an Execute Block");
 	}
 }
