@@ -87,33 +87,14 @@ namespace sisbase.Commands
 		[Description("Reloads the SMC and registers any Systems that weren't registered")]
 		public async Task Reload(CommandContext ctx)
 		{
-			var allSystems = new Func<Assembly, List<Type>>(
-				(x) => x.ExportedTypes.Where(T => T.GetTypeInfo().IsSystemCandidate()).ToList()
-			);
-			var Data = new Dictionary<Assembly, List<Type>>();
-			foreach (var x in SMC.RegisteredAssemblies)
-			{
-				var data = allSystems(x).Where(t => !SMC.RegisteredSystems.ContainsKey(t)).ToList();
-				Data.Add(x, data);
-			}
-
-			var typeToStrBool = new Func<Type, KeyValuePair<string, bool>>(
-					(T) => new KeyValuePair<string, bool>($"`{T.Name}`", SisbaseBot.Instance.Systems.Register(T)));
-			var convert = new Func<KeyValuePair<Assembly, List<Type>>,
-				KeyValuePair<Assembly, Dictionary<string, bool>>
-				>(
-					(kvp) => new KeyValuePair<Assembly, Dictionary<string, bool>>(
-						kvp.Key,
-						kvp.Value.Select(x => typeToStrBool(x)).ToDictionary(x => x.Key, x => x.Value)
-				));
-
+			var Data = SisbaseBot.Instance.Systems.Reload();
 			if (Data.Any(k => k.Value.Count > 0))
 			{
 				var Embed = EmbedBase.OutputEmbed("SMC Reloaded. ΔSystem Status:");
-				var Information = Data.Select(dict => convert(dict)).ToDictionary(x => x.Key, x => x.Value);
-				foreach (var kvp in Information)
+
+				foreach (var kvp in Data)
 				{
-					var i1 = kvp.Value.Select(_kvp => $"{(_kvp.Value ? "✅" : "❌")} - {_kvp.Key}").ToList();
+					var i1 = kvp.Value.Select(x => $"{(x.Value ? "✅" : "❌")} - `{x.Key}`").ToList();
 					string i0 = string.Join("\n", i1);
 					string i2 = kvp.Key.GetName().Name;
 					if (string.IsNullOrEmpty(i0)) continue;
