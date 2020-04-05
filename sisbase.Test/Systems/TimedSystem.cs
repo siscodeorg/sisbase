@@ -16,7 +16,7 @@ namespace sisbase.Test.Systems
 			Name = "TimedSystem";
 			Description = "A dummy System to test the scheduler";
 			Status = true;
-			Timeout = TimeSpan.FromSeconds(10);
+			Timeout = TimeSpan.FromMinutes(1);
 		}
 
 		public void Deactivate()
@@ -24,7 +24,6 @@ namespace sisbase.Test.Systems
 			Name = null;
 			Description = null;
 			Status = false;
-			Timeout = TimeSpan.Zero;
 		}
 
 		public void Execute() => Logger.Log(this, "Command Executed from Execute()");
