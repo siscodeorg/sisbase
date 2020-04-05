@@ -159,7 +159,6 @@ namespace sisbase.Utils
 							((ISchedule)system).Timeout,
 							((ISchedule)system).RunContinuous
 							));
-						SMC.RegisteredTimers[t].Change(TimeSpan.FromMilliseconds(-1), ((ISchedule)system).Timeout);
 						system.Log("Timer started");
 					}
 					SMC.RegisteredSystems.AddOrUpdate(t, system, (key, old) => system);
