@@ -5,11 +5,9 @@ using DSharpPlus.Interactivity;
 using Newtonsoft.Json;
 using sisbase.Attributes;
 using sisbase.Utils;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace sisbase.Commands

@@ -1,7 +1,6 @@
 ﻿using DSharpPlus;
 using DSharpPlus.EventArgs;
 using sisbase.Utils;
-using System;
 using System.Threading.Tasks;
 
 namespace sisbase.Test.Systems
