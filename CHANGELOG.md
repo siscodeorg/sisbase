@@ -61,7 +61,7 @@ Now you need to register a bot with `#SisbaseBot.RegisterBot()` isntead of manua
 + Added `IScheduler`
 
 If you need that a system executes something every other `X (hours/minutes/seconds)` you now can set an `Action` and a 
-`TimeSpan` on your systems and let the SNC do the dirty job for you.
+`TimeSpan` on your systems and let the SMC do the dirty job for you.
 
 `IScheduler` is fully compatible with all available `ISystem` interfaces.
 
