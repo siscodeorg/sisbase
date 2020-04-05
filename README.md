@@ -17,10 +17,10 @@ Puppet Server : Other servers the bot may get resources from (emoji servers)
  - Help system
  -  - [x] Category
  -  - [x] Commands
- - - [x] Help Command
+ -  - [x] Help Command
  
  - Custom Systems!
- - - With IApplicableSystem you can create custom systems (ReactRole, etc) outside of the main file 
+ - - With ISystem you can create custom systems (ReactRole, etc) outside of the main file 
  - - Available Interfaces :
  - - - IScheduler
  - - - IClientSystem (DiscordClient)
