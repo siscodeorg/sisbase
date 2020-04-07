@@ -345,17 +345,17 @@
             </summary>
             <param name="client">The currrent client</param>
         </member>
-        <member name="T:sisbase.Utils.ISchedule">
+        <member name="T:sisbase.Utils.IScheduledSystem">
             <summary>
             Interface for running a scheduled function on systems
             </summary>
         </member>
-        <member name="P:sisbase.Utils.ISchedule.Timeout">
+        <member name="P:sisbase.Utils.IScheduledSystem.Timeout">
             <summary>
             Timeout for the schedule
             </summary>
         </member>
-        <member name="P:sisbase.Utils.ISchedule.RunContinuous">
+        <member name="P:sisbase.Utils.IScheduledSystem.RunContinuous">
             <summary>
             What will be run after the timeout elapses
             </summary>
@@ -441,8 +441,7 @@
         </member>
         <member name="T:sisbase.Utils.SMC">
             <summary>
-            The System Management Controller
-            Now with 100% less PPBUS_G3H
+            The System Management Controller Now with 100% less PPBUS_G3H
             </summary>
         </member>
         <member name="P:sisbase.Utils.SMC.RegisteredSystems">
