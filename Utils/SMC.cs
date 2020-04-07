@@ -10,8 +10,7 @@ using System.Threading;
 namespace sisbase.Utils
 {
 	/// <summary>
-	/// The System Management Controller
-	/// Now with 100% less PPBUS_G3H
+	/// The System Management Controller Now with 100% less PPBUS_G3H
 	/// </summary>
 	public class SMC
 	{
