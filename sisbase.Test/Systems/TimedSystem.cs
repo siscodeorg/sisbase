@@ -3,7 +3,7 @@ using System;
 
 namespace sisbase.Test.Systems
 {
-	public class TimedSystem : ISystem, ISchedule
+	public class TimedSystem : ISystem, IScheduledSystem
 	{
 		public string Name { get; set; }
 		public string Description { get; set; }
