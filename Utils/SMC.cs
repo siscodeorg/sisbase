@@ -60,7 +60,16 @@ namespace sisbase.Utils
 
 				data.Add(asm, nDict);
 			}
+			ReloadCommands();
 			return data;
+		}
+
+		internal static void ReloadCommands()
+		{
+			//Unregisters all commands
+			SisbaseBot.Instance.CommandsNext.UnregisterCommands(SisbaseBot.Instance.CommandsNext.RegisteredCommands.Select(x => x.Value).ToArray());
+			//Re-registers the commands
+			RegisteredAssemblies.ForEach(x => SisbaseBot.Instance.CommandsNext.RegisterCommands(x));
 		}
 
 		internal bool Register(Type t)
@@ -80,11 +89,11 @@ namespace sisbase.Utils
 				system.Execute();
 				if (system.Status == true)
 				{
-					if (typeof(ISchedule).IsAssignableFrom(t))
+					if (typeof(IScheduledSystem).IsAssignableFrom(t))
 					{
 						RegisteredTimers.TryAdd(t, CreateNewTimer(
-							((ISchedule)system).Timeout,
-							((ISchedule)system).RunContinuous
+							((IScheduledSystem)system).Timeout,
+							((IScheduledSystem)system).RunContinuous
 							));
 						system.Log("Timer started");
 					}
@@ -107,7 +116,7 @@ namespace sisbase.Utils
 				ISystem system;
 				RegisteredSystems.TryGetValue(t, out system);
 				system.Warn("System is disabling...");
-				if (typeof(ISchedule).IsAssignableFrom(t))
+				if (typeof(IScheduledSystem).IsAssignableFrom(t))
 				{
 					RegisteredTimers[t].Dispose();
 					RegisteredTimers.TryRemove(t, out _);
@@ -116,6 +125,7 @@ namespace sisbase.Utils
 				system.Deactivate();
 				RegisteredSystems.TryRemove(t, out system);
 				Logger.Log("SMC", $"A System was disabled : {system.Name}");
+				ReloadCommands();
 				return true;
 			}
 			else
@@ -153,11 +163,11 @@ namespace sisbase.Utils
 				{
 					system.ApplyToClient(client);
 					system.Log("System applied to client");
-					if (typeof(ISchedule).IsAssignableFrom(t))
+					if (typeof(IScheduledSystem).IsAssignableFrom(t))
 					{
 						SMC.RegisteredTimers.TryAdd(t, SMC.CreateNewTimer(
-							((ISchedule)system).Timeout,
-							((ISchedule)system).RunContinuous
+							((IScheduledSystem)system).Timeout,
+							((IScheduledSystem)system).RunContinuous
 							));
 						system.Log("Timer started");
 					}
