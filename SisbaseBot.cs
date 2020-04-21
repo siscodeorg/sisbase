@@ -139,6 +139,9 @@ namespace sisbase
 			while (!_cts.IsCancellationRequested)
 				await Task.Delay(1, _cts.Token);
 		}
+
+		public void Stop() => _cts.Cancel();
+
 		/// <summary>
 		/// Starts the bot instance
 		/// </summary>
