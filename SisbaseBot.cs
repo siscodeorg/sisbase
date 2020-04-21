@@ -146,7 +146,7 @@ namespace sisbase
 		/// Starts the bot instance
 		/// </summary>
 		/// <returns></returns>
-		public Task StartAsync()
+		internal Task Connect()
 			=> Client.ConnectAsync();
 
 		/// <summary>
