@@ -43,7 +43,7 @@ sisbase.RegisterBot(typeof(Program).Assembly);
 ```
 
 ### Last Part : Running the bot.
-To run the bot just use the `Run()` function as its shown below.
+To run the bot just use the `Start()` function as its shown below.
 ```csharp
 await sisbase.Start();
 ```
