@@ -36,7 +36,7 @@ namespace sisbase.Utils
 		/// <summary>
 		/// Adds a new custom configuration onto the bot config.
 		/// </summary>
-		/// <typeparam name="T"> Type of the custom configuration</typeparam>
+		/// <typeparam name="T">Type of the custom configuration</typeparam>
 		/// <param name="s"></param>
 		/// <param name="key">The name of the custom configuration</param>
 		/// <param name="value"></param>
@@ -77,7 +77,7 @@ namespace sisbase.Utils
 		/// <summary>
 		/// Gets the value of an existing custom configuration from the bot config.
 		/// </summary>
-		/// <typeparam name="T"> Type of the custom configuration</typeparam>
+		/// <typeparam name="T">Type of the custom configuration</typeparam>
 		/// <param name="s"></param>
 		/// <param name="key">The name of the custom configuration</param>
 		public static T GetCustomConfiguration<T>(this Sisbase s, string key)
