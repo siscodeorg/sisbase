@@ -305,7 +305,7 @@
             <summary>
             Adds a new custom configuration onto the bot config.
             </summary>
-            <typeparam name="T"> Type of the custom configuration</typeparam>
+            <typeparam name="T">Type of the custom configuration</typeparam>
             <param name="s"></param>
             <param name="key">The name of the custom configuration</param>
             <param name="value"></param>
@@ -330,9 +330,23 @@
             <summary>
             Gets the value of an existing custom configuration from the bot config.
             </summary>
-            <typeparam name="T"> Type of the custom configuration</typeparam>
+            <typeparam name="T">Type of the custom configuration</typeparam>
             <param name="s"></param>
             <param name="key">The name of the custom configuration</param>
+        </member>
+        <member name="M:sisbase.Utils.General.FirstInt(DSharpPlus.Entities.DiscordMessage)">
+            <summary>
+            Returns the first integer value found on a <see cref="T:DSharpPlus.Entities.DiscordMessage"/>
+            </summary>
+            <param name="m">The message</param>
+            <returns></returns>
+        </member>
+        <member name="M:sisbase.Utils.General.FirstEmoji(DSharpPlus.Entities.DiscordMessage)">
+            <summary>
+            Returns the first emoji found on a <see cref="T:DSharpPlus.Entities.DiscordMessage"/>
+            </summary>
+            <param name="m">The message</param>
+            <returns></returns>
         </member>
         <member name="T:sisbase.Utils.IClientSystem">
             <summary>
@@ -457,6 +471,11 @@
         <member name="T:sisbase.Utils.SMCExtensions">
             <summary>
             Provides extension methods for the <see cref="T:sisbase.Utils.SMC"/>
+            </summary>
+        </member>
+        <member name="T:sisbase.Utils.Emoji">
+            <summary>
+            Wraps all Unicode Emojis.
             </summary>
         </member>
     </members>
