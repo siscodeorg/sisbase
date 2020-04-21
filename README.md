@@ -2,7 +2,8 @@
 ## A Simple to use Discord Bot Base based on DSharpPlus.
 
 # Starting up
-![https://dsharpplus.emzi0767.com/articles/nightly.html](https://img.shields.io/badge/1._Add_DSharpPlus--nightly_source-to_your_nuget_souces-critical) ![https://www.nuget.org/packages/sisbase/](https://img.shields.io/badge/2._Install_Nuget_Package-sisbase-informational)
+[![DSharpPlus](https://img.shields.io/badge/1._Add_DSharpPlus--nightly_source-to_your_nuget_souces-critical)](https://dsharpplus.emzi0767.com/articles/nightly.html) 
+[![Sisbase](https://img.shields.io/badge/2._Install_Nuget_Package-sisbase-informational)](https://www.nuget.org/packages/sisbase/)
 
 <img src="https://i.imgur.com/TaELh6H.png" width=500>
 
