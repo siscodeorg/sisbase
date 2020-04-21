@@ -23,6 +23,8 @@ namespace sisbase
 		/// </summary>
 		public static SisbaseBot Instance { get; private set; }
 
+		internal static CancellationTokenSource _cts;
+
 		/// <summary>
 		/// The configuration for the bot.
 		/// </summary>
@@ -83,7 +85,7 @@ namespace sisbase
 					PollBehaviour = PollBehaviour.DeleteEmojis
 				}
 			);
-
+			_cts = new CancellationTokenSource();
 			Systems = new SMC();
 			Systems.RegisterSystems(typeof(SisbaseBot).Assembly);
 			CommandsNext.RegisterCommands(typeof(SisbaseBot).Assembly);
