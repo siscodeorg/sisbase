@@ -4,6 +4,8 @@
 # Starting up
 [![DSharpPlus](https://img.shields.io/badge/1._Add_DSharpPlus--nightly_source-to_your_nuget_souces-critical)](https://dsharpplus.emzi0767.com/articles/nightly.html) 
 [![Sisbase](https://img.shields.io/badge/2._Install_Nuget_Package-sisbase-informational)](https://www.nuget.org/packages/sisbase/)
+[![Discord](https://img.shields.io/discord/684081110640361509.svg?label=discord)](https://discord.gg/t8a9jvR)
+
 
 <img src="https://i.imgur.com/TaELh6H.png" width=500>
 
