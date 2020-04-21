@@ -1,6 +1,7 @@
 ﻿using sisbase.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace sisbase.Utils
 {
@@ -83,5 +84,13 @@ namespace sisbase.Utils
 			s.Config.CustomSettings.TryGetValue(key, out object value);
 			return (T)value;
 		}
+
+		/// <summary>
+		/// Returns the first integer value found on a <see cref="DiscordMessage"/>
+		/// </summary>
+		/// <param name="m">The message</param>
+		/// <returns></returns>
+		public static int FirstInt(this DiscordMessage m) =>
+			int.Parse(m.Content.Split(" ").Where(x => int.TryParse(x, out int _)).FirstOrDefault());
 	}
 }
