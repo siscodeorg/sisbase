@@ -1,34 +1,34 @@
 # ![](https://i.imgur.com/D6rTqWW.png)
-A Simple to use Discord Bot Base based on DSharpPlus.
+## A Simple to use Discord Bot Base based on DSharpPlus.
 
-# Project Structure
-Basic terminology :
+# Starting up
+![https://dsharpplus.emzi0767.com/articles/nightly.html](https://img.shields.io/badge/1._Add_DSharpPlus--nightly_source-to_your_nuget_souces-critical) ![https://www.nuget.org/packages/sisbase/](https://img.shields.io/badge/2._Install_Nuget_Package-sisbase-informational)
 
-Master Server : The main server the bot is suposed to run.
+<img src="https://i.imgur.com/TaELh6H.png" width=500>
 
-Puppet Server : Other servers the bot may get resources from (emoji servers)
+## Features 
 
-## Custom Atrributes
-- OniiSan - Sets command only for the MASTER server.
- - Imouto - Staff command (Modify Roles)
+### Fully featured help command with support for
+-  Categories
+-  Commands
+-  Hidden Commands
 
-## Functions 
 
- - Help system
- -  - [x] Category
- -  - [x] Commands
- -  - [x] Help Command
- 
- - Custom Systems!
- - - With ISystem you can create custom systems (ReactRole, etc) outside of the main file 
- - - Available Interfaces :
- - - - IScheduler
- - - - IClientSystem (DiscordClient)
- - - - IStaticSystem
+### Custom Systems!
+- With ISystem you can create custom systems (ReactRole, etc) outside of the main file 
+- Available Interfaces :
+- - IScheduledSystem (Provides a customizable timer)
+- - IClientSystem (DiscordClient)
+- - IStaticSystem
 
- - Consistant Embeds :
- - - Ordered List
- - - List
- - - Input / Output
- -  - Command / Category Helpers
- - - CLI configuration saved on JSON
+
+### An EmbedBase containing parsers of:
+- Ordered List and List (Needs to be an scalar / provide an `.ToString()` override)
+- Input / Output
+- Help of Commands and Categories
+
+
+### An extensive utilities set:
+- Automatic Handling of Cancel Codes on the console
+- Simplified Unicode Emoji Support
+- Custom Attributes
