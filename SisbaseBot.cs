@@ -6,7 +6,9 @@ using DSharpPlus.Interactivity.Enums;
 using sisbase.Configuration;
 using sisbase.Utils;
 using System;
+using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace sisbase
@@ -46,21 +48,34 @@ namespace sisbase
 		public InteractivityExtension Interactivity { get; private set; }
 
 		/// <summary>
-		/// The System Managment Controller<br></br>
-		/// Responsible for registry and unregistry of all Systems.
+		/// The System Managment Controller <br></br> Responsible for registry and unregistry of all Systems.
 		/// </summary>
 		public SMC Systems { get; private set; }
 
 		/// <summary>
 		/// Constructs a new <see cref="SisbaseBot"/> from a given configuration
 		/// </summary>
-		/// <param name="sisbaseConfiguration"> The configuration used by the bot.</param>
-		public SisbaseBot(Sisbase sisbaseConfiguration)
+		/// <param name="configDirectory">The directory used to store the configuration.</param>
+		public SisbaseBot(string configDirectory)
 		{
 			if (Instance != null)
 				throw new InvalidOperationException("Instance is already running");
 			Instance = this;
-			SisbaseConfiguration = sisbaseConfiguration;
+			SisbaseConfiguration = new Sisbase(configDirectory);
+			CreateNewBot();
+		}
+
+		public SisbaseBot()
+		{
+			if (Instance != null)
+				throw new InvalidOperationException("Instance is already running");
+			Instance = this;
+			SisbaseConfiguration = new Sisbase(Directory.GetCurrentDirectory());
+			CreateNewBot();
+		}
+
+		internal void CreateNewBot()
+		{
 			Client = new DiscordClient(
 				new DiscordConfiguration
 				{
@@ -119,7 +134,8 @@ namespace sisbase
 		}
 
 		/// <summary>
-		/// Registers all systems and commands from a given assembly. The System and Command classes need to be public for registration
+		/// Registers all systems and commands from a given assembly. The System and Command classes
+		/// need to be public for registration
 		/// </summary>
 		/// <param name="asm">The assembly</param>
 		public void RegisterBot(Assembly asm)
