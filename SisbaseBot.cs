@@ -127,6 +127,18 @@ namespace sisbase
 
 #pragma warning restore CS1998
 
+		public async Task Start()
+		{
+			Console.CancelKeyPress += (sender, e) =>
+			{
+				if (!_cts.IsCancellationRequested)
+					Stop();
+				e.Cancel = true;
+			};
+			await Connect();
+			while (!_cts.IsCancellationRequested)
+				await Task.Delay(1, _cts.Token);
+		}
 		/// <summary>
 		/// Starts the bot instance
 		/// </summary>
