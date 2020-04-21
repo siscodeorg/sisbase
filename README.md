@@ -35,3 +35,4 @@
 - Automatic Handling of Cancel Codes on the console
 - Simplified Unicode Emoji Support
 - Custom Attributes
+- Extensions for parsing input from `DiscordMessage`
