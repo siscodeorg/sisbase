@@ -15,8 +15,8 @@ namespace sisbase.Utils
 	public static class EmbedBase
 	{
 		/// <summary>
-		/// Generates a new group help embed from an specified command <br></br>
-		/// The comand must be a GroupCommand.
+		/// Generates a new group help embed from an specified command <br></br> The comand must be
+		/// a GroupCommand.
 		/// </summary>
 		/// <param name="Command"></param>
 		/// <returns></returns>
@@ -95,9 +95,9 @@ namespace sisbase.Utils
 		}
 
 		/// <summary>
-		/// Generates a new <see cref="DiscordEmbed"/> from a given query string. <br></br>
-		/// Prepends "Please Type : " to the given string.
-		/// /// </summary>
+		/// Generates a new <see cref="DiscordEmbed"/> from a given query string. <br></br> Prepends
+		/// "Please Type : " to the given string.
+		/// </summary>
 		/// <param name="input">The string</param>
 		/// <returns></returns>
 		public static DiscordEmbed InputEmbed(string input)
