@@ -74,7 +74,7 @@ namespace sisbase.Utils
 				var attributes = commandGroup.CustomAttributes.ToList();
 				bool HasEmoji = attributes.Any(x => x is EmojiAttribute);
 				var emoji = HasEmoji ? ((EmojiAttribute)attributes.Where(x => x is EmojiAttribute).First()).Emoji : unk;
-				helpBuilder.AddField($"{emoji} ・ {commandGroup.Name}", commandGroup.Description);
+				helpBuilder.AddField($"{emoji} ・ {commandGroup.Name}", !string.IsNullOrWhiteSpace(commandGroup.Description) ? commandGroup.Description : $"{commandGroup.Name} - STUB : Doesn't have a description.");
 			}
 
 			string misc = "";
