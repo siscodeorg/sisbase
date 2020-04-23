@@ -9,6 +9,6 @@ handle.
 
 # Where to start?
 
-Check out the [`Articles`](/articles/intro.html) if you are looking for tutorials, start guides and examples.
+Check out the [`Articles`](articles/intro.html) if you are looking for tutorials, start guides and examples.
 
-If you are looking for the docs, see the [`Api Documentation`](/api/index.html) section
+If you are looking for the docs, see the [`Api Documentation`](api/index.html) section

@@ -2,14 +2,14 @@
 
 Listed here is a couple of links that will help you start developing your own bots.
 
-* [Hello World Bot](/articles/hello_world.html) - Teaches how to make a bot that connects to discord.
+* [Hello World Bot](hello_world.html) - Teaches how to make a bot that connects to discord.
 
 ## New to programming in C#?
 
 Take a look at [this interactive course by Microsoft](https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/intro-to-csharp/ "Introduction to C#"). If you are feeling lost, you should definitely check it out.
 ## Looking for API documentation?
 
-Head over to the [Api Documentation](/api/index.html) page.
+Head over to the [Api Documentation](../api/index.html) page.
 
 ## Example bots
 
