@@ -40,4 +40,11 @@ namespace sisbase.Test.Commands
 			await mbuilder.Build(ctx.Channel);
 		}
 	}
+
+	[Group("stubgroup")]
+	public class stub : BaseCommandModule
+	{
+		[GroupCommand()]
+		public async Task stubCmd(CommandContext ctx) => await ctx.RespondAsync(embed: EmbedBase.GroupHelpEmbed(ctx.Command));
+	}
 }
