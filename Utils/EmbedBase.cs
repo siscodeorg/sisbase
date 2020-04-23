@@ -53,9 +53,9 @@ namespace sisbase.Utils
 		/// <returns></returns>
 		public static async Task<DiscordEmbed> HelpEmbed(this CommandsNextExtension cne, CommandContext ctx, bool showHidden = false)
 		{
-			var x = cne.RegisteredCommands.Values.ToList();
+			var RegisteredCommands = cne.RegisteredCommands.Values.ToList();
 			var groups = new List<CommandGroup>();
-			foreach (var command in x)
+			foreach (var command in RegisteredCommands)
 			{
 				if (command is CommandGroup group)
 				{
@@ -82,7 +82,7 @@ namespace sisbase.Utils
 			}
 
 			string misc = "";
-			foreach (var command in x)
+			foreach (var command in RegisteredCommands)
 			{
 				if ((await command.RunChecksAsync(ctx, true)).Count() > 0) continue;
 				if (command.IsHidden && !showHidden) continue;
