@@ -1,6 +1,8 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
+using sisbase.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,6 +20,24 @@ namespace sisbase.Test.Commands
 			var msg = await dmc.SendMessageAsync("nmdm : WAITING");
 			var response = await dmc.GetNextMessageAsync(ctx.Member);
 			await msg.ModifyAsync($"ndmm : \n{response.Result.Content}");
+		}
+
+		[Command("mbuild")]
+		public async Task MessBuilder(CommandContext ctx)
+		{
+			var mbuilder = new MessageBuilder();
+			mbuilder = mbuilder
+				.WithEmbed(EmbedBase.OutputEmbed("Sample Embed"))
+				.WithContent("Content");
+			await mbuilder.Build(ctx.Channel);
+			mbuilder = mbuilder.WithEmbed(mbuilder.Embed.Mutate
+				(x =>
+					x.WithDescription("Mutated Embed")
+						.WithColor(DiscordColor.Red))
+				);
+			await mbuilder.Build(ctx.Channel);
+			mbuilder = mbuilder.WithContent("Mutated Content");
+			await mbuilder.Build(ctx.Channel);
 		}
 	}
 }
