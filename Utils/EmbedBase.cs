@@ -69,12 +69,8 @@ namespace sisbase.Utils
 			foreach (var commandGroup in groups)
 			{
 				var children = commandGroup.Children.ToList();
-				foreach (var command in children)
-				{
-					x.Remove(command);
-				}
-
-				x.Remove(commandGroup);
+				commandGroup.Children.ToList().ForEach(x => RegisteredCommands.Remove(x));
+				RegisteredCommands.Remove(commandGroup);
 				var attributes = commandGroup.CustomAttributes.ToList();
 				bool HasEmoji = attributes.Any(x => x is EmojiAttribute);
 				var emoji = HasEmoji ? ((EmojiAttribute)attributes.Where(x => x is EmojiAttribute).First()).Emoji : unk;
