@@ -13,7 +13,7 @@ namespace sisbase.Utils
 			Embed = embed; return this;
 		}
 
-		public MessageBuilder ClearEmbeds()
+		public MessageBuilder ClearEmbed()
 		{
 			Embed = null; return this;
 		}
