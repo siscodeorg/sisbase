@@ -65,6 +65,7 @@ namespace sisbase.Utils
 				}
 			}
 			var helpBuilder = new DiscordEmbedBuilder();
+			var unk = DiscordEmoji.FromName(SisbaseBot.Instance.Client, ":grey_question:");
 			foreach (var commandGroup in groups)
 			{
 				var children = commandGroup.Children.ToList();
@@ -75,12 +76,9 @@ namespace sisbase.Utils
 
 				x.Remove(commandGroup);
 				var attributes = commandGroup.CustomAttributes.ToList();
-				foreach (var y in attributes)
-				{
-					if (!(y is EmojiAttribute emoji)) continue;
-					helpBuilder.AddField($"{emoji.Emoji} ・ {commandGroup.Name}", commandGroup.Description);
-					break;
-				}
+				bool HasEmoji = attributes.Any(x => x is EmojiAttribute);
+				var emoji = HasEmoji ? ((EmojiAttribute)attributes.Where(x => x is EmojiAttribute).First()).Emoji : unk;
+				helpBuilder.AddField($"{emoji} ・ {commandGroup.Name}", commandGroup.Description);
 			}
 
 			string misc = "";
