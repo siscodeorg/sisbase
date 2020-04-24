@@ -21,14 +21,14 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <DocumentationFile>C:\Users\roridev\Documents\GitHub\sisbase\sisbase.xml</DocumentationFile>
+      <DocumentationFile>sisbase.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
       <Compile Remove="sisbase.Test\**" />
       <EmbeddedResource Remove="sisbase.Test\**" />
       <None Remove="sisbase.Test\**" />
-      <None Include="..\..\..\Pictures\sisbase.png">
+      <None Include="assets\sisbase.png">
         <Pack>True</Pack>
         <PackagePath></PackagePath>
       </None>
