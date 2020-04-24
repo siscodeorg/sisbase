@@ -4,9 +4,7 @@ using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using sisbase.Interactivity;
 using sisbase.Utils;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace sisbase.Test.Commands
@@ -44,10 +42,39 @@ namespace sisbase.Test.Commands
 		[Command("interact")]
 		public async Task interactCmd(CommandContext ctx)
 		{
-			var interactResult = await ctx.Member.InteractAsync(x => x.WithContent("Please Type Something"), ctx.Channel);
-			await interactResult.RespondAsync($"YOOOO > {interactResult.Content}");
-			var message2 = await ctx.Member.InteractAsync(x => x.WithEmbed(EmbedBase.OutputEmbed("Test2, Say something Again")), ctx.Channel);
-			await message2.RespondAsync(embed: EmbedBase.OutputEmbed($"YOOOO > {message2.Content}"));
+			var interaction = new Interaction(ctx.Message);
+			await interaction.SendMessageAsync(new MessageBuilder().WithContent("Type Anything"));
+			var msg = await interaction.GetUserResponseAsync();
+			await interaction.ModifyLastMessage(x => x.WithContent($"Your message were : {msg.Content}"));
+			interaction.Close();
+		}
+
+		[Command("interact3")]
+		public async Task interact3Cmd(CommandContext ctx)
+		{
+			var interaction = new Interaction(ctx.Message);
+			var msg = new MessageBuilder()
+				.WithEmbed(EmbedBase.InputEmbed("Something: [1/3]"));
+			await interaction.SendMessageAsync(msg);
+			await interaction.GetUserResponseAsync();
+			await interaction.ModifyLastMessage(x => x.WithEmbed(EmbedBase.InputEmbed("Something: [2/3]")));
+			await interaction.GetUserResponseAsync();
+			await interaction.ModifyLastMessage(x => x.WithEmbed(EmbedBase.InputEmbed("Something: [3/3]")));
+			await interaction.GetUserResponseAsync();
+			await interaction.ModifyLastMessage(x => x.WithEmbed(EmbedBase.ListEmbed(interaction.UserMessages.Select(x => x.Content).ToList(), "User Messages")));
+			interaction.Close();
+		}
+
+		[Command("interactHook")]
+		public async Task interactHookCmd(CommandContext ctx)
+		{
+			var msg = new MessageBuilder()
+				.WithEmbed(EmbedBase.InputEmbed("Whatever that includes \"aniki\", If you message doesn't the bot will ignore"));
+			await msg.Build(ctx.Channel);
+			var interact = await ctx.Channel.WaitForInteraction(ctx.Message, x => x.Content.ToLower().Contains("aniki"));
+			msg.WithEmbed(EmbedBase.OutputEmbed(interact.UserMessages.Last().Content).Mutate(x => x.WithColor(DiscordColor.Orange)));
+			await msg.Build(ctx.Channel);
+			interact.Close();
 		}
 	}
 
