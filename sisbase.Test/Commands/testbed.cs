@@ -70,8 +70,7 @@ namespace sisbase.Test.Commands
 		{
 			var msg = new MessageBuilder()
 				.WithEmbed(EmbedBase.InputEmbed("Whatever that includes \"aniki\", If you message doesn't the bot will ignore"));
-			await msg.Build(ctx.Channel);
-			var interact = await ctx.Channel.WaitForInteraction(ctx.Message, x => x.Content.ToLower().Contains("aniki"));
+			var interact = await ctx.Channel.WaitForInteraction(msg, x => x.Content.ToLower().Contains("aniki"));
 			msg.WithEmbed(EmbedBase.OutputEmbed(interact.UserMessages.Last().Content).Mutate(x => x.WithColor(DiscordColor.Orange)));
 			await msg.Build(ctx.Channel);
 			interact.Close();
