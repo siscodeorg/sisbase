@@ -13,12 +13,11 @@ namespace sisbase.Interactivity
 
 	public class Interaction
 	{
-		///together, these two lists contain the history of the Interaction. their lengths should never differ by more than one.
 		public List<DiscordMessage> BotMessages { get; } = new List<DiscordMessage>();
 
-		public List<DiscordMessage> UserMessages { get; } = new List<DiscordMessage>();  // probably this begins populated with `origin`
+		public List<DiscordMessage> UserMessages { get; } = new List<DiscordMessage>();
 
-		public DiscordMessage Origin { get; }  // this contains the User and Channel to be used as the context
+		public DiscordMessage Origin { get; }
 		public TimeSpan MessageTimeout { get; set; }
 
 		public Interaction(DiscordMessage origin)
@@ -32,14 +31,14 @@ namespace sisbase.Interactivity
 		{
 			var msg = await message.Build(Origin.Channel);
 			BotMessages.Add(msg);
-		}// send and add to botMessages
+		}
 
 		public async Task<DiscordMessage> GetUserResponseAsync()
 		{
 			var msg = await UserMessages.Last().GetNextMessageAsync();
 			UserMessages.Add(msg.Result);
 			return msg.Result;
-		}// Await message, add to userMessages, and return
+		}
 
 		public async Task<DiscordMessage> GetUserResponseAsync(Func<DiscordMessage, bool> filter)
 		{
@@ -55,14 +54,14 @@ namespace sisbase.Interactivity
 			var msg = await builder.Build(BotMessages.Last().Channel);
 			BotMessages.RemoveAll(x => x.Id == builder.MessageId);
 			BotMessages.Add(msg);
-		}// does a discordmessage contain much information about the content?
+		}
 
 		public void Close()
 		{
 			MessageTimeout = TimeSpan.Zero;
 			BotMessages.Clear();
 			UserMessages.Clear();
-		}// purely bookkeeping. this may be unnecessary?
+		}
 	}
 
 	public static class InteractionExtensions
