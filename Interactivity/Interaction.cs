@@ -68,12 +68,12 @@ namespace sisbase.Interactivity
 	public static class InteractionExtensions
 	{
 		public static async Task<Interaction> WaitForInteraction(this DiscordChannel channel,
-			DiscordMessage hook,
+			MessageBuilder hook,
 			Func<DiscordMessage, bool> interactioncheck)
 		{
-			var interact = new Interaction(hook);
-			await interact.GetUserResponseAsync(interactioncheck);
-			return interact;
+			await hook.Build(channel);
+			var response = await channel.GetNextMessageAsync(interactioncheck);
+			return new Interaction(response.Result);
 		}
 	}
 }
