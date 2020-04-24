@@ -142,7 +142,10 @@ namespace sisbase
 		{ Systems.RegisterSystems(asm); CommandsNext.RegisterCommands(asm); }
 
 #pragma warning restore CS1998
-
+		/// <summary>
+		/// Starts the bot instance
+		/// </summary>
+		/// <returns></returns>
 		public async Task Start()
 		{
 			Console.CancelKeyPress += (sender, e) =>
@@ -158,10 +161,7 @@ namespace sisbase
 
 		public void Stop() => _cts.Cancel();
 
-		/// <summary>
-		/// Starts the bot instance
-		/// </summary>
-		/// <returns></returns>
+	
 		internal Task Connect()
 			=> Client.ConnectAsync();
 
