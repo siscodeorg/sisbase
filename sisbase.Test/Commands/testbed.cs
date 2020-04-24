@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
+using sisbase.Interactivity;
 using sisbase.Utils;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,15 @@ namespace sisbase.Test.Commands
 			await mbuilder.Build(ctx.Channel);
 			mbuilder = mbuilder.WithContent("Mutated Content");
 			await mbuilder.Build(ctx.Channel);
+		}
+
+		[Command("interact")]
+		public async Task interactCmd(CommandContext ctx)
+		{
+			var interactResult = await ctx.Member.InteractAsync(x => x.WithContent("Please Type Something"), ctx.Channel);
+			await interactResult.RespondAsync($"YOOOO > {interactResult.Content}");
+			var message2 = await ctx.Member.InteractAsync(x => x.WithEmbed(EmbedBase.OutputEmbed("Test2, Say something Again")), ctx.Channel);
+			await message2.RespondAsync(embed: EmbedBase.OutputEmbed($"YOOOO > {message2.Content}"));
 		}
 	}
 
