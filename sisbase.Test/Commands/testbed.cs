@@ -1,4 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using System;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
@@ -74,6 +75,21 @@ namespace sisbase.Test.Commands
 			msg.WithEmbed(EmbedBase.OutputEmbed(interact.UserMessages.Last().Content).Mutate(x => x.WithColor(DiscordColor.Orange)));
 			await msg.Build(ctx.Channel);
 			interact.Close();
+		}
+
+		[Command("interactTimeout")]
+		public async Task interactTimeoutCmd(CommandContext ctx)
+		{
+			var interaction = new Interaction(ctx.Message) {MessageTimeout = TimeSpan.FromSeconds(5)};
+			var msg = new MessageBuilder()
+				.WithEmbed(EmbedBase.InputEmbed("This message will self-destruct if you do not say \"onii-chan daisuki\" within the next 5 seconds"));
+			await interaction.SendMessageAsync(msg);
+			var resp = await interaction.GetUserResponseAsync(x => x.Content.Contains("onii-chan daisuki"));
+			if (resp == null)
+				await interaction.ModifyLastMessage(m =>
+					m.WithEmbed(EmbedBase.InputEmbed("I wonder what this used to say?")));
+			else
+				await interaction.SendMessageAsync(new MessageBuilder().WithContent("Kyaah, kawaii~!"));
 		}
 	}
 
