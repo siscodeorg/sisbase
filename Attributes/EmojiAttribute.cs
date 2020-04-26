@@ -23,9 +23,8 @@ namespace sisbase.Attributes
 		/// Constructs a new EmojiAttribute from an unicode name <br></br>
 		/// Eg. :computer: , :white_check_mark:
 		/// </summary>
-		/// <param name="unicode">The unicode string  (requires being surrounded by colons)</param>
-		public EmojiAttribute(string unicode) => Emoji = DiscordEmoji.FromUnicode(SisbaseBot.Instance.Client, unicode) ?? DiscordEmoji.FromName(SisbaseBot.Instance.Client, unicode);
-
+		/// <param name="name">The discord name(requires being surrounded by colons)</param>
+		public EmojiAttribute(string name) => Emoji = DiscordEmoji.FromName(SisbaseBot.Instance.Client, name);
 		/// <summary>
 		/// Constructs a new EmojiAttribute from an known guild emoji id.
 		/// </summary>
