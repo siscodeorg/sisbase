@@ -19,14 +19,6 @@ namespace sisbase.Commands
 	/// </summary>
 	public class Developer : BaseCommandModule
 	{
-		[Command("firstInt")]
-		public async Task fisrtInt(CommandContext ctx, [RemainingText] string input)
-			=> await ctx.RespondAsync(embed: EmbedBase.OutputEmbed($"firstInt : {ctx.Message.FirstInt()}"));
-
-		[Command("firstEmoji")]
-		public async Task fisrtEmoji(CommandContext ctx, [RemainingText] string input)
-			=> await ctx.RespondAsync(embed: EmbedBase.OutputEmbed($"firstEmoji : {ctx.Message.FirstEmoji() ?? "NO EMOJI FOUND"} `{ctx.Message.FirstEmoji() ?? "NO EMOJI FOUND"}`"));
-
 		[Command("setMaster")]
 		[RequireOwner]
 		public async Task SetMaster(CommandContext ctx)
