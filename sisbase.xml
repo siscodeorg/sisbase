@@ -166,15 +166,14 @@
         </member>
         <member name="P:sisbase.SisbaseBot.Systems">
             <summary>
-            The System Managment Controller<br></br>
-            Responsible for registry and unregistry of all Systems.
+            The System Managment Controller <br></br> Responsible for registry and unregistry of all Systems.
             </summary>
         </member>
-        <member name="M:sisbase.SisbaseBot.#ctor(sisbase.Configuration.Sisbase)">
+        <member name="M:sisbase.SisbaseBot.#ctor(System.String)">
             <summary>
             Constructs a new <see cref="T:sisbase.SisbaseBot"/> from a given configuration
             </summary>
-            <param name="sisbaseConfiguration"> The configuration used by the bot.</param>
+            <param name="configDirectory">The directory used to store the configuration.</param>
         </member>
         <member name="M:sisbase.SisbaseBot.RTPR(DSharpPlus.Entities.DiscordMessage)">
             <summary>
@@ -183,11 +182,12 @@
         </member>
         <member name="M:sisbase.SisbaseBot.RegisterBot(System.Reflection.Assembly)">
             <summary>
-            Registers all systems and commands from a given assembly. The System and Command classes need to be public for registration
+            Registers all systems and commands from a given assembly. The System and Command classes
+            need to be public for registration
             </summary>
             <param name="asm">The assembly</param>
         </member>
-        <member name="M:sisbase.SisbaseBot.StartAsync">
+        <member name="M:sisbase.SisbaseBot.Start">
             <summary>
             Starts the bot instance
             </summary>
@@ -231,8 +231,8 @@
         </member>
         <member name="M:sisbase.Utils.EmbedBase.GroupHelpEmbed(DSharpPlus.CommandsNext.Command)">
             <summary>
-            Generates a new group help embed from an specified command <br></br>
-            The comand must be a GroupCommand.
+            Generates a new group help embed from an specified command <br></br> The comand must be
+            a GroupCommand.
             </summary>
             <param name="Command"></param>
             <returns></returns>
@@ -248,9 +248,9 @@
         </member>
         <member name="M:sisbase.Utils.EmbedBase.InputEmbed(System.String)">
             <summary>
-            Generates a new <see cref="T:DSharpPlus.Entities.DiscordEmbed"/> from a given query string. <br></br>
-            Prepends "Please Type : " to the given string.
-            /// </summary>
+            Generates a new <see cref="T:DSharpPlus.Entities.DiscordEmbed"/> from a given query string. <br></br> Prepends
+            "Please Type : " to the given string.
+            </summary>
             <param name="input">The string</param>
             <returns></returns>
         </member>

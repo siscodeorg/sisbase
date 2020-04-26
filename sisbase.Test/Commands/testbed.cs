@@ -91,6 +91,15 @@ namespace sisbase.Test.Commands
 			else
 				await interaction.SendMessageAsync(new MessageBuilder().WithContent("Kyaah, kawaii~!"));
 		}
+	
+		[Command("firstInt")]
+		public async Task fisrtInt(CommandContext ctx, [RemainingText] string input)
+			=> await ctx.RespondAsync(embed: EmbedBase.OutputEmbed($"firstInt : {ctx.Message.FirstInt()}"));
+
+		[Command("firstEmoji")]
+		public async Task fisrtEmoji(CommandContext ctx, [RemainingText] string input)
+			=> await ctx.RespondAsync(embed: EmbedBase.OutputEmbed($"firstEmoji : {ctx.Message.FirstEmoji() ?? "NO EMOJI FOUND"} `{ctx.Message.FirstEmoji() ?? "NO EMOJI FOUND"}`"));
+
 	}
 
 	[Group("stubgroup")]

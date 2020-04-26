@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-/// Code originated from D#+ <https://github.com/DSharpPlus/DSharpPlus>
+// Code originated from D#+ <https://github.com/DSharpPlus/DSharpPlus>
 namespace sisbase.Utils
 {
 	/// <summary>
