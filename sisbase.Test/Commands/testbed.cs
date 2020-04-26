@@ -1,4 +1,5 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
@@ -47,7 +48,18 @@ namespace sisbase.Test.Commands
 		[Command("firstEmoji")]
 		public async Task fisrtEmoji(CommandContext ctx, [RemainingText] string input)
 			=> await ctx.RespondAsync(embed: EmbedBase.OutputEmbed($"firstEmoji : {ctx.Message.FirstEmoji() ?? "NO EMOJI FOUND"} `{ctx.Message.FirstEmoji() ?? "NO EMOJI FOUND"}`"));
-
+		[Command("allPerms")]
+		public async Task allPerms(CommandContext ctx)
+			=> await ctx.RespondAsync(embed: EmbedBase.OutputEmbed(ctx.Member.GetPermissions().ToPermissionString()));
+		[Command("getPerms")]
+		public async Task getPerms(CommandContext ctx, DiscordMember member)
+			=> await ctx.RespondAsync(embed: EmbedBase.OutputEmbed(member.GetPermissions().ToPermissionString()));
+		[Command("isMod")]
+		public async Task isMod(CommandContext ctx)
+			=> await ctx.RespondAsync(embed: EmbedBase.OutputEmbed(ctx.Member.IsModerator() ? "TRUE" : "FALSE"));
+		[Command("isMod")]
+		public async Task isMod(CommandContext ctx, DiscordMember member)
+			=> await ctx.RespondAsync(embed: EmbedBase.OutputEmbed(member.IsModerator() ? "TRUE" : "FALSE"));
 	}
 
 	[Group("stubgroup")]
