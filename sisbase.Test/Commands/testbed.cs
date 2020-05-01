@@ -13,6 +13,10 @@ namespace sisbase.Test.Commands
 	[Group("test"), Description("The testbed commands")]
 	public class testbed : BaseCommandModule
 	{
+
+		[GroupCommand]
+		public async Task gcmd(CommandContext ctx) =>
+			await ctx.RespondAsync(embed: EmbedBase.GroupHelpEmbed(ctx.Command));
 		[Command("gnmdm")]
 		public async Task GetNextMessageDm(CommandContext ctx)
 		{
