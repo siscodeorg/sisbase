@@ -95,7 +95,25 @@ namespace sisbase.Test.Commands
 			else
 				await interaction.SendMessageAsync(new MessageBuilder().WithContent("Kyaah, kawaii~!"));
 		}
-	
+		[Command("interactEvents")]
+		public async Task interactEvents(CommandContext ctx)
+		{
+			var interaction = new Interaction(ctx.Message);
+			interaction.OriginMessageEdited  += (a, b) => {
+				interaction.ModifyLastMessage(x => x.WithContent($"Edited Message : {b.After.Content} | Type a new message to close the command.")).RunSynchronously();
+				return new Interactivity.EventArgs.MessageEditArgs(b.After, b.Before);
+			};
+			interaction.OriginMessageReacted += (a, b) => {
+				interaction.SendMessageAsync( new MessageBuilder().WithContent($"Emoji Added : {b.Emoji}")).RunSynchronously();
+				return new Interactivity.EventArgs.MessageReactArgs(b.Message,b.Emoji, b.User);
+			};
+			var msg = new MessageBuilder().WithContent("Please edit your original message");
+			await interaction.SendMessageAsync(msg);
+			var res = await interaction.GetUserResponseAsync();
+			await interaction.SendMessageAsync(msg.WithContent("Command Closed"));
+			interaction.Close();
+		}
+
 		[Command("firstInt")]
 		public async Task fisrtInt(CommandContext ctx, [RemainingText] string input)
 			=> await ctx.RespondAsync(embed: EmbedBase.OutputEmbed($"firstInt : {ctx.Message.FirstInt()}"));
