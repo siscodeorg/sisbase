@@ -14,8 +14,6 @@ namespace sisbase.Interactivity
 
 	public class Interaction
 	{
-		//TODO : 
-		//Learn how D#+ AsyncEventHandler Works and implement it here.
 		public List<DiscordMessage> BotMessages { get; } = new List<DiscordMessage>();
 
 		#region Delegates
@@ -36,6 +34,9 @@ namespace sisbase.Interactivity
 		private AsyncEvent<MessageReactionRemoveEventArgs> _messageReactRemove;
 		private AsyncEvent<MessageUpdateEventArgs> _messageEdit;
 		private AsyncEvent<MessageDeleteEventArgs> _messageDelete;
+
+		/// All Interaction Events
+		private AsyncEvent _onClose;
 		#endregion Delegates
 		#region Events
 		public event AsyncEventHandler<MessageReactionAddEventArgs> LastMessageReactionAdded
@@ -109,6 +110,12 @@ namespace sisbase.Interactivity
 			add => _messageDelete.Register(value);
 			remove => _messageDelete.Unregister(value);
 		}
+
+		public event AsyncEventHandler OnClose
+		{
+			add => _onClose.Register(value);
+			remove => _onClose.Unregister(value);
+		}
 		#endregion Events
 		#region Event Dispatchers
 		private async Task LastMessageDispatch(MessageReactionAddEventArgs e)
@@ -137,6 +144,9 @@ namespace sisbase.Interactivity
 			=> await _messageEdit.InvokeAsync(e);
 		private async Task MessageDispatch(MessageDeleteEventArgs e)
 			=> await _messageDelete.InvokeAsync(e);
+
+		private async Task CloseDispatch()
+			=> await _onClose.InvokeAsync();
 		#endregion
 		public List<DiscordMessage> UserMessages { get; } = new List<DiscordMessage>();
 		
@@ -250,8 +260,9 @@ namespace sisbase.Interactivity
 			}
 			await MessageDispatch(e);
 		}
-		public void Close()
+		public async Task Close()
 		{
+			await CloseDispatch();
 			IMC.RemoveIntraction(this);
 			MessageTimeout = TimeSpan.Zero;
 			BotMessages.Clear();
