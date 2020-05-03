@@ -179,7 +179,7 @@ namespace sisbase.Interactivity
 
 		public async Task<DiscordMessage> GetUserResponseAsync()
 		{
-			var msg = await UserMessages.Last().GetNextMessageWithTimeoutAsync(MessageTimeout);
+			var msg = await UserMessages.Last().GetNextMessageAsync(MessageTimeout);
 			UserMessages.Add(msg.Result);
 			IMC.UpdateInteraction(Origin, this);
 			return msg.Result;
@@ -187,7 +187,7 @@ namespace sisbase.Interactivity
 
 		public async Task<DiscordMessage> GetUserResponseAsync(Func<DiscordMessage, bool> filter)
 		{
-			var msg = await UserMessages.Last().GetNextMessageWithTimeoutAsync(filter, MessageTimeout);
+			var msg = await UserMessages.Last().GetNextMessageAsync(filter, MessageTimeout);
 			UserMessages.Add(msg.Result);
 			IMC.UpdateInteraction(Origin, this);
 			return msg.Result;
@@ -273,35 +273,5 @@ namespace sisbase.Interactivity
 			var response = await channel.GetNextMessageAsync(interactioncheck);
 			return new Interaction(response.Result);
 		}
-
-		/// <summary>
-		/// this exists because GetNextMessageAsync from D#+ does not propagate timeout information
-		/// </summary>
-		/// <param name="c"></param>
-		/// <param name="predicate"></param>
-		/// <param name="timeoutoverride"></param>
-		/// <returns></returns>
-		/// <exception cref="InvalidOperationException"></exception>
-		internal static async Task<InteractivityResult<DiscordMessage>> GetNextMessageWithTimeoutAsync(this DiscordChannel c, Func<DiscordMessage, bool> predicate,
-			TimeSpan? timeoutoverride = null)
-		{
-			var interactivity = SisbaseBot.Instance.Interactivity;
-
-			if (interactivity == null)
-				throw new InvalidOperationException("Interactivity was not set up!");
-
-			if (timeoutoverride == null)
-				return await interactivity.WaitForMessageAsync(x => x.ChannelId == c.Id && predicate(x));
-			else
-				return await interactivity.WaitForMessageAsync(x => x.ChannelId == c.Id && predicate(x),
-					timeoutoverride);
-		}
-
-		internal static async Task<InteractivityResult<DiscordMessage>> GetNextMessageWithTimeoutAsync(this DiscordMessage m, TimeSpan? timeoutoverride = null)
-			=> await m.Channel.GetNextMessageWithTimeoutAsync(x => x.Author.Id == m.Author.Id && m.ChannelId == x.ChannelId, timeoutoverride);
-
-		internal static async Task<InteractivityResult<DiscordMessage>> GetNextMessageWithTimeoutAsync(this DiscordMessage m, Func<DiscordMessage, bool> predicate, 
-			TimeSpan? timeoutoverride = null)
-			=> await m.Channel.GetNextMessageWithTimeoutAsync(x => x.Author.Id == m.Author.Id && m.ChannelId == x.ChannelId && predicate(x), timeoutoverride);
 	}
 }
