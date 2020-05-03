@@ -32,28 +32,28 @@ namespace sisbase.Systems
 
 		private async Task ReactionRemovedHandler(MessageReactionRemoveEventArgs e)
 		{
-			if (!IMC.InteractionRegistry.Any(x => x.UserMessages.Contains(e.Message))) return;
 			var interaction = IMC.InteractionRegistry.Find(x => x.UserMessages.Contains(e.Message));
+			if (interaction == null) return;
 			await interaction.Dispatch(e);
 		}
 
 		private async Task DeleteHandler(MessageDeleteEventArgs e)
 		{
-			if (!IMC.InteractionRegistry.Any(x => x.UserMessages.Contains(e.Message))) return;
 			var interaction = IMC.InteractionRegistry.Find(x => x.UserMessages.Contains(e.Message));
+			if (interaction == null) return;
 			await interaction.Dispatch(e);
 		}
 
 		private async Task ReactionAddHandler(MessageReactionAddEventArgs e)
 		{
-			if (!IMC.InteractionRegistry.Any(x => x.UserMessages.Contains(e.Message))) return;
 			var interaction = IMC.InteractionRegistry.Find(x => x.UserMessages.Contains(e.Message));
+			if (interaction == null) return;
 			await interaction.Dispatch(e);
 		}
 		private async Task EditHandler(MessageUpdateEventArgs e)
 		{
-			if (!IMC.InteractionRegistry.Any(x => x.UserMessages.Contains(e.Message))) return;
 			var interaction = IMC.InteractionRegistry.Find(x => x.UserMessages.Contains(e.Message));
+			if (interaction == null) return;
 			await interaction.Dispatch(e);
 		}
 
