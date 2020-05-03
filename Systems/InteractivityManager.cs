@@ -1,4 +1,5 @@
 ﻿using DSharpPlus;
+using DSharpPlus.EventArgs;
 using sisbase.Interactivity;
 using sisbase.Utils;
 using System;
@@ -6,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static sisbase.Interactivity.EventArgs;
 
 namespace sisbase.Systems
 {
@@ -26,27 +26,35 @@ namespace sisbase.Systems
 		{
 			client.MessageUpdated += EditHandler;
 			client.MessageReactionAdded += ReactionAddHandler;
+			client.MessageReactionRemoved += ReactionRemovedHandler;
 			client.MessageDeleted += DeleteHandler;
 		}
 
-		private async Task DeleteHandler(DSharpPlus.EventArgs.MessageDeleteEventArgs e)
+		private async Task ReactionRemovedHandler(MessageReactionRemoveEventArgs e)
 		{
 			if (!IMC.InteractionRegistry.Any(x => x.UserMessages.Contains(e.Message))) return;
 			var interaction = IMC.InteractionRegistry.Find(x => x.UserMessages.Contains(e.Message));
-			interaction.InvokeEvent(new MessageDeleteArgs(e.Message));
+			await interaction.Dispatch(e);
 		}
 
-		private async Task ReactionAddHandler(DSharpPlus.EventArgs.MessageReactionAddEventArgs e)
+		private async Task DeleteHandler(MessageDeleteEventArgs e)
 		{
 			if (!IMC.InteractionRegistry.Any(x => x.UserMessages.Contains(e.Message))) return;
 			var interaction = IMC.InteractionRegistry.Find(x => x.UserMessages.Contains(e.Message));
-			interaction.InvokeEvent(new MessageReactArgs(e.Message, e.Emoji,e.User));
+			await interaction.Dispatch(e);
 		}
-		private async Task EditHandler(DSharpPlus.EventArgs.MessageUpdateEventArgs e)
+
+		private async Task ReactionAddHandler(MessageReactionAddEventArgs e)
 		{
 			if (!IMC.InteractionRegistry.Any(x => x.UserMessages.Contains(e.Message))) return;
 			var interaction = IMC.InteractionRegistry.Find(x => x.UserMessages.Contains(e.Message));
-			interaction.InvokeEvent(new MessageEditArgs(e.MessageBefore,e.Message)) ;
+			await interaction.Dispatch(e);
+		}
+		private async Task EditHandler(MessageUpdateEventArgs e)
+		{
+			if (!IMC.InteractionRegistry.Any(x => x.UserMessages.Contains(e.Message))) return;
+			var interaction = IMC.InteractionRegistry.Find(x => x.UserMessages.Contains(e.Message));
+			await interaction.Dispatch(e);
 		}
 
 		public void Deactivate()
