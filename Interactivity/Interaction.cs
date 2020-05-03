@@ -174,6 +174,7 @@ namespace sisbase.Interactivity
 			_originReactRemove = new AsyncEvent<MessageReactionRemoveEventArgs>(HandleExceptions, "ORIGIN_MESSAGE_REACTION_REMOVED");
 			_originEdit = new AsyncEvent<MessageUpdateEventArgs>(HandleExceptions, "ORIGIN_MESSAGE_EDIT");
 			_originDelete = new AsyncEvent<MessageDeleteEventArgs>(HandleExceptions, "ORIGIN_MESSAGE_DELETE");
+			_onClose = new AsyncEvent(HandleExceptions, "INTERACTION_CLOSED");
 			IMC.AddInteraction(this);
 		}
 		
