@@ -99,16 +99,12 @@ namespace sisbase.Test.Commands
 		public async Task interactEvents(CommandContext ctx)
 		{
 			var interaction = new Interaction(ctx.Message);
-			interaction.OriginMessageEdited  += (a, b) => {
-				interaction.ModifyLastMessage(x => x.WithContent($"Edited Message : {b.After.Content} | Type a new message to close the command.")).RunSynchronously();
-				return new Interactivity.EventArgs.MessageEditArgs(b.After, b.Before);
-			};
-			interaction.OriginMessageReacted += (a, b) => {
-				interaction.SendMessageAsync( new MessageBuilder().WithContent($"Emoji Added : {b.Emoji}")).RunSynchronously();
-				return new Interactivity.EventArgs.MessageReactArgs(b.Message,b.Emoji, b.User);
-			};
 			var msg = new MessageBuilder().WithContent("Please edit your original message");
 			await interaction.SendMessageAsync(msg);
+			interaction.OriginDeleted += async (e) => await interaction.SendMessageAsync(new MessageBuilder().WithContent("Origin message deleted"));
+			interaction.OriginEdited += async (e) => await interaction.SendMessageAsync(new MessageBuilder().WithContent($"Origin message edited : \n{e.MessageBefore?.Content} -> {e.Message.Content}"));
+			interaction.OriginReactionAdded += async (e) => await interaction.SendMessageAsync(new MessageBuilder().WithContent($"Origin message [+] reaction : {e.Emoji} | {e.User.Username}"));
+			interaction.OriginReactionRemoved += async (e) => await interaction.SendMessageAsync(new MessageBuilder().WithContent($"Origin message [-] reaction : {e.Emoji} | {e.User.Username}"));
 			var res = await interaction.GetUserResponseAsync();
 			await interaction.SendMessageAsync(msg.WithContent("Command Closed"));
 			interaction.Close();
