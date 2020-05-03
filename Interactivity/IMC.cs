@@ -18,7 +18,5 @@ namespace sisbase.Interactivity
 			=> InteractionRegistry.Remove(interaction);
 		internal static Interaction GetInteraction(DiscordMessage origin)
 			=> InteractionRegistry.Find(x => x.Origin == origin);
-		internal static void UpdateInteraction(DiscordMessage origin, Interaction delta)
-		{ InteractionRegistry.Remove(GetInteraction(origin)); AddInteraction(delta); }
 	}
 }

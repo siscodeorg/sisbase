@@ -174,14 +174,12 @@ namespace sisbase.Interactivity
 		{
 			var msg = await message.Build(Origin.Channel);
 			BotMessages.Add(msg);
-			IMC.UpdateInteraction(Origin, this);
 		}
 
 		public async Task<DiscordMessage> GetUserResponseAsync()
 		{
 			var msg = await UserMessages.Last().GetNextMessageAsync(MessageTimeout);
 			UserMessages.Add(msg.Result);
-			IMC.UpdateInteraction(Origin, this);
 			return msg.Result;
 		}
 
@@ -189,7 +187,6 @@ namespace sisbase.Interactivity
 		{
 			var msg = await UserMessages.Last().GetNextMessageAsync(filter, MessageTimeout);
 			UserMessages.Add(msg.Result);
-			IMC.UpdateInteraction(Origin, this);
 			return msg.Result;
 		}
 
@@ -200,7 +197,6 @@ namespace sisbase.Interactivity
 			var msg = await builder.Build(BotMessages.Last().Channel);
 			BotMessages.RemoveAll(x => x.Id == builder.MessageId);
 			BotMessages.Add(msg);
-			IMC.UpdateInteraction(Origin, this);
 		}
 
 		public async Task Dispatch(MessageReactionAddEventArgs e)
