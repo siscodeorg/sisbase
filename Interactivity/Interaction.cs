@@ -1,12 +1,12 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using sisbase.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static sisbase.Interactivity.EventArgs;
 
 namespace sisbase.Interactivity
 {
@@ -19,28 +19,125 @@ namespace sisbase.Interactivity
 		public List<DiscordMessage> BotMessages { get; } = new List<DiscordMessage>();
 
 		#region Delegates
-	
-		public delegate MessageReactArgs onLastMessageReact(Interaction sender,MessageReactArgs args);
-		public delegate MessageReactArgs onOriginMessageReact(Interaction sender, MessageReactArgs args);
-		public delegate MessageReactArgs onMessageReact(Interaction sender, MessageReactArgs args);
-		public delegate MessageEditArgs onLastMessageEdit(Interaction sender, MessageEditArgs args);
-		public delegate MessageEditArgs onOriginMessageEdit(Interaction sender, MessageEditArgs args);
-		public delegate MessageEditArgs onMessageEdit(Interaction sender, MessageEditArgs args);
-		public delegate MessageDeleteArgs onLastMessageDelete(Interaction sender, MessageDeleteArgs args);
-		public delegate MessageDeleteArgs onOriginMessageDelete(Interaction sender, MessageDeleteArgs args);
-		public delegate MessageDeleteArgs onMessageDelete(Interaction sender, MessageDeleteArgs args);
+		/// All LastMessage Events
+		private AsyncEvent<MessageReactionAddEventArgs> _lastMessageReactAdd;
+		private AsyncEvent<MessageReactionRemoveEventArgs> _lastMessageReactRemove;
+		private AsyncEvent<MessageUpdateEventArgs> _lastMessageEdit;
+		private AsyncEvent<MessageDeleteEventArgs> _lastMessageDelete;
+
+		/// All Origin Events
+		private AsyncEvent<MessageReactionAddEventArgs> _originReactAdd;
+		private AsyncEvent<MessageReactionRemoveEventArgs> _originReactRemove;
+		private AsyncEvent<MessageUpdateEventArgs> _originEdit;
+		private AsyncEvent<MessageDeleteEventArgs> _originDelete;
+
+		/// All Message Events
+		private AsyncEvent<MessageReactionAddEventArgs> _messageReactAdd;
+		private AsyncEvent<MessageReactionRemoveEventArgs> _messageReactRemove;
+		private AsyncEvent<MessageUpdateEventArgs> _messageEdit;
+		private AsyncEvent<MessageDeleteEventArgs> _messageDelete;
 		#endregion Delegates
 		#region Events
-		public event onLastMessageReact LastMessageReacted;
-		public event onOriginMessageReact OriginMessageReacted;
-		public event onMessageReact MessageReacted;
-		public event onLastMessageEdit LastMessageEdited;
-		public event onOriginMessageEdit OriginMessageEdited;
-		public event onMessageEdit MessageEdited;
-		public event onLastMessageDelete LastMessageDeleted;
-		public event onOriginMessageDelete OriginMessageDeleted;
-		public event onMessageDelete MessageDeleted;
+		public event AsyncEventHandler<MessageReactionAddEventArgs> LastMessageReactionAdded
+		{
+			add => _lastMessageReactAdd.Register(value);
+			remove => _lastMessageReactAdd.Unregister(value);
+		}
+
+		public event AsyncEventHandler<MessageReactionRemoveEventArgs> LastMessageReactionRemoved
+		{
+			add => _lastMessageReactRemove.Register(value);
+			remove => _lastMessageReactRemove.Unregister(value);
+		}
+
+		public event AsyncEventHandler<MessageUpdateEventArgs> LastMessageEdited
+		{
+			add => _lastMessageEdit.Register(value);
+			remove => _lastMessageEdit.Unregister(value);	
+		}
+
+		public event AsyncEventHandler<MessageDeleteEventArgs> LastMessageDeleted
+		{
+			add => _lastMessageDelete.Register(value);
+			remove => _lastMessageDelete.Unregister(value);
+		}
+
+		public event AsyncEventHandler<MessageReactionAddEventArgs> OriginReactionAdded
+		{
+			add => _originReactAdd.Register(value);
+			remove => _originReactAdd.Unregister(value);
+		}
+
+		public event AsyncEventHandler<MessageReactionRemoveEventArgs> OriginReactionRemoved
+		{
+			add => _originReactRemove.Register(value);
+			remove => _originReactRemove.Unregister(value);
+		}
+
+		public event AsyncEventHandler<MessageUpdateEventArgs> OriginEdited
+		{
+			add => _originEdit.Register(value);
+			remove => _originEdit.Unregister(value);
+		}
+
+		public event AsyncEventHandler<MessageDeleteEventArgs> OriginDeleted
+		{
+			add => _originDelete.Register(value);
+			remove => _originDelete.Unregister(value);
+		}
+
+		public event AsyncEventHandler<MessageReactionAddEventArgs> MessageReactionAdded
+		{
+			add => _messageReactAdd.Register(value);
+			remove => _messageReactAdd.Unregister(value);
+		}
+
+		public event AsyncEventHandler<MessageReactionRemoveEventArgs> MessageReactionRemoved
+		{
+			add => _messageReactRemove.Register(value);
+			remove => _messageReactRemove.Unregister(value);
+		}
+
+		public event AsyncEventHandler<MessageUpdateEventArgs> MessageEdited
+		{
+			add => _messageEdit.Register(value);
+			remove => _messageEdit.Unregister(value);
+		}
+
+		public event AsyncEventHandler<MessageDeleteEventArgs> MessageDeleted
+		{
+			add => _messageDelete.Register(value);
+			remove => _messageDelete.Unregister(value);
+		}
 		#endregion Events
+		#region Event Dispatchers
+		private async Task LastMessageDispatch(MessageReactionAddEventArgs e)
+			=> await _lastMessageReactAdd.InvokeAsync(e);
+		private async Task LastMessageDispatch(MessageReactionRemoveEventArgs e)
+			=> await _lastMessageReactRemove.InvokeAsync(e);
+		private async Task LastMessageDispatch(MessageUpdateEventArgs e)
+			=> await _lastMessageEdit.InvokeAsync(e);
+		private async Task LastMessageDispatch(MessageDeleteEventArgs e)
+			=> await _lastMessageDelete.InvokeAsync(e);
+
+		private async Task OriginDispatch(MessageReactionAddEventArgs e)
+			=> await _originReactAdd.InvokeAsync(e);
+		private async Task OriginDispatch(MessageReactionRemoveEventArgs e)
+			=> await _originReactRemove.InvokeAsync(e);
+		private async Task OriginDispatch(MessageUpdateEventArgs e)
+			=> await _originEdit.InvokeAsync(e);
+		private async Task OriginDispatch(MessageDeleteEventArgs e)
+			=> await _originDelete.InvokeAsync(e);
+
+		private async Task MessageDispatch(MessageReactionAddEventArgs e)
+			=> await _messageReactAdd.InvokeAsync(e);
+		private async Task MessageDispatch(MessageReactionRemoveEventArgs e)
+			=> await _messageReactRemove.InvokeAsync(e);
+		private async Task MessageDispatch(MessageUpdateEventArgs e)
+			=> await _messageEdit.InvokeAsync(e);
+		private async Task MessageDispatch(MessageDeleteEventArgs e)
+			=> await _messageDelete.InvokeAsync(e);
+		#endregion
 		public List<DiscordMessage> UserMessages { get; } = new List<DiscordMessage>();
 		
 		public DiscordMessage Origin { get; }
@@ -55,8 +152,23 @@ namespace sisbase.Interactivity
 			}
 			Origin = origin;
 			UserMessages.Add(origin);
+			_lastMessageReactAdd = new AsyncEvent<MessageReactionAddEventArgs>(HandleExceptions, "LAST_MESSAGE_REACTION_ADDED");
+			_lastMessageReactRemove = new AsyncEvent<MessageReactionRemoveEventArgs>(HandleExceptions, "LAST_MESSAGE_REACTION_REMOVED");
+			_lastMessageEdit = new AsyncEvent<MessageUpdateEventArgs>(HandleExceptions, "LAST_MESSAGE_EDIT");
+			_lastMessageDelete = new AsyncEvent<MessageDeleteEventArgs>(HandleExceptions, "LAST_MESSAGE_DELETE");
+			_messageReactAdd = new AsyncEvent<MessageReactionAddEventArgs>(HandleExceptions, "SISBASE_MESSAGE_REACTION_ADDED");
+			_messageReactRemove = new AsyncEvent<MessageReactionRemoveEventArgs>(HandleExceptions, "SISBASE_MESSAGE_REACTION_REMOVED");
+			_messageEdit = new AsyncEvent<MessageUpdateEventArgs>(HandleExceptions, "SISBASE_MESSAGE_EDIT");
+			_messageDelete = new AsyncEvent<MessageDeleteEventArgs>(HandleExceptions, "SISBASE_MESSAGE_DELETE");
+			_originReactAdd = new AsyncEvent<MessageReactionAddEventArgs>(HandleExceptions, "ORIGIN_MESSAGE_REACTION_ADDED");
+			_originReactRemove = new AsyncEvent<MessageReactionRemoveEventArgs>(HandleExceptions, "ORIGIN_MESSAGE_REACTION_REMOVED");
+			_originEdit = new AsyncEvent<MessageUpdateEventArgs>(HandleExceptions, "ORIGIN_MESSAGE_EDIT");
+			_originDelete = new AsyncEvent<MessageDeleteEventArgs>(HandleExceptions, "ORIGIN_MESSAGE_DELETE");
 			IMC.AddInteraction(this);
 		}
+		
+		private void HandleExceptions(string eventName, Exception ex)
+			=> Logger.Warn("InteractionAPI", $"An {ex.GetType()} happened in {eventName}.");
 
 		public async Task SendMessageAsync(MessageBuilder message)
 		{
@@ -90,29 +202,57 @@ namespace sisbase.Interactivity
 			BotMessages.Add(msg);
 			IMC.UpdateInteraction(Origin, this);
 		}
-		internal void InvokeEvent(MessageEditArgs args) 
+
+		public async Task Dispatch(MessageReactionAddEventArgs e)
 		{
-			if (args.After.Id == Origin.Id)
-				OriginMessageEdited?.Invoke(this, args);
-			if (args.After.Id == UserMessages.Last().Id)
-				LastMessageEdited?.Invoke(this, args);
-			MessageEdited?.Invoke(this, args);
+			if(e.Message == UserMessages.Last())
+			{
+				await LastMessageDispatch(e);
+			}
+			if(e.Message == Origin)
+			{
+				await OriginDispatch(e);
+			}
+			await MessageDispatch(e);
 		}
-		internal void InvokeEvent(MessageReactArgs args)
+
+		public async Task Dispatch(MessageReactionRemoveEventArgs e)
 		{
-			if (args.Message.Id == Origin.Id)
-				OriginMessageReacted?.Invoke(this, args);
-			if (args.Message.Id == UserMessages.Last().Id)
-				LastMessageReacted?.Invoke(this, args);
-			MessageReacted?.Invoke(this, args);
+			if (e.Message == UserMessages.Last())
+			{
+				await LastMessageDispatch(e);
+			}
+			if (e.Message == Origin)
+			{
+				await OriginDispatch(e);
+			}
+			await MessageDispatch(e);
 		}
-		internal void InvokeEvent(MessageDeleteArgs args)
+
+		public async Task Dispatch(MessageUpdateEventArgs e)
 		{
-			if (args.Message.Id == Origin.Id)
-				OriginMessageDeleted?.Invoke(this, args);
-			if (args.Message.Id == UserMessages.Last().Id)
-				LastMessageDeleted?.Invoke(this, args);
-			MessageDeleted?.Invoke(this, args);
+			if (e.Message == UserMessages.Last())
+			{
+				await LastMessageDispatch(e);
+			}
+			if (e.Message == Origin)
+			{
+				await OriginDispatch(e);
+			}
+			await MessageDispatch(e);
+		}
+
+		public async Task Dispatch(MessageDeleteEventArgs e)
+		{
+			if (e.Message == UserMessages.Last())
+			{
+				await LastMessageDispatch(e);
+			}
+			if (e.Message == Origin)
+			{
+				await OriginDispatch(e);
+			}
+			await MessageDispatch(e);
 		}
 		public void Close()
 		{
