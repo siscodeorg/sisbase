@@ -23,6 +23,12 @@ namespace sisbase.Interactivity
 		private AsyncEvent<MessageUpdateEventArgs> _lastUserMessageEdit;
 		private AsyncEvent<MessageDeleteEventArgs> _lastUserMessageDelete;
 
+		/// All LastBotMessage Events
+		private AsyncEvent<MessageReactionAddEventArgs> _lastBotMessageReactAdd;
+		private AsyncEvent<MessageReactionRemoveEventArgs> _lastBotMessageReactRemove;
+		private AsyncEvent<MessageUpdateEventArgs> _lastBotMessageEdit;
+		private AsyncEvent<MessageDeleteEventArgs> _lastBotMessageDelete;
+
 		/// All Origin Events
 		private AsyncEvent<MessageReactionAddEventArgs> _originReactAdd;
 		private AsyncEvent<MessageReactionRemoveEventArgs> _originReactRemove;
@@ -61,6 +67,30 @@ namespace sisbase.Interactivity
 		{
 			add => _lastUserMessageDelete.Register(value);
 			remove => _lastUserMessageDelete.Unregister(value);
+		}
+
+		public event AsyncEventHandler<MessageReactionAddEventArgs> LastBotMessageReactionAdded
+		{
+			add => _lastBotMessageReactAdd.Register(value);
+			remove => _lastBotMessageReactAdd.Unregister(value);
+		}
+
+		public event AsyncEventHandler<MessageReactionRemoveEventArgs> LastBotMessageReactionRemoved
+		{
+			add => _lastBotMessageReactRemove.Register(value);
+			remove => _lastBotMessageReactRemove.Unregister(value);
+		}
+
+		public event AsyncEventHandler<MessageUpdateEventArgs> LastBotMessageEdited
+		{
+			add => _lastBotMessageEdit.Register(value);
+			remove => _lastBotMessageEdit.Unregister(value);
+		}
+
+		public event AsyncEventHandler<MessageDeleteEventArgs> LastBotMessageDeleted
+		{
+			add => _lastBotMessageDelete.Register(value);
+			remove => _lastBotMessageDelete.Unregister(value);
 		}
 
 		public event AsyncEventHandler<MessageReactionAddEventArgs> OriginReactionAdded
@@ -127,6 +157,15 @@ namespace sisbase.Interactivity
 		private async Task LastMessageDispatch(MessageDeleteEventArgs e)
 			=> await _lastUserMessageDelete.InvokeAsync(e);
 
+		private async Task LastBotMessageDispatch(MessageReactionAddEventArgs e)
+			=> await _lastBotMessageReactAdd.InvokeAsync(e);
+		private async Task LastBotMessageDispatch(MessageReactionRemoveEventArgs e)
+			=> await _lastBotMessageReactRemove.InvokeAsync(e);
+		private async Task LastBotMessageDispatch(MessageUpdateEventArgs e)
+			=> await _lastBotMessageEdit.InvokeAsync(e);
+		private async Task LastBotMessageDispatch(MessageDeleteEventArgs e)
+			=> await _lastBotMessageDelete.InvokeAsync(e);
+
 		private async Task OriginDispatch(MessageReactionAddEventArgs e)
 			=> await _originReactAdd.InvokeAsync(e);
 		private async Task OriginDispatch(MessageReactionRemoveEventArgs e)
@@ -166,6 +205,10 @@ namespace sisbase.Interactivity
 			_lastUserMessageReactRemove = new AsyncEvent<MessageReactionRemoveEventArgs>(HandleExceptions, "LAST_USER_MESSAGE_REACTION_REMOVED");
 			_lastUserMessageEdit = new AsyncEvent<MessageUpdateEventArgs>(HandleExceptions, "LAST_USER_MESSAGE_EDIT");
 			_lastUserMessageDelete = new AsyncEvent<MessageDeleteEventArgs>(HandleExceptions, "LAST_USER_MESSAGE_DELETE");
+			_lastBotMessageReactAdd = new AsyncEvent<MessageReactionAddEventArgs>(HandleExceptions, "LAST_BOT_MESSAGE_REACTION_ADDED");
+			_lastBotMessageReactRemove = new AsyncEvent<MessageReactionRemoveEventArgs>(HandleExceptions, "LAST_BOT_MESSAGE_REACTION_REMOVED");
+			_lastBotMessageEdit = new AsyncEvent<MessageUpdateEventArgs>(HandleExceptions, "LAST_BOT_MESSAGE_EDIT");
+			_lastBotMessageDelete = new AsyncEvent<MessageDeleteEventArgs>(HandleExceptions, "LAST_BOT_MESSAGE_DELETE");
 			_messageReactAdd = new AsyncEvent<MessageReactionAddEventArgs>(HandleExceptions, "SISBASE_MESSAGE_REACTION_ADDED");
 			_messageReactRemove = new AsyncEvent<MessageReactionRemoveEventArgs>(HandleExceptions, "SISBASE_MESSAGE_REACTION_REMOVED");
 			_messageEdit = new AsyncEvent<MessageUpdateEventArgs>(HandleExceptions, "SISBASE_MESSAGE_EDIT");
@@ -216,6 +259,10 @@ namespace sisbase.Interactivity
 			{
 				await LastMessageDispatch(e);
 			}
+			if(e.Message == BotMessages.Last())
+			{
+				await LastBotMessageDispatch(e);
+			}
 			if(e.Message == Origin)
 			{
 				await OriginDispatch(e);
@@ -228,6 +275,10 @@ namespace sisbase.Interactivity
 			if (e.Message == UserMessages.Last())
 			{
 				await LastMessageDispatch(e);
+			}
+			if (e.Message == BotMessages.Last())
+			{
+				await LastBotMessageDispatch(e);
 			}
 			if (e.Message == Origin)
 			{
@@ -242,6 +293,10 @@ namespace sisbase.Interactivity
 			{
 				await LastMessageDispatch(e);
 			}
+			if (e.Message == BotMessages.Last())
+			{
+				await LastBotMessageDispatch(e);
+			}
 			if (e.Message == Origin)
 			{
 				await OriginDispatch(e);
@@ -254,6 +309,10 @@ namespace sisbase.Interactivity
 			if (e.Message == UserMessages.Last())
 			{
 				await LastMessageDispatch(e);
+			}
+			if (e.Message == BotMessages.Last())
+			{
+				await LastBotMessageDispatch(e);
 			}
 			if (e.Message == Origin)
 			{
