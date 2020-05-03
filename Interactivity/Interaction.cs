@@ -17,11 +17,11 @@ namespace sisbase.Interactivity
 		public List<DiscordMessage> BotMessages { get; } = new List<DiscordMessage>();
 
 		#region Delegates
-		/// All LastMessage Events
-		private AsyncEvent<MessageReactionAddEventArgs> _lastMessageReactAdd;
-		private AsyncEvent<MessageReactionRemoveEventArgs> _lastMessageReactRemove;
-		private AsyncEvent<MessageUpdateEventArgs> _lastMessageEdit;
-		private AsyncEvent<MessageDeleteEventArgs> _lastMessageDelete;
+		/// All LastUserMessage Events
+		private AsyncEvent<MessageReactionAddEventArgs> _lastUserMessageReactAdd;
+		private AsyncEvent<MessageReactionRemoveEventArgs> _lastUserMessageReactRemove;
+		private AsyncEvent<MessageUpdateEventArgs> _lastUserMessageEdit;
+		private AsyncEvent<MessageDeleteEventArgs> _lastUserMessageDelete;
 
 		/// All Origin Events
 		private AsyncEvent<MessageReactionAddEventArgs> _originReactAdd;
@@ -39,28 +39,28 @@ namespace sisbase.Interactivity
 		private AsyncEvent _onClose;
 		#endregion Delegates
 		#region Events
-		public event AsyncEventHandler<MessageReactionAddEventArgs> LastMessageReactionAdded
+		public event AsyncEventHandler<MessageReactionAddEventArgs> LastUserMessageReactionAdded
 		{
-			add => _lastMessageReactAdd.Register(value);
-			remove => _lastMessageReactAdd.Unregister(value);
+			add => _lastUserMessageReactAdd.Register(value);
+			remove => _lastUserMessageReactAdd.Unregister(value);
 		}
 
-		public event AsyncEventHandler<MessageReactionRemoveEventArgs> LastMessageReactionRemoved
+		public event AsyncEventHandler<MessageReactionRemoveEventArgs> LastUserMessageReactionRemoved
 		{
-			add => _lastMessageReactRemove.Register(value);
-			remove => _lastMessageReactRemove.Unregister(value);
+			add => _lastUserMessageReactRemove.Register(value);
+			remove => _lastUserMessageReactRemove.Unregister(value);
 		}
 
-		public event AsyncEventHandler<MessageUpdateEventArgs> LastMessageEdited
+		public event AsyncEventHandler<MessageUpdateEventArgs> LastUserMessageEdited
 		{
-			add => _lastMessageEdit.Register(value);
-			remove => _lastMessageEdit.Unregister(value);	
+			add => _lastUserMessageEdit.Register(value);
+			remove => _lastUserMessageEdit.Unregister(value);	
 		}
 
-		public event AsyncEventHandler<MessageDeleteEventArgs> LastMessageDeleted
+		public event AsyncEventHandler<MessageDeleteEventArgs> LastUserMessageDeleted
 		{
-			add => _lastMessageDelete.Register(value);
-			remove => _lastMessageDelete.Unregister(value);
+			add => _lastUserMessageDelete.Register(value);
+			remove => _lastUserMessageDelete.Unregister(value);
 		}
 
 		public event AsyncEventHandler<MessageReactionAddEventArgs> OriginReactionAdded
@@ -119,13 +119,13 @@ namespace sisbase.Interactivity
 		#endregion Events
 		#region Event Dispatchers
 		private async Task LastMessageDispatch(MessageReactionAddEventArgs e)
-			=> await _lastMessageReactAdd.InvokeAsync(e);
+			=> await _lastUserMessageReactAdd.InvokeAsync(e);
 		private async Task LastMessageDispatch(MessageReactionRemoveEventArgs e)
-			=> await _lastMessageReactRemove.InvokeAsync(e);
+			=> await _lastUserMessageReactRemove.InvokeAsync(e);
 		private async Task LastMessageDispatch(MessageUpdateEventArgs e)
-			=> await _lastMessageEdit.InvokeAsync(e);
+			=> await _lastUserMessageEdit.InvokeAsync(e);
 		private async Task LastMessageDispatch(MessageDeleteEventArgs e)
-			=> await _lastMessageDelete.InvokeAsync(e);
+			=> await _lastUserMessageDelete.InvokeAsync(e);
 
 		private async Task OriginDispatch(MessageReactionAddEventArgs e)
 			=> await _originReactAdd.InvokeAsync(e);
@@ -162,10 +162,10 @@ namespace sisbase.Interactivity
 			}
 			Origin = origin;
 			UserMessages.Add(origin);
-			_lastMessageReactAdd = new AsyncEvent<MessageReactionAddEventArgs>(HandleExceptions, "LAST_MESSAGE_REACTION_ADDED");
-			_lastMessageReactRemove = new AsyncEvent<MessageReactionRemoveEventArgs>(HandleExceptions, "LAST_MESSAGE_REACTION_REMOVED");
-			_lastMessageEdit = new AsyncEvent<MessageUpdateEventArgs>(HandleExceptions, "LAST_MESSAGE_EDIT");
-			_lastMessageDelete = new AsyncEvent<MessageDeleteEventArgs>(HandleExceptions, "LAST_MESSAGE_DELETE");
+			_lastUserMessageReactAdd = new AsyncEvent<MessageReactionAddEventArgs>(HandleExceptions, "LAST_USER_MESSAGE_REACTION_ADDED");
+			_lastUserMessageReactRemove = new AsyncEvent<MessageReactionRemoveEventArgs>(HandleExceptions, "LAST_USER_MESSAGE_REACTION_REMOVED");
+			_lastUserMessageEdit = new AsyncEvent<MessageUpdateEventArgs>(HandleExceptions, "LAST_USER_MESSAGE_EDIT");
+			_lastUserMessageDelete = new AsyncEvent<MessageDeleteEventArgs>(HandleExceptions, "LAST_USER_MESSAGE_DELETE");
 			_messageReactAdd = new AsyncEvent<MessageReactionAddEventArgs>(HandleExceptions, "SISBASE_MESSAGE_REACTION_ADDED");
 			_messageReactRemove = new AsyncEvent<MessageReactionRemoveEventArgs>(HandleExceptions, "SISBASE_MESSAGE_REACTION_REMOVED");
 			_messageEdit = new AsyncEvent<MessageUpdateEventArgs>(HandleExceptions, "SISBASE_MESSAGE_EDIT");
