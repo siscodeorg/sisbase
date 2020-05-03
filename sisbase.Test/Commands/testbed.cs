@@ -51,7 +51,7 @@ namespace sisbase.Test.Commands
             await interaction.SendMessageAsync(new MessageBuilder().WithContent("Type Anything"));
             var msg = await interaction.GetUserResponseAsync();
             await interaction.ModifyLastMessage(x => x.WithContent($"Your message were : {msg.Content}"));
-            interaction.Close();
+            await interaction.Close();
         }
 
         [Command("interact3")]
@@ -67,7 +67,7 @@ namespace sisbase.Test.Commands
             await interaction.ModifyLastMessage(x => x.WithEmbed(EmbedBase.InputEmbed("Something: [3/3]")));
             await interaction.GetUserResponseAsync();
             await interaction.ModifyLastMessage(x => x.WithEmbed(EmbedBase.ListEmbed(interaction.UserMessages.Select(x => x.Content).ToList(), "User Messages")));
-            interaction.Close();
+            await interaction.Close();
         }
 
         [Command("interactHook")]
@@ -78,7 +78,7 @@ namespace sisbase.Test.Commands
             var interact = await ctx.Channel.WaitForInteraction(msg, x => x.Content.ToLower().Contains("aniki"));
             msg.WithEmbed(EmbedBase.OutputEmbed(interact.UserMessages.Last().Content).Mutate(x => x.WithColor(DiscordColor.Orange)));
             await msg.Build(ctx.Channel);
-            interact.Close();
+            await interact.Close();
         }
 
         [Command("interactTimeout")]
@@ -107,7 +107,7 @@ namespace sisbase.Test.Commands
             interaction.OriginReactionRemoved += async (e) => await interaction.SendMessageAsync(new MessageBuilder().WithContent($"Origin message [-] reaction : {e.Emoji} | {e.User.Username}"));
             var res = await interaction.GetUserResponseAsync();
             await interaction.SendMessageAsync(msg.WithContent("Command Closed"));
-            interaction.Close();
+            await interaction.Close();
         }
 
 
