@@ -220,9 +220,14 @@ namespace sisbase.Interactivity
 			_onClose = new AsyncEvent(HandleExceptions, "INTERACTION_CLOSED");
 			IMC.AddInteraction(this);
 		}
-		
+
 		private void HandleExceptions(string eventName, Exception ex)
-			=> Logger.Warn("InteractionAPI", $"An {ex.GetType()} happened in {eventName}.");
+		{
+			if (ex is AggregateException age)
+				age.Handle(x => { HandleExceptions(eventName, x); return false; });
+			else
+				Logger.Warn("InteractionAPI", $"An {ex.GetType()} happened in {eventName}."); 
+		}
 
 		public async Task SendMessageAsync(MessageBuilder message)
 		{
