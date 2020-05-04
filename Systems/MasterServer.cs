@@ -2,6 +2,7 @@ using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using Newtonsoft.Json;
+using sisbase.Attributes;
 using sisbase.Utils;
 using System;
 using System.IO;
@@ -13,7 +14,7 @@ namespace sisbase.Systems
 	/// The guild the bot is supossed to run
 	/// </summary>
 #pragma warning disable CS1591
-
+	[Vital]
 	public class MasterServer : IClientSystem
 	{
 		public string Name { get; set; }
