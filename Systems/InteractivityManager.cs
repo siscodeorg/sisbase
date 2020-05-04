@@ -33,6 +33,7 @@ namespace sisbase.Systems
 		private async Task ReactionRemovedHandler(MessageReactionRemoveEventArgs e)
 		{
 			var interaction = IMC.InteractionRegistry.Find(x => x.UserMessages.Contains(e.Message));
+			interaction ??= IMC.InteractionRegistry.Find(x => x.BotMessages.Contains(e.Message));
 			if (interaction == null) return;
 			await interaction.Dispatch(e);
 		}
@@ -40,6 +41,7 @@ namespace sisbase.Systems
 		private async Task DeleteHandler(MessageDeleteEventArgs e)
 		{
 			var interaction = IMC.InteractionRegistry.Find(x => x.UserMessages.Contains(e.Message));
+			interaction ??= IMC.InteractionRegistry.Find(x => x.BotMessages.Contains(e.Message));
 			if (interaction == null) return;
 			await interaction.Dispatch(e);
 		}
@@ -47,12 +49,14 @@ namespace sisbase.Systems
 		private async Task ReactionAddHandler(MessageReactionAddEventArgs e)
 		{
 			var interaction = IMC.InteractionRegistry.Find(x => x.UserMessages.Contains(e.Message));
+			interaction ??= IMC.InteractionRegistry.Find(x => x.BotMessages.Contains(e.Message));
 			if (interaction == null) return;
 			await interaction.Dispatch(e);
 		}
 		private async Task EditHandler(MessageUpdateEventArgs e)
 		{
 			var interaction = IMC.InteractionRegistry.Find(x => x.UserMessages.Contains(e.Message));
+			interaction ??= IMC.InteractionRegistry.Find(x => x.BotMessages.Contains(e.Message));
 			if (interaction == null) return;
 			await interaction.Dispatch(e);
 		}
