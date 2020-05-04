@@ -255,11 +255,11 @@ namespace sisbase.Interactivity
 
 		public async Task Dispatch(MessageReactionAddEventArgs e)
 		{
-			if(e.Message == UserMessages.Last())
+			if(e.Message == UserMessages.LastOrDefault())
 			{
 				await LastMessageDispatch(e);
 			}
-			if(e.Message == BotMessages.Last())
+			if(e.Message == BotMessages.LastOrDefault())
 			{
 				await LastBotMessageDispatch(e);
 			}
@@ -272,11 +272,11 @@ namespace sisbase.Interactivity
 
 		public async Task Dispatch(MessageReactionRemoveEventArgs e)
 		{
-			if (e.Message == UserMessages.Last())
+			if (e.Message == UserMessages.LastOrDefault())
 			{
 				await LastMessageDispatch(e);
 			}
-			if (e.Message == BotMessages.Last())
+			if (e.Message == BotMessages.LastOrDefault())
 			{
 				await LastBotMessageDispatch(e);
 			}
@@ -289,11 +289,11 @@ namespace sisbase.Interactivity
 
 		public async Task Dispatch(MessageUpdateEventArgs e)
 		{
-			if (e.Message == UserMessages.Last())
+			if (e.Message == UserMessages.LastOrDefault())
 			{
 				await LastMessageDispatch(e);
 			}
-			if (e.Message == BotMessages.Last())
+			if (e.Message == BotMessages.LastOrDefault())
 			{
 				await LastBotMessageDispatch(e);
 			}
@@ -306,11 +306,11 @@ namespace sisbase.Interactivity
 
 		public async Task Dispatch(MessageDeleteEventArgs e)
 		{
-			if (e.Message == UserMessages.Last())
+			if (e.Message == UserMessages.LastOrDefault())
 			{
 				await LastMessageDispatch(e);
 			}
-			if (e.Message == BotMessages.Last())
+			if (e.Message == BotMessages.LastOrDefault())
 			{
 				await LastBotMessageDispatch(e);
 			}
