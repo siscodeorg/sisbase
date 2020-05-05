@@ -232,6 +232,7 @@ namespace sisbase.Interactivity
 
 		private void HandleExceptions(string eventName, Exception ex)
 		{
+			if (ex is OperationCanceledException) return;
 			if (ex is AggregateException age)
 				age.Handle(x => { HandleExceptions(eventName, x); return false; });
 			else
