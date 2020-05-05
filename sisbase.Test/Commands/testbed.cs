@@ -110,7 +110,45 @@ namespace sisbase.Test.Commands
             await interaction.Close();
         }
 
+        [Command("lifetimeCrash")]
+        public async Task lifetimeCrash(CommandContext ctx)
+        {
+	        var intr = ctx.AsInteraction();
+	        intr.SetLifetime(TimeSpan.FromSeconds(10));
+	        intr.OnClose += async () =>
+		        await intr.SendMessageAsync(new MessageBuilder().WithContent("I'm alive!"));
+	        await intr.CompletionTask();
+        }
 
+        [Command("fastCrash")]
+        public async Task fastCrash(CommandContext ctx)
+        {
+	        var intr = ctx.AsInteraction();
+	        intr.OnClose += async () =>
+		        await intr.SendMessageAsync(new MessageBuilder().WithContent("I'm alive!"));
+	        await intr.Close();
+	        await intr.SendMessageAsync(new MessageBuilder().WithContent("I should be dead!"));
+	        Logger.Log("fastCrash", "You should never see this");
+        }
+
+        [Command("endReason")]
+        public async Task endReason(CommandContext ctx)
+        {
+	        var intr = ctx.AsInteraction();
+	        intr.SetLifetime(TimeSpan.FromSeconds(3));
+	        DiscordMessage resp;
+	        intr.OnClose += async () =>
+		        await intr.SendMessageAsync(new MessageBuilder().WithContent("Interaction closed!"));
+	        try
+	        {
+		        resp = await intr.GetUserResponseAsync();
+		        await intr.SendMessageAsync(new MessageBuilder().WithContent("you said: " + resp.Content));
+	        }
+	        catch (OperationCanceledException)
+	        {
+		        await ctx.RespondAsync("The interaction has been destroyed by the ravages of time!");
+	        }
+        }
 
         [Command("firstInt")]
 		public async Task fisrtInt(CommandContext ctx, [RemainingText] string input)

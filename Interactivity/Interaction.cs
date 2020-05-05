@@ -6,7 +6,9 @@ using sisbase.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using DSharpPlus.CommandsNext;
 
 namespace sisbase.Interactivity
 {
@@ -192,6 +194,12 @@ namespace sisbase.Interactivity
 		public DiscordMessage Origin { get; }
 		public TimeSpan? MessageTimeout { get; set; }
 
+		private readonly CancellationTokenSource _lifetime = new CancellationTokenSource();
+		public bool IsAlive => !_lifetime.IsCancellationRequested;
+		private readonly object _closingLock = new object();
+		private bool _isClosing;
+		private bool _isClosed;
+
 		public Interaction(DiscordMessage origin)
 		{
 			if (origin.Author == SisbaseBot.Instance.Client.CurrentUser)
@@ -218,6 +226,7 @@ namespace sisbase.Interactivity
 			_originEdit = new AsyncEvent<MessageUpdateEventArgs>(HandleExceptions, "ORIGIN_MESSAGE_EDIT");
 			_originDelete = new AsyncEvent<MessageDeleteEventArgs>(HandleExceptions, "ORIGIN_MESSAGE_DELETE");
 			_onClose = new AsyncEvent(HandleExceptions, "INTERACTION_CLOSED");
+			_lifetime.Token.Register(() => Task.Run(async () => await Close()).Wait());
 			IMC.AddInteraction(this);
 		}
 
@@ -231,26 +240,30 @@ namespace sisbase.Interactivity
 
 		public async Task SendMessageAsync(MessageBuilder message)
 		{
+			LifeCheck();
 			var msg = await message.Build(Origin.Channel);
 			BotMessages.Add(msg);
 		}
 
 		public async Task<DiscordMessage> GetUserResponseAsync()
 		{
-			var msg = await UserMessages.Last().GetNextMessageAsync(MessageTimeout);
+			LifeCheck(strict: true);
+			var msg = await UserMessages.Last().GetNextMessageAsync(MessageTimeout).DetachOnCancel(_lifetime.Token);
 			UserMessages.Add(msg.Result);
 			return msg.Result;
 		}
 
 		public async Task<DiscordMessage> GetUserResponseAsync(Func<DiscordMessage, bool> filter)
 		{
-			var msg = await UserMessages.Last().GetNextMessageAsync(filter, MessageTimeout);
+			LifeCheck(strict: true);
+			var msg = await UserMessages.Last().GetNextMessageAsync(filter, MessageTimeout).DetachOnCancel(_lifetime.Token);
 			UserMessages.Add(msg.Result);
 			return msg.Result;
 		}
 
 		public async Task ModifyLastMessage(Action<MessageBuilder> func)
 		{
+			LifeCheck();
 			var builder = new MessageBuilder(BotMessages.Last());
 			func(builder);
 			var msg = await builder.Build(BotMessages.Last().Channel);
@@ -260,6 +273,7 @@ namespace sisbase.Interactivity
 
 		public async Task Dispatch(MessageReactionAddEventArgs e)
 		{
+			if(_isClosing) return;
 			if(e.Message == UserMessages.LastOrDefault())
 			{
 				await LastMessageDispatch(e);
@@ -277,6 +291,7 @@ namespace sisbase.Interactivity
 
 		public async Task Dispatch(MessageReactionRemoveEventArgs e)
 		{
+			if(_isClosing) return;
 			if (e.Message == UserMessages.LastOrDefault())
 			{
 				await LastMessageDispatch(e);
@@ -294,6 +309,7 @@ namespace sisbase.Interactivity
 
 		public async Task Dispatch(MessageUpdateEventArgs e)
 		{
+			if(_isClosing) return;
 			if (e.Message == UserMessages.LastOrDefault())
 			{
 				await LastMessageDispatch(e);
@@ -311,6 +327,7 @@ namespace sisbase.Interactivity
 
 		public async Task Dispatch(MessageDeleteEventArgs e)
 		{
+			if(_isClosing) return;
 			if (e.Message == UserMessages.LastOrDefault())
 			{
 				await LastMessageDispatch(e);
@@ -325,14 +342,37 @@ namespace sisbase.Interactivity
 			}
 			await MessageDispatch(e);
 		}
+
+		public void SetLifetime(TimeSpan time)
+		{
+			_lifetime.CancelAfter(time);
+		}
+
+		private void LifeCheck(bool strict = false)
+		{
+			if (_isClosed || (strict && _isClosing))
+			{
+				throw new OperationCanceledException(_lifetime.Token);
+			}
+		}
+
 		public async Task Close()
 		{
+			lock (_closingLock)
+			{
+				if (_isClosing) return;
+				_isClosing = true;
+			}
 			await CloseDispatch();
+			_isClosed = true;
+			_lifetime.Cancel();
 			IMC.RemoveIntraction(this);
 			MessageTimeout = TimeSpan.Zero;
 			BotMessages.Clear();
 			UserMessages.Clear();
 		}
+
+		public Task CompletionTask() => _lifetime.Token.WhenCanceled();
 	}
 
 	public static class InteractionExtensions
@@ -344,6 +384,11 @@ namespace sisbase.Interactivity
 			await hook.Build(channel);
 			var response = await channel.GetNextMessageAsync(interactioncheck);
 			return new Interaction(response.Result);
+		}
+
+		public static Interaction AsInteraction(this CommandContext ctx)
+		{
+			return new Interaction(ctx.Message);
 		}
 	}
 }
