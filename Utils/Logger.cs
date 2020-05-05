@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sisbase.Attributes;
+using System;
 using color = System.ConsoleColor;
 using stdout = System.Console;
 
@@ -24,8 +25,10 @@ namespace sisbase.Utils
 		{
 			WriteDate();
 			s.Status.Write();
+			stdout.ForegroundColor = s.IsVital() ? color.Yellow : color.Cyan;
+			stdout.Write($"{s.Name} ");
 			stdout.ForegroundColor = color.Cyan;
-			stdout.Write($"{s.Name} | {message} \t");
+			stdout.Write($"| {message} \t");
 			stdout.ResetColor();
 		}
 
