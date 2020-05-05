@@ -58,10 +58,9 @@ namespace sisbase.Commands
 		[Description("Lists all active systems")]
 		public async Task List(CommandContext ctx)
 		{
-			var allSystems = new List<string>();
-			SMC.RegisteredSystems.ToList().ForEach(x => allSystems.Add($"{x.Value.Name} - `{x.Key.Assembly.GetName().Name}`"));
+			var allSystems = SMC.RegisteredSystems.ToList().Select(x => $"{(x.Value.IsVital() ? "\\⚠️" : "")} {x.Value.Name} - `{x.Key.Assembly.GetName().Name}`");
 			var embed = EmbedBase.ListEmbed(allSystems, "Systems");
-			await ctx.RespondAsync(embed: embed);
+			await ctx.RespondAsync(embed: embed.Mutate(x => x.WithFooter($"{x.Footer.Text}  | ⚠️ - Vital")));
 		}
 
 		[Command("disable")]
