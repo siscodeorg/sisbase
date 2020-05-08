@@ -8,6 +8,13 @@ namespace sisbase.Utils
 		public DiscordEmbed Embed { get; internal set; }
 		public string Content { get; internal set; }
 
+		public MessageBuilder(string Content)
+			=> WithContent(Content);
+		public MessageBuilder(DiscordEmbed embed)
+			=> WithEmbed(embed);
+		public MessageBuilder()
+			=> ClearEmbed().ClearContent();
+
 		public MessageBuilder WithEmbed(DiscordEmbed embed)
 		{
 			Embed = embed; return this;
@@ -16,6 +23,10 @@ namespace sisbase.Utils
 		public MessageBuilder ClearEmbed()
 		{
 			Embed = null; return this;
+		}
+		public MessageBuilder ClearContent()
+		{
+			Content = string.Empty; return this;
 		}
 
 		public MessageBuilder WithContent(string content)
