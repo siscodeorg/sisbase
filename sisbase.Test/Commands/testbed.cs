@@ -40,7 +40,14 @@ namespace sisbase.Test.Commands
 			mbuilder = mbuilder.WithContent("Mutated Content");
 			await mbuilder.Build(ctx.Channel);
 		}
-	
+		[Command("nmbuild")]
+		public async Task NewMessageBuilder(CommandContext ctx)
+		{
+			var mbuild = new MessageBuilder("Test");
+			await mbuild.Build(ctx.Channel);
+			mbuild = new MessageBuilder(EmbedBase.OutputEmbed("Test"));
+			await mbuild.Build(ctx.Channel);
+		}
 		[Command("firstInt")]
 		public async Task fisrtInt(CommandContext ctx, [RemainingText] string input)
 			=> await ctx.RespondAsync(embed: EmbedBase.OutputEmbed($"firstInt : {ctx.Message.FirstInt()}"));
