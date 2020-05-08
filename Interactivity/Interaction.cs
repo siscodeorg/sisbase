@@ -246,6 +246,11 @@ namespace sisbase.Interactivity
 			BotMessages.Add(msg);
 		}
 
+		public async Task SendMessageAsync(string content)
+			=> await SendMessageAsync(new MessageBuilder(content));
+		public async Task SendMessageAsync(DiscordEmbed embed)
+			=> await SendMessageAsync(new MessageBuilder(embed));
+
 		public async Task<DiscordMessage> GetUserResponseAsync()
 		{
 			LifeCheck(strict: true);
