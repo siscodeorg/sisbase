@@ -4,8 +4,8 @@ stages:
     - build
 
 before_script:
-    - "dotnet nuget add source https://nuget.emzi0767.com/api/v3/index.json"
-    - "dotnet restore"
+    - "nuget sources add -name DSharpPlus -source https://nuget.emzi0767.com/api/v3/index.json"
+    - "nuget restore"
 
 build:
     stage: build
