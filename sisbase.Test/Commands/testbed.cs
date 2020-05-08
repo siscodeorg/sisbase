@@ -93,7 +93,7 @@ namespace sisbase.Test.Commands
                 await interaction.ModifyLastMessage(m =>
                     m.WithEmbed(EmbedBase.InputEmbed("I wonder what this used to say?")));
             else
-                await interaction.SendMessageAsync(new MessageBuilder().WithContent("Kyaah, kawaii~!"));
+                await interaction.SendMessageAsync("Kyaah, kawaii~!"));
         }
         [Command("interactEvents")]
         public async Task interactEvents(CommandContext ctx)
@@ -101,10 +101,10 @@ namespace sisbase.Test.Commands
             var interaction = new Interaction(ctx.Message);
             var msg = new MessageBuilder().WithContent("Please edit your original message");
             await interaction.SendMessageAsync(msg);
-            interaction.OriginDeleted += async (e) => await interaction.SendMessageAsync(new MessageBuilder().WithContent("Origin message deleted"));
-            interaction.OriginEdited += async (e) => await interaction.SendMessageAsync(new MessageBuilder().WithContent($"Origin message edited : \n{e.MessageBefore?.Content} -> {e.Message.Content}"));
-            interaction.OriginReactionAdded += async (e) => await interaction.SendMessageAsync(new MessageBuilder().WithContent($"Origin message [+] reaction : {e.Emoji} | {e.User.Username}"));
-            interaction.OriginReactionRemoved += async (e) => await interaction.SendMessageAsync(new MessageBuilder().WithContent($"Origin message [-] reaction : {e.Emoji} | {e.User.Username}"));
+            interaction.OriginDeleted += async (e) => await interaction.SendMessageAsync("Origin message deleted");
+            interaction.OriginEdited += async (e) => await interaction.SendMessageAsync($"Origin message edited : \n{e.MessageBefore?.Content} -> {e.Message.Content}");
+            interaction.OriginReactionAdded += async (e) => await interaction.SendMessageAsync($"Origin message [+] reaction : {e.Emoji} | {e.User.Username}");
+            interaction.OriginReactionRemoved += async (e) => await interaction.SendMessageAsync($"Origin message [-] reaction : {e.Emoji} | {e.User.Username}");
             var res = await interaction.GetUserResponseAsync();
             await interaction.SendMessageAsync(msg.WithContent("Command Closed"));
             await interaction.Close();
