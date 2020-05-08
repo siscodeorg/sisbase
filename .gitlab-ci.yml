@@ -1,0 +1,13 @@
+image: microsoft/dotnet:latest
+
+stages:
+    - build
+
+before_script:
+    - "nuget sources add -name DSharpPlus -source https://nuget.emzi0767.com/api/v3/index.json"
+    - "nuget restore"
+
+build:
+    stage: build
+    script:
+        - "dotnet build"
