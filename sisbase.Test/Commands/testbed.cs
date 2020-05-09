@@ -93,7 +93,7 @@ namespace sisbase.Test.Commands
                 await interaction.ModifyLastMessage(m =>
                     m.WithEmbed(EmbedBase.InputEmbed("I wonder what this used to say?")));
             else
-                await interaction.SendMessageAsync("Kyaah, kawaii~!"));
+                await interaction.SendMessageAsync("Kyaah, kawaii~!");
         }
         [Command("interactEvents")]
         public async Task interactEvents(CommandContext ctx)
