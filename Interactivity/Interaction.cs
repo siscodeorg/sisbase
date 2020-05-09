@@ -227,6 +227,7 @@ namespace sisbase.Interactivity
 			_originDelete = new AsyncEvent<MessageDeleteEventArgs>(HandleExceptions, "ORIGIN_MESSAGE_DELETE");
 			_onClose = new AsyncEvent(HandleExceptions, "INTERACTION_CLOSED");
 			_lifetime.Token.Register(() => Task.Run(async () => await Close()).Wait());
+			SetLifetime(TimeSpan.FromMinutes(5));
 			IMC.AddInteraction(this);
 		}
 
