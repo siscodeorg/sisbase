@@ -1,4 +1,5 @@
 ﻿using DSharpPlus;
+using sisbase.Attributes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -108,8 +109,14 @@ namespace sisbase.Utils
 			}
 		}
 
+		//Todo : Better exception handling.
 		internal static bool Unregister(Type t)
 		{
+			if (t.GetCustomAttribute(typeof(VitalAttribute)) != null) 
+			{
+				Logger.Warn("SMC", "An vital system has attemped unregistering.");
+				return false;
+			}
 			if (RegisteredSystems.ContainsKey(t))
 			{
 				ISystem system;
