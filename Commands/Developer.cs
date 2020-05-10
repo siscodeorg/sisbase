@@ -67,7 +67,7 @@ namespace sisbase.Commands
 		[Description("Disables and unregisters a system")]
 		public async Task Disable(CommandContext ctx)
 		{
-			var allSystems = SMC.RegisteredSystems.Select(k => k.Value.Name).ToList();
+			var allSystems = SMC.RegisteredSystems.Where(s => !s.Value.IsVital()).Select(k => k.Value.Name).ToList();
 			var embed = EmbedBase.OrderedListEmbed(allSystems, "Systems").Mutate(x =>
 			x.WithTitle("Please select the system you want to disable [number]")
 			 .WithAuthor(null)
