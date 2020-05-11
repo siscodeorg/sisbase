@@ -11,8 +11,8 @@ namespace sisbase.Interactivity
 	{
 		internal DiscordMessage _Message;
 		internal Interaction _Owner;
-		public async Task Delete()
-			=> await _Owner.Remove(this);
+		//public async Task Delete()
+		//	=> await _Owner.Remove(this);
 		public string Content => _Message.Content;
 		public DiscordUser Author => _Message.Author;
 		public DiscordChannel Channel => _Message.Channel;
