@@ -1,5 +1,6 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
+using sisbase.Interactivity.EventArgs;
 using sisbase.Utils;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,52 @@ namespace sisbase.Interactivity
 		public bool WebhookMessage => _Message.WebhookMessage;
 		public ulong Id => _Message.Id;
 		#endregion
-		
+		#region Delegates
+		private AsyncEvent<ReactionAddedEventArgs> _reactionAdded;
+		private AsyncEvent<ReactionRemovedEventArgs> _reactionRemoved;
+		private AsyncEvent<ReactionToggledEventArgs> _reactionToggled;
+		private AsyncEvent<MessageDeletedEventArgs> _messageDeleted;
+		private AsyncEvent<MessageUpdatedEventArgs> _messageUpdated;
+		#endregion
+		#region Events
+		public event AsyncEventHandler<ReactionAddedEventArgs> ReactionAdded
+		{
+			add => _reactionAdded.Register(value);
+			remove => _reactionAdded.Unregister(value);
+		}
+		public event AsyncEventHandler<ReactionRemovedEventArgs> ReactionRemoved
+		{
+			add => _reactionRemoved.Register(value);
+			remove => _reactionRemoved.Register(value);
+		}
+		public event AsyncEventHandler<ReactionToggledEventArgs> ReactionToggled
+		{
+			add => _reactionToggled.Register(value);
+			remove => _reactionToggled.Unregister(value);
+		}
+		public event AsyncEventHandler<MessageDeletedEventArgs> MessageDeleted
+		{
+			add => _messageDeleted.Register(value);
+			remove => _messageDeleted.Unregister(value);
+		}
+		public event AsyncEventHandler<MessageUpdatedEventArgs> MessageUpdated
+		{
+			add => _messageUpdated.Register(value);
+			remove => _messageUpdated.Unregister(value);
+		}
+		#endregion
+		#region Event Dispatchers
+		internal async Task Dispatch(ReactionAddedEventArgs e)
+			=> await _reactionAdded.InvokeAsync(e);
+		internal async Task Dispatch(ReactionRemovedEventArgs e)
+			=> await _reactionRemoved.InvokeAsync(e);
+		internal async Task Dispatch(ReactionToggledEventArgs e)
+			=> await _reactionToggled.InvokeAsync(e);
+		internal async Task Dispatch(MessageUpdatedEventArgs e)
+			=> await _messageUpdated.InvokeAsync(e);
+		internal async Task Dispatch(MessageDeletedEventArgs e)
+			=> await _messageDeleted.InvokeAsync(e);
+		#endregion
 		//public async Task Delete()
 		//	=> await _Owner.Remove(this);
 
@@ -75,6 +121,11 @@ namespace sisbase.Interactivity
 		{
 			_Message = m;
 			_Owner = i;
+			_messageDeleted = new AsyncEvent<MessageDeletedEventArgs>(Interaction.HandleExceptions, "SISBASE_MESSAGE_DELETED_EVENT");
+			_messageUpdated = new AsyncEvent<MessageUpdatedEventArgs>(Interaction.HandleExceptions, "SISBASE_MESSSAGE_UPDATED_EVENT");
+			_reactionAdded = new AsyncEvent<ReactionAddedEventArgs>(Interaction.HandleExceptions, "SISBASE_REACTION_ADDED_EVENT");
+			_reactionRemoved = new AsyncEvent<ReactionRemovedEventArgs>(Interaction.HandleExceptions, "SISBASE_REACTION_REMOVED_EVENT");
+			_reactionToggled = new AsyncEvent<ReactionToggledEventArgs>(Interaction.HandleExceptions, "SISBASE_REACTION_TOGGLED_EVENT");
 		}
 	}
 }
