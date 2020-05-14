@@ -43,7 +43,7 @@ namespace sisbase.Interactivity
 		//public async Task Delete()
 		//	=> await _Owner.Remove(this);
 
-		public async Task Mutate(Action<MessageBuilder> action)
+		public async Task MutateAsync(Action<MessageBuilder> action)
 		{
 			var builder = new MessageBuilder(_Message);
 			action(builder);
@@ -51,7 +51,7 @@ namespace sisbase.Interactivity
 		}
 		public Task RespondAsync(MessageBuilder message) 
 			=>  _Owner.SendMessageAsync(message);
-		public async Task ToggleReaction(DiscordEmoji reaction)
+		public async Task ToggleReactionAsync(DiscordEmoji reaction)
 		{
 			if ((await _Message.GetReactionsAsync(reaction)).Contains(SisbaseBot.Instance.Client.CurrentUser))
 				await _Message.DeleteOwnReactionAsync(reaction);
