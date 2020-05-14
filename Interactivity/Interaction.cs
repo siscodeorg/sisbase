@@ -231,7 +231,7 @@ namespace sisbase.Interactivity
 			IMC.AddInteraction(this);
 		}
 
-		private void HandleExceptions(string eventName, Exception ex)
+		internal static void HandleExceptions(string eventName, Exception ex)
 		{
 			if (ex is OperationCanceledException) return;
 			if (ex is AggregateException age)
