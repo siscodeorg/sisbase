@@ -44,12 +44,12 @@ namespace sisbase.Utils
 		{
 			if (MessageId == 0)
 			{
-				var msg = await channel.SendMessageAsync(Content, tts, Embed);
-				MessageId = msg.Id;
-				return msg;
+				var _msg = await channel.SendMessageAsync(Content, tts, Embed);
+				MessageId = _msg.Id;
+				return _msg;
 			}
-
-			return await (await channel.GetMessageAsync(MessageId)).ModifyAsync(Content, Embed);
+			var msg = await channel.GetMessageAsync(MessageId);
+			return await msg.ModifyAsync(Content, Embed);
 		}
 	}
 }
