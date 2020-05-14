@@ -14,7 +14,7 @@ namespace sisbase.Interactivity.EventArgs
 		public InteractionMessage Message { get; internal set; }
 		public DiscordChannel Channel
 			=> Message.Channel;
-		public ReactionAddedEventArgs(DiscordClient client) : base(client)
+		internal ReactionAddedEventArgs(DiscordClient client) : base(client)
 		{}
 
 	}

@@ -13,7 +13,7 @@ namespace sisbase.Interactivity.EventArgs
 		public DiscordChannel Channel
 			=> Message.Channel;
 		public DiscordUser User { get; internal set; }
-		public MessageDeletedEventArgs(DiscordClient client) : base(client)
+		internal MessageDeletedEventArgs(DiscordClient client) : base(client)
 		{}
 	}
 }
