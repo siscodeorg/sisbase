@@ -14,7 +14,7 @@ namespace sisbase.Interactivity
         public InteractionMessageProxyMode Mode { get; internal set; }
         internal InteractionMessageListProxy Parent;
         public InteractionMessage Get()
-            => Parent.Get(Mode);
+            => Mode == InteractionMessageProxyMode.FIRST ? Parent.Get().FirstOrDefault() : Parent.Get().LastOrDefault();
 
         #region delegate
         public DiscordChannel Channel => Get().Channel;

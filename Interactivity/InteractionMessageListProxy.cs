@@ -10,23 +10,7 @@ namespace sisbase.Interactivity
 	{
 		public InteractionMessageListProxyMode Mode { get; internal set; }
 		internal Interaction Parent;
-		public InteractionMessage Get(InteractionMessageProxyMode mode)
-		{
-            if (Mode == InteractionMessageListProxyMode.BOT)
-            {
-                if (mode == InteractionMessageProxyMode.FIRST)
-                    return Parent.BotMessages.FirstOrDefault();
-                else
-                    return Parent.BotMessages.LastOrDefault();
-            }
-            else
-            {
-                if (mode == InteractionMessageProxyMode.FIRST)
-                    return Parent.UserMessages.FirstOrDefault();
-                else
-                    return Parent.UserMessages.LastOrDefault();
-            }
-
-        }
+		public List<InteractionMessage> Get() 
+			=> Mode == InteractionMessageListProxyMode.BOT ? Parent.BotMessages : Parent.UserMessages;
 	}
 }
