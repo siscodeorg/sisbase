@@ -10,7 +10,7 @@ namespace sisbase.Interactivity.EventArgs
 	public class MessageUpdatedEventArgs : DiscordEventArgs
 	{
 		public InteractionMessage After { get; internal set; }
-		public InteractionMessage Before { get; internal set; }
+		public PastInteractionMessage Before { get; internal set; }
 		public DiscordChannel Channel
 			=> After.Channel;
 		public DiscordGuild Guild
