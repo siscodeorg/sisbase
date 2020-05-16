@@ -17,9 +17,12 @@ namespace sisbase.Interactivity.EventArgs
 			=> Channel.Guild;
 		public DiscordUser Author
 			=> After.Author;
-		public IReadOnlyList<DiscordUser> MentionedUsers { get; internal set; }
-		public IReadOnlyList<DiscordRole> MentionedRoles { get; internal set; }
-		public IReadOnlyList<DiscordChannel> MentionedChannels { get; internal set; }
+		public IReadOnlyList<DiscordUser> MentionedUsers
+			=> After.MentionedUsers;
+		public IReadOnlyList<DiscordRole> MentionedRoles
+			=> After.MentionedRoles;
+		public IReadOnlyList<DiscordChannel> MentionedChannels
+			=> After.MentionedChannels;
 		internal MessageUpdatedEventArgs(DiscordClient client) : base (client){ }
 	}
 }
