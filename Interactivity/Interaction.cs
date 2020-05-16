@@ -1,22 +1,19 @@
 ﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using sisbase.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
-using System.IO;
 
-namespace sisbase.Interactivity
-{
+namespace sisbase.Interactivity {
 #nullable enable
 
-	public class Interaction
-	{
+	public class Interaction {
 		public List<InteractionMessage> BotMessages { get; } = new List<InteractionMessage>();
 		public List<InteractionMessage> UserMessages { get; } = new List<InteractionMessage>();
 
@@ -29,46 +26,42 @@ namespace sisbase.Interactivity
 		private bool _isClosing;
 		private bool _isClosed;
 
-		public Interaction(DiscordMessage origin)
-		{
-			if (origin.Author == SisbaseBot.Instance.Client.CurrentUser)
-			{
+		private readonly AsyncEvent _onClose;
+		public event AsyncEventHandler InteractionClosed {
+			add => _onClose.Register(value);
+			remove => _onClose.Unregister(value);
+		}
+		public async Task Dispatch() => await _onClose.InvokeAsync();
+		public Interaction(DiscordMessage origin) {
+			if (origin.Author == SisbaseBot.Instance.Client.CurrentUser) {
 				throw new ArgumentException($"Origin message can't be sent by the bot itself." +
 					" Consider using a message created by the used you are interacting with.", "origin");
 			}
 			Origin = origin;
-			UserMessages.Add(new InteractionMessage(origin,this));
+			UserMessages.Add(new InteractionMessage(origin, this));
 			_lifetime.Token.Register(() => Task.Run(async () => await Close()).Wait());
 			SetLifetime(TimeSpan.FromMinutes(5));
+			_onClose = new AsyncEvent(IMC.HandleExceptions, "INTERACTION_CLOSED");
 			IMC.AddInteraction(this);
+
 		}
 
-		internal static void HandleExceptions(string eventName, Exception ex)
-		{
-			if (ex is OperationCanceledException) return;
-			if (ex is AggregateException age)
-				age.Handle(x => { HandleExceptions(eventName, x); return false; });
-			else
-				Logger.Warn("InteractionAPI", $"An {ex.GetType()} happened in {eventName}.");
-		}
 
-		public async Task<InteractionMessage> SendMessageAsync(MessageBuilder message)
-		{
+
+		public async Task<InteractionMessage> SendMessageAsync(MessageBuilder message) {
 			LifeCheck();
 			var msg = await message.Build(Origin.Channel);
 			var imsg = new InteractionMessage(msg, this);
 			BotMessages.Add(imsg);
 			return imsg;
 		}
-		public async Task<InteractionMessage> SendFileAsync(MessageBuilder message, Stream data)
-		{
+		public async Task<InteractionMessage> SendFileAsync(MessageBuilder message, Stream data) {
 			var msg = await message.Bind(data as FileStream).Build(Origin.Channel);
 			var imsg = new InteractionMessage(msg, this);
 			BotMessages.Add(imsg);
 			return imsg;
 		}
-		public async Task RemoveAsync(InteractionMessage interactionMessage, string reason = "")
-		{
+		public async Task RemoveAsync(InteractionMessage interactionMessage, string reason = "") {
 			await interactionMessage._Message.DeleteAsync(reason);
 			if (interactionMessage.Author == SisbaseBot.Instance.Client.CurrentUser)
 				BotMessages.Remove(interactionMessage);
@@ -80,52 +73,43 @@ namespace sisbase.Interactivity
 		public async Task SendMessageAsync(DiscordEmbed embed)
 			=> await SendMessageAsync(new MessageBuilder(embed));
 
-		public async Task<DiscordMessage> GetUserResponseAsync()
-		{
+		public async Task<DiscordMessage> GetUserResponseAsync() {
 			LifeCheck(strict: true);
 			var msg = await UserMessages.Last()._Message.GetNextMessageAsync(MessageTimeout).DetachOnCancel(_lifetime.Token);
-			UserMessages.Add(new InteractionMessage(msg.Result,this));
+			UserMessages.Add(new InteractionMessage(msg.Result, this));
 			return msg.Result;
 		}
 
-		public async Task<DiscordMessage> GetUserResponseAsync(Func<DiscordMessage, bool> filter)
-		{
+		public async Task<DiscordMessage> GetUserResponseAsync(Func<DiscordMessage, bool> filter) {
 			LifeCheck(strict: true);
 			var msg = await UserMessages.Last()._Message.GetNextMessageAsync(filter, MessageTimeout).DetachOnCancel(_lifetime.Token);
-			UserMessages.Add(new InteractionMessage(msg.Result,this));
+			UserMessages.Add(new InteractionMessage(msg.Result, this));
 			return msg.Result;
 		}
 
-		public async Task ModifyLastMessage(Action<MessageBuilder> func)
-		{
+		public async Task ModifyLastMessage(Action<MessageBuilder> func) {
 			LifeCheck();
 			var builder = new MessageBuilder(BotMessages.Last()._Message);
 			func(builder);
 			var msg = await builder.Build(BotMessages.Last().Channel);
 			BotMessages.RemoveAll(x => x.Id == builder.MessageId);
-			BotMessages.Add(new InteractionMessage(msg,this));
+			BotMessages.Add(new InteractionMessage(msg, this));
 		}
 
-		public void SetLifetime(TimeSpan time)
-		{
-			_lifetime.CancelAfter(time);
-		}
+		public void SetLifetime(TimeSpan time) => _lifetime.CancelAfter(time);
 
-		private void LifeCheck(bool strict = false)
-		{
-			if (_isClosed || (strict && _isClosing))
-			{
+		private void LifeCheck(bool strict = false) {
+			if (_isClosed || (strict && _isClosing)) {
 				throw new OperationCanceledException(_lifetime.Token);
 			}
 		}
 
-		public async Task Close()
-		{
-			lock (_closingLock)
-			{
+		public async Task Close() {
+			lock (_closingLock) {
 				if (_isClosing) return;
 				_isClosing = true;
 			}
+			await Dispatch();
 			_isClosed = true;
 			_lifetime.Cancel();
 			IMC.RemoveIntraction(this);
@@ -137,20 +121,15 @@ namespace sisbase.Interactivity
 		public Task CompletionTask() => _lifetime.Token.WhenCanceled();
 	}
 
-	public static class InteractionExtensions
-	{
+	public static class InteractionExtensions {
 		public static async Task<Interaction> WaitForInteraction(this DiscordChannel channel,
 			MessageBuilder hook,
-			Func<DiscordMessage, bool> interactioncheck)
-		{
+			Func<DiscordMessage, bool> interactioncheck) {
 			await hook.Build(channel);
 			var response = await channel.GetNextMessageAsync(interactioncheck);
 			return new Interaction(response.Result);
 		}
 
-		public static Interaction AsInteraction(this CommandContext ctx)
-		{
-			return new Interaction(ctx.Message);
-		}
+		public static Interaction AsInteraction(this CommandContext ctx) => new Interaction(ctx.Message);
 	}
 }
