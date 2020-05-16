@@ -167,16 +167,17 @@ namespace sisbase.Interactivity
 			=> _Message.UnpinAsync();
 		public Task DeleteReactionAsync(DiscordEmoji emoji, DiscordUser user, string reason = null) =>
 			_Message.DeleteReactionAsync(emoji, user, reason);
-
+		#region Constr
 		public InteractionMessage(DiscordMessage m, Interaction i)
 		{
 			_Message = m;
 			_Owner = i;
-			_messageDeleted = new AsyncEvent<MessageDeletedEventArgs>(Interaction.HandleExceptions, "SISBASE_MESSAGE_DELETED_EVENT");
-			_messageUpdated = new AsyncEvent<MessageUpdatedEventArgs>(Interaction.HandleExceptions, "SISBASE_MESSSAGE_UPDATED_EVENT");
-			_reactionAdded = new AsyncEvent<ReactionAddedEventArgs>(Interaction.HandleExceptions, "SISBASE_REACTION_ADDED_EVENT");
-			_reactionRemoved = new AsyncEvent<ReactionRemovedEventArgs>(Interaction.HandleExceptions, "SISBASE_REACTION_REMOVED_EVENT");
-			_reactionToggled = new AsyncEvent<ReactionToggledEventArgs>(Interaction.HandleExceptions, "SISBASE_REACTION_TOGGLED_EVENT");
+			_messageDeleted = new AsyncEvent<MessageDeletedEventArgs>(IMC.HandleExceptions, "SISBASE_MESSAGE_DELETED_EVENT");
+			_messageUpdated = new AsyncEvent<MessageUpdatedEventArgs>(IMC.HandleExceptions, "SISBASE_MESSSAGE_UPDATED_EVENT");
+			_reactionAdded = new AsyncEvent<ReactionAddedEventArgs>(IMC.HandleExceptions, "SISBASE_REACTION_ADDED_EVENT");
+			_reactionRemoved = new AsyncEvent<ReactionRemovedEventArgs>(IMC.HandleExceptions, "SISBASE_REACTION_REMOVED_EVENT");
+			_reactionToggled = new AsyncEvent<ReactionToggledEventArgs>(IMC.HandleExceptions, "SISBASE_REACTION_TOGGLED_EVENT");
 		}
+		#endregion
 	}
 }
