@@ -57,19 +57,15 @@ namespace sisbase.Utils
 		{
 			TTS = tts; return this;
 		}
-		internal MessageBuilder Bind(Stream data, string filePath)
-		{
-			Data = data; FilePath = filePath; return this;
-		}
-		internal MessageBuilder Bind(FileStream data)
+		public MessageBuilder Bind(Stream data)
 		{
 			Data = data; return this;
 		}
-		internal MessageBuilder Bind(string filePath)
+		public MessageBuilder Bind(string filePath)
 		{
 			FilePath = filePath; return this;
 		}
-		internal MessageBuilder BindMany(Dictionary<string,Stream> multipleFiles)
+		public MessageBuilder BindMany(Dictionary<string,Stream> multipleFiles)
 		{
 			ManyData = multipleFiles; return this;
 		}
@@ -81,12 +77,10 @@ namespace sisbase.Utils
 				DiscordMessage _msg;
 				if (ManyData.Count > 0)
 					_msg = await channel.SendMultipleFilesAsync(ManyData, Content, TTS, Embed, Mentions);
-				if (Data != Stream.Null && !string.IsNullOrEmpty(FilePath))
-					_msg = await channel.SendFileAsync(FilePath, Data, Content, TTS, Embed, Mentions);
-				else if (Data != Stream.Null)
-					_msg = await channel.SendFileAsync(Data as FileStream, Content, TTS, Embed, Mentions);
 				else if (!string.IsNullOrEmpty(FilePath))
 					_msg = await channel.SendFileAsync(FilePath, Content, TTS, Embed, Mentions);
+				else if (Data != Stream.Null)
+					_msg = await channel.SendFileAsync(Data as FileStream, Content, TTS, Embed, Mentions);
 				else
 					_msg = await channel.SendMessageAsync(Content, TTS, Embed, Mentions);
 
