@@ -57,12 +57,77 @@ namespace sisbase.Interactivity {
         private async Task Dispatch(ReactionRemovedEventArgs e) => await _reactionRemoved.InvokeAsync(e);
         private async Task Dispatch(MessageDeletedEventArgs e) => await _messageDeleted.InvokeAsync(e);
         private async Task Dispatch(MessageUpdatedEventArgs e) => await _messageUpdated.InvokeAsync(e);
+
+        internal async Task Wants(MessageReactionAddEventArgs e) {
+            var message = Get().Find(x => x.Id == e.Message.Id);
+            if (message == null) return;
+            var sbargs = new ReactionAddedEventArgs(e.Client) { 
+                Message = message,
+                User = e.User,
+                Emoji = e.Emoji
+            };
+            var toggle = new ReactionToggledEventArgs(e.Client) {
+                Message = message,
+                User = e.User,
+                Emoji = e.Emoji,
+                State = ToggleState.ADDED
+            };
+
+            await Dispatch(sbargs);
+            await Dispatch(toggle);
+            await First.Wants(e);
+            await Last.Wants(e);
+
+        }
+        internal async Task Wants(MessageReactionRemoveEventArgs e) {
+            var message = Get().Find(x => x.Id == e.Message.Id);
+            if (message == null) return;
+            var sbargs = new ReactionRemovedEventArgs(e.Client) {
+                Message = message,
+                User = e.User,
+                Emoji = e.Emoji
+            };
+            var toggle = new ReactionToggledEventArgs(e.Client) {
+                Message = message,
+                User = e.User,
+                Emoji = e.Emoji,
+                State = ToggleState.REMOVED
+            };
+
+            await Dispatch(sbargs);
+            await Dispatch(toggle);
+            await First.Wants(e);
+            await Last.Wants(e);
+        }
+        internal async Task Wants(MessageDeleteEventArgs e) {
+            var message = Get().Find(x => x.Id == e.Message.Id);
+            if (message == null) return;
+            var sbargs = new MessageDeletedEventArgs(e.Client) {
+                Message = message
+            };
+   
+            await Dispatch(sbargs);
+            await First.Wants(e);
+            await Last.Wants(e);
+        }
+        internal async Task Wants(MessageUpdateEventArgs e) {
+            var message = Get().Find(x => x.Id == e.Message.Id);
+            if (message == null) return;
+            var past = new PastInteractionMessage(e.MessageBefore);
+            var sbargs = new MessageUpdatedEventArgs(e.Client) {
+                After = message,
+                Before = past
+            };
+            await Dispatch(sbargs);
+            await First.Wants(e);
+            await Last.Wants(e);
+        }
         #endregion
         #region IReadOnlyList<T> Implementations
-        public int Count => Mode == InteractionMessageListProxyMode.BOT ? Parent.BotMessages.Count : Parent.UserMessages.Count;
-		public InteractionMessage this[int index] => Mode == InteractionMessageListProxyMode.BOT ? Parent.BotMessages[index] : Parent.UserMessages[index];	
-		public IEnumerator<InteractionMessage> GetEnumerator() => Mode == InteractionMessageListProxyMode.BOT ? Parent.BotMessages.GetEnumerator() : Parent.UserMessages.GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => Mode == InteractionMessageListProxyMode.BOT ? Parent.BotMessages.GetEnumerator() : Parent.UserMessages.GetEnumerator();
-		#endregion
-	}
+        public int Count => Mode == InteractionMessageListProxyMode.BOT ? Parent._botMessages.Count : Parent._userMessages.Count;
+        public InteractionMessage this[int index] => Mode == InteractionMessageListProxyMode.BOT ? Parent._botMessages[index] : Parent._userMessages[index];
+        public IEnumerator<InteractionMessage> GetEnumerator() => Mode == InteractionMessageListProxyMode.BOT ? Parent._botMessages.GetEnumerator() : Parent._userMessages.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => Mode == InteractionMessageListProxyMode.BOT ? Parent._botMessages.GetEnumerator() : Parent._userMessages.GetEnumerator();
+        #endregion
+    }
 }

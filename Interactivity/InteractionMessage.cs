@@ -1,5 +1,6 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
 using sisbase.Interactivity.EventArgs;
 using sisbase.Utils;
 using System;
@@ -14,10 +15,12 @@ namespace sisbase.Interactivity
 	{
 		public DiscordMessage _Message;
 		internal Interaction _Owner;
+		internal List<PastInteractionMessage> _history = new List<PastInteractionMessage>();
 		#region Properties
 		public DiscordMessageActivity Activity => _Message.Activity;
 		public DiscordMessageApplication Application => _Message.Application;
 		public IReadOnlyList<DiscordAttachment> Attachments => _Message.Attachments;
+		public IReadOnlyList<PastInteractionMessage> History => _history;
 		public DiscordUser Author => _Message.Author;
 		public DiscordChannel Channel => _Message.Channel;
 		public ulong ChannelId => _Message.ChannelId;
@@ -76,16 +79,72 @@ namespace sisbase.Interactivity
 		}
 		#endregion
 		#region Event Dispatchers
-		internal async Task Dispatch(ReactionAddedEventArgs e)
+		private async Task Dispatch(ReactionAddedEventArgs e)
 			=> await _reactionAdded.InvokeAsync(e);
-		internal async Task Dispatch(ReactionRemovedEventArgs e)
+		private async Task Dispatch(ReactionRemovedEventArgs e)
 			=> await _reactionRemoved.InvokeAsync(e);
-		internal async Task Dispatch(ReactionToggledEventArgs e)
+		private async Task Dispatch(ReactionToggledEventArgs e)
 			=> await _reactionToggled.InvokeAsync(e);
-		internal async Task Dispatch(MessageUpdatedEventArgs e)
+		private async Task Dispatch(MessageUpdatedEventArgs e)
 			=> await _messageUpdated.InvokeAsync(e);
-		internal async Task Dispatch(MessageDeletedEventArgs e)
+		private async Task Dispatch(MessageDeletedEventArgs e)
 			=> await _messageDeleted.InvokeAsync(e);
+		internal async Task Wants(MessageReactionAddEventArgs e) {
+			if (e.Message.Id == Id) {
+				var sbargs = new ReactionAddedEventArgs(e.Client) {
+					Emoji = e.Emoji,
+					Message = this,
+					User = e.User
+				};
+				var toggle = new ReactionToggledEventArgs(e.Client) {
+					Emoji = e.Emoji,
+					Message = this,
+					User = e.User,
+					State = Enums.ToggleState.ADDED
+				};
+				await Dispatch(toggle);
+				await Dispatch(sbargs);
+			}
+				
+		}
+		internal async Task Wants(MessageReactionRemoveEventArgs e) {
+			if (e.Message.Id == Id) {
+				var sbargs = new ReactionRemovedEventArgs(e.Client) {
+					Emoji = e.Emoji,
+					Message = this,
+					User = e.User
+				};
+				var toggle = new ReactionToggledEventArgs(e.Client) {
+					Emoji = e.Emoji,
+					Message = this,
+					User = e.User,
+					State = Enums.ToggleState.REMOVED
+				};
+				await Dispatch(toggle);
+				await Dispatch(sbargs);
+			}
+		}
+		internal async Task Wants(MessageDeleteEventArgs e) {
+			if (e.Message.Id == Id) {
+				var sbargs = new MessageDeletedEventArgs(e.Client) {
+					Message = this
+				};
+				await Dispatch(sbargs);
+			}
+		}
+		internal async Task Wants(MessageUpdateEventArgs e) {
+			if (e.MessageBefore.Id == Id) {
+				var past = new PastInteractionMessage(e.MessageBefore);
+				if(!History.Contains(past)) _history.Add(past);
+				var sbargs = new MessageUpdatedEventArgs(e.Client) {
+					After = this,
+					Before = past
+				};
+				await Dispatch(sbargs);
+			}
+				
+		}
+
 		#endregion
 		public Task DeleteAsync(string reason = "")
 			=> _Owner.RemoveAsync(this, reason);
