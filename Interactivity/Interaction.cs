@@ -14,9 +14,10 @@ namespace sisbase.Interactivity {
 #nullable enable
 
 	public class Interaction {
-		public List<InteractionMessage> BotMessages { get; } = new List<InteractionMessage>();
-		public List<InteractionMessage> UserMessages { get; } = new List<InteractionMessage>();
-
+		internal List<InteractionMessage> _botMessages { get; } = new List<InteractionMessage>();
+		internal List<InteractionMessage> _userMessages { get; } = new List<InteractionMessage>();
+		public InteractionMessageListProxy BotMessages { get; }
+		public InteractionMessageListProxy UserMessages { get; }
 		public DiscordMessage Origin { get; }
 		public TimeSpan? MessageTimeout { get; set; }
 
@@ -38,35 +39,34 @@ namespace sisbase.Interactivity {
 					" Consider using a message created by the used you are interacting with.", "origin");
 			}
 			Origin = origin;
-			UserMessages.Add(new InteractionMessage(origin, this));
+			_userMessages.Add(new InteractionMessage(origin, this));
 			_lifetime.Token.Register(() => Task.Run(async () => await Close()).Wait());
 			SetLifetime(TimeSpan.FromMinutes(5));
 			_onClose = new AsyncEvent(IMC.HandleExceptions, "INTERACTION_CLOSED");
+			BotMessages = new InteractionMessageListProxy(Enums.InteractionMessageListProxyMode.BOT, this);
+			UserMessages = new InteractionMessageListProxy(Enums.InteractionMessageListProxyMode.USER, this);
 			IMC.AddInteraction(this);
 
 		}
-
-
-
 		public async Task<InteractionMessage> SendMessageAsync(MessageBuilder message) {
 			LifeCheck();
 			var msg = await message.Build(Origin.Channel);
 			var imsg = new InteractionMessage(msg, this);
-			BotMessages.Add(imsg);
+			_botMessages.Add(imsg);
 			return imsg;
 		}
 		public async Task<InteractionMessage> SendFileAsync(MessageBuilder message, Stream data) {
 			var msg = await message.Bind(data as FileStream).Build(Origin.Channel);
 			var imsg = new InteractionMessage(msg, this);
-			BotMessages.Add(imsg);
+			_botMessages.Add(imsg);
 			return imsg;
 		}
 		public async Task RemoveAsync(InteractionMessage interactionMessage, string reason = "") {
 			await interactionMessage._Message.DeleteAsync(reason);
 			if (interactionMessage.Author == SisbaseBot.Instance.Client.CurrentUser)
-				BotMessages.Remove(interactionMessage);
+				_botMessages.Remove(interactionMessage);
 			else
-				UserMessages.Remove(interactionMessage);
+				_userMessages.Remove(interactionMessage);
 		}
 		public async Task SendMessageAsync(string content)
 			=> await SendMessageAsync(new MessageBuilder(content));
@@ -75,25 +75,25 @@ namespace sisbase.Interactivity {
 
 		public async Task<DiscordMessage> GetUserResponseAsync() {
 			LifeCheck(strict: true);
-			var msg = await UserMessages.Last()._Message.GetNextMessageAsync(MessageTimeout).DetachOnCancel(_lifetime.Token);
-			UserMessages.Add(new InteractionMessage(msg.Result, this));
+			var msg = await _userMessages.Last()._Message.GetNextMessageAsync(MessageTimeout).DetachOnCancel(_lifetime.Token);
+			_userMessages.Add(new InteractionMessage(msg.Result, this));
 			return msg.Result;
 		}
 
 		public async Task<DiscordMessage> GetUserResponseAsync(Func<DiscordMessage, bool> filter) {
 			LifeCheck(strict: true);
-			var msg = await UserMessages.Last()._Message.GetNextMessageAsync(filter, MessageTimeout).DetachOnCancel(_lifetime.Token);
-			UserMessages.Add(new InteractionMessage(msg.Result, this));
+			var msg = await _userMessages.Last()._Message.GetNextMessageAsync(filter, MessageTimeout).DetachOnCancel(_lifetime.Token);
+			_userMessages.Add(new InteractionMessage(msg.Result, this));
 			return msg.Result;
 		}
 
 		public async Task ModifyLastMessage(Action<MessageBuilder> func) {
 			LifeCheck();
-			var builder = new MessageBuilder(BotMessages.Last()._Message);
+			var builder = new MessageBuilder(_botMessages.Last()._Message);
 			func(builder);
-			var msg = await builder.Build(BotMessages.Last().Channel);
-			BotMessages.RemoveAll(x => x.Id == builder.MessageId);
-			BotMessages.Add(new InteractionMessage(msg, this));
+			var msg = await builder.Build(_botMessages.Last().Channel);
+			_botMessages.RemoveAll(x => x.Id == builder.MessageId);
+			_botMessages.Add(new InteractionMessage(msg, this));
 		}
 
 		public void SetLifetime(TimeSpan time) => _lifetime.CancelAfter(time);
@@ -114,10 +114,9 @@ namespace sisbase.Interactivity {
 			_lifetime.Cancel();
 			IMC.RemoveIntraction(this);
 			MessageTimeout = TimeSpan.Zero;
-			BotMessages.Clear();
-			UserMessages.Clear();
+			_botMessages.Clear();
+			_userMessages.Clear();
 		}
-
 		public Task CompletionTask() => _lifetime.Token.WhenCanceled();
 	}
 
