@@ -1,21 +1,22 @@
 ﻿using DSharpPlus;
+using DSharpPlus.EventArgs;
 using sisbase.Interactivity.Enums;
 using sisbase.Interactivity.EventArgs;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace sisbase.Interactivity {
-	public class InteractionMessageListProxy : IReadOnlyList<InteractionMessage> {
-		
-		internal Interaction Parent;
-		public List<InteractionMessage> Get()
-			=> Mode == InteractionMessageListProxyMode.BOT ? Parent.BotMessages : Parent.UserMessages;
-		public InteractionMessageListProxyMode Mode { get; internal set; }
-		internal InteractionMessageListProxy(InteractionMessageListProxyMode mode, Interaction parent) {
+    public class InteractionMessageListProxy : IReadOnlyList<InteractionMessage> {
+
+        internal Interaction Parent;
+        public List<InteractionMessage> Get()
+            => Mode == InteractionMessageListProxyMode.BOT ? Parent._botMessages : Parent._userMessages;
+        public InteractionMessageListProxyMode Mode { get; internal set; }
+        public InteractionMessageProxy First { get; internal set; }
+        public InteractionMessageProxy Last { get; internal set; }
+        internal InteractionMessageListProxy(InteractionMessageListProxyMode mode, Interaction parent) {
             Mode = mode;
             Parent = parent;
             _reactionAdded = new AsyncEvent<ReactionAddedEventArgs>(IMC.HandleExceptions, $"{Mode}_MESSAGE_REACTION_ADDED");
@@ -23,6 +24,8 @@ namespace sisbase.Interactivity {
             _reactionToggled = new AsyncEvent<ReactionToggledEventArgs>(IMC.HandleExceptions, $"{Mode}_MESSAGE_REACTION_TOGGLED");
             _messageUpdated = new AsyncEvent<MessageUpdatedEventArgs>(IMC.HandleExceptions, $"{Mode}_MESSAGE_UPDATED");
             _messageDeleted = new AsyncEvent<MessageDeletedEventArgs>(IMC.HandleExceptions, $"{Mode}_MESSAGE_DELETED");
+            First = new InteractionMessageProxy(InteractionMessageProxyMode.FIRST, this);
+            Last = new InteractionMessageProxy(InteractionMessageProxyMode.LAST, this);
         }
         #region Events
         private readonly AsyncEvent<ReactionToggledEventArgs> _reactionToggled;
