@@ -187,7 +187,8 @@ namespace sisbase.Interactivity
 				.WithEmbed(embed)
 				.WithMentions(mentions as List<IMention>)
 				.SetTTS(tts)
-				.Bind(fileData,fileName));
+				.Bind(fileName)
+				.Bind(fileData));
 		public Task<InteractionMessage> RespondWithFileAsync(FileStream fileData, string content = null,
 				bool tts = false, DiscordEmbed embed = null, IEnumerable<IMention> mentions = null) 
 			=> _Owner.SendMessageAsync(new MessageBuilder()
