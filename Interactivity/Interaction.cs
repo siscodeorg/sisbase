@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
+using System.IO;
 
 namespace sisbase.Interactivity
 {
@@ -16,181 +17,9 @@ namespace sisbase.Interactivity
 
 	public class Interaction
 	{
-		public List<DiscordMessage> BotMessages { get; } = new List<DiscordMessage>();
+		public List<InteractionMessage> BotMessages { get; } = new List<InteractionMessage>();
+		public List<InteractionMessage> UserMessages { get; } = new List<InteractionMessage>();
 
-		#region Delegates
-		/// All LastUserMessage Events
-		private AsyncEvent<MessageReactionAddEventArgs> _lastUserMessageReactAdd;
-		private AsyncEvent<MessageReactionRemoveEventArgs> _lastUserMessageReactRemove;
-		private AsyncEvent<MessageUpdateEventArgs> _lastUserMessageEdit;
-		private AsyncEvent<MessageDeleteEventArgs> _lastUserMessageDelete;
-
-		/// All LastBotMessage Events
-		private AsyncEvent<MessageReactionAddEventArgs> _lastBotMessageReactAdd;
-		private AsyncEvent<MessageReactionRemoveEventArgs> _lastBotMessageReactRemove;
-		private AsyncEvent<MessageUpdateEventArgs> _lastBotMessageEdit;
-		private AsyncEvent<MessageDeleteEventArgs> _lastBotMessageDelete;
-
-		/// All Origin Events
-		private AsyncEvent<MessageReactionAddEventArgs> _originReactAdd;
-		private AsyncEvent<MessageReactionRemoveEventArgs> _originReactRemove;
-		private AsyncEvent<MessageUpdateEventArgs> _originEdit;
-		private AsyncEvent<MessageDeleteEventArgs> _originDelete;
-
-		/// All Message Events
-		private AsyncEvent<MessageReactionAddEventArgs> _messageReactAdd;
-		private AsyncEvent<MessageReactionRemoveEventArgs> _messageReactRemove;
-		private AsyncEvent<MessageUpdateEventArgs> _messageEdit;
-		private AsyncEvent<MessageDeleteEventArgs> _messageDelete;
-
-		/// All Interaction Events
-		private AsyncEvent _onClose;
-		#endregion Delegates
-		#region Events
-		public event AsyncEventHandler<MessageReactionAddEventArgs> LastUserMessageReactionAdded
-		{
-			add => _lastUserMessageReactAdd.Register(value);
-			remove => _lastUserMessageReactAdd.Unregister(value);
-		}
-
-		public event AsyncEventHandler<MessageReactionRemoveEventArgs> LastUserMessageReactionRemoved
-		{
-			add => _lastUserMessageReactRemove.Register(value);
-			remove => _lastUserMessageReactRemove.Unregister(value);
-		}
-
-		public event AsyncEventHandler<MessageUpdateEventArgs> LastUserMessageEdited
-		{
-			add => _lastUserMessageEdit.Register(value);
-			remove => _lastUserMessageEdit.Unregister(value);	
-		}
-
-		public event AsyncEventHandler<MessageDeleteEventArgs> LastUserMessageDeleted
-		{
-			add => _lastUserMessageDelete.Register(value);
-			remove => _lastUserMessageDelete.Unregister(value);
-		}
-
-		public event AsyncEventHandler<MessageReactionAddEventArgs> LastBotMessageReactionAdded
-		{
-			add => _lastBotMessageReactAdd.Register(value);
-			remove => _lastBotMessageReactAdd.Unregister(value);
-		}
-
-		public event AsyncEventHandler<MessageReactionRemoveEventArgs> LastBotMessageReactionRemoved
-		{
-			add => _lastBotMessageReactRemove.Register(value);
-			remove => _lastBotMessageReactRemove.Unregister(value);
-		}
-
-		public event AsyncEventHandler<MessageUpdateEventArgs> LastBotMessageEdited
-		{
-			add => _lastBotMessageEdit.Register(value);
-			remove => _lastBotMessageEdit.Unregister(value);
-		}
-
-		public event AsyncEventHandler<MessageDeleteEventArgs> LastBotMessageDeleted
-		{
-			add => _lastBotMessageDelete.Register(value);
-			remove => _lastBotMessageDelete.Unregister(value);
-		}
-
-		public event AsyncEventHandler<MessageReactionAddEventArgs> OriginReactionAdded
-		{
-			add => _originReactAdd.Register(value);
-			remove => _originReactAdd.Unregister(value);
-		}
-
-		public event AsyncEventHandler<MessageReactionRemoveEventArgs> OriginReactionRemoved
-		{
-			add => _originReactRemove.Register(value);
-			remove => _originReactRemove.Unregister(value);
-		}
-
-		public event AsyncEventHandler<MessageUpdateEventArgs> OriginEdited
-		{
-			add => _originEdit.Register(value);
-			remove => _originEdit.Unregister(value);
-		}
-
-		public event AsyncEventHandler<MessageDeleteEventArgs> OriginDeleted
-		{
-			add => _originDelete.Register(value);
-			remove => _originDelete.Unregister(value);
-		}
-
-		public event AsyncEventHandler<MessageReactionAddEventArgs> MessageReactionAdded
-		{
-			add => _messageReactAdd.Register(value);
-			remove => _messageReactAdd.Unregister(value);
-		}
-
-		public event AsyncEventHandler<MessageReactionRemoveEventArgs> MessageReactionRemoved
-		{
-			add => _messageReactRemove.Register(value);
-			remove => _messageReactRemove.Unregister(value);
-		}
-
-		public event AsyncEventHandler<MessageUpdateEventArgs> MessageEdited
-		{
-			add => _messageEdit.Register(value);
-			remove => _messageEdit.Unregister(value);
-		}
-
-		public event AsyncEventHandler<MessageDeleteEventArgs> MessageDeleted
-		{
-			add => _messageDelete.Register(value);
-			remove => _messageDelete.Unregister(value);
-		}
-
-		public event AsyncEventHandler OnClose
-		{
-			add => _onClose.Register(value);
-			remove => _onClose.Unregister(value);
-		}
-		#endregion Events
-		#region Event Dispatchers
-		private async Task LastMessageDispatch(MessageReactionAddEventArgs e)
-			=> await _lastUserMessageReactAdd.InvokeAsync(e);
-		private async Task LastMessageDispatch(MessageReactionRemoveEventArgs e)
-			=> await _lastUserMessageReactRemove.InvokeAsync(e);
-		private async Task LastMessageDispatch(MessageUpdateEventArgs e)
-			=> await _lastUserMessageEdit.InvokeAsync(e);
-		private async Task LastMessageDispatch(MessageDeleteEventArgs e)
-			=> await _lastUserMessageDelete.InvokeAsync(e);
-
-		private async Task LastBotMessageDispatch(MessageReactionAddEventArgs e)
-			=> await _lastBotMessageReactAdd.InvokeAsync(e);
-		private async Task LastBotMessageDispatch(MessageReactionRemoveEventArgs e)
-			=> await _lastBotMessageReactRemove.InvokeAsync(e);
-		private async Task LastBotMessageDispatch(MessageUpdateEventArgs e)
-			=> await _lastBotMessageEdit.InvokeAsync(e);
-		private async Task LastBotMessageDispatch(MessageDeleteEventArgs e)
-			=> await _lastBotMessageDelete.InvokeAsync(e);
-
-		private async Task OriginDispatch(MessageReactionAddEventArgs e)
-			=> await _originReactAdd.InvokeAsync(e);
-		private async Task OriginDispatch(MessageReactionRemoveEventArgs e)
-			=> await _originReactRemove.InvokeAsync(e);
-		private async Task OriginDispatch(MessageUpdateEventArgs e)
-			=> await _originEdit.InvokeAsync(e);
-		private async Task OriginDispatch(MessageDeleteEventArgs e)
-			=> await _originDelete.InvokeAsync(e);
-
-		private async Task MessageDispatch(MessageReactionAddEventArgs e)
-			=> await _messageReactAdd.InvokeAsync(e);
-		private async Task MessageDispatch(MessageReactionRemoveEventArgs e)
-			=> await _messageReactRemove.InvokeAsync(e);
-		private async Task MessageDispatch(MessageUpdateEventArgs e)
-			=> await _messageEdit.InvokeAsync(e);
-		private async Task MessageDispatch(MessageDeleteEventArgs e)
-			=> await _messageDelete.InvokeAsync(e);
-
-		private async Task CloseDispatch()
-			=> await _onClose.InvokeAsync();
-		#endregion
-		public List<DiscordMessage> UserMessages { get; } = new List<DiscordMessage>();
-		
 		public DiscordMessage Origin { get; }
 		public TimeSpan? MessageTimeout { get; set; }
 
@@ -204,28 +33,11 @@ namespace sisbase.Interactivity
 		{
 			if (origin.Author == SisbaseBot.Instance.Client.CurrentUser)
 			{
-				throw new ArgumentException($"Origin message can't be sent by the bot itself."+
+				throw new ArgumentException($"Origin message can't be sent by the bot itself." +
 					" Consider using a message created by the used you are interacting with.", "origin");
 			}
 			Origin = origin;
-			UserMessages.Add(origin);
-			_lastUserMessageReactAdd = new AsyncEvent<MessageReactionAddEventArgs>(HandleExceptions, "LAST_USER_MESSAGE_REACTION_ADDED");
-			_lastUserMessageReactRemove = new AsyncEvent<MessageReactionRemoveEventArgs>(HandleExceptions, "LAST_USER_MESSAGE_REACTION_REMOVED");
-			_lastUserMessageEdit = new AsyncEvent<MessageUpdateEventArgs>(HandleExceptions, "LAST_USER_MESSAGE_EDIT");
-			_lastUserMessageDelete = new AsyncEvent<MessageDeleteEventArgs>(HandleExceptions, "LAST_USER_MESSAGE_DELETE");
-			_lastBotMessageReactAdd = new AsyncEvent<MessageReactionAddEventArgs>(HandleExceptions, "LAST_BOT_MESSAGE_REACTION_ADDED");
-			_lastBotMessageReactRemove = new AsyncEvent<MessageReactionRemoveEventArgs>(HandleExceptions, "LAST_BOT_MESSAGE_REACTION_REMOVED");
-			_lastBotMessageEdit = new AsyncEvent<MessageUpdateEventArgs>(HandleExceptions, "LAST_BOT_MESSAGE_EDIT");
-			_lastBotMessageDelete = new AsyncEvent<MessageDeleteEventArgs>(HandleExceptions, "LAST_BOT_MESSAGE_DELETE");
-			_messageReactAdd = new AsyncEvent<MessageReactionAddEventArgs>(HandleExceptions, "SISBASE_MESSAGE_REACTION_ADDED");
-			_messageReactRemove = new AsyncEvent<MessageReactionRemoveEventArgs>(HandleExceptions, "SISBASE_MESSAGE_REACTION_REMOVED");
-			_messageEdit = new AsyncEvent<MessageUpdateEventArgs>(HandleExceptions, "SISBASE_MESSAGE_EDIT");
-			_messageDelete = new AsyncEvent<MessageDeleteEventArgs>(HandleExceptions, "SISBASE_MESSAGE_DELETE");
-			_originReactAdd = new AsyncEvent<MessageReactionAddEventArgs>(HandleExceptions, "ORIGIN_MESSAGE_REACTION_ADDED");
-			_originReactRemove = new AsyncEvent<MessageReactionRemoveEventArgs>(HandleExceptions, "ORIGIN_MESSAGE_REACTION_REMOVED");
-			_originEdit = new AsyncEvent<MessageUpdateEventArgs>(HandleExceptions, "ORIGIN_MESSAGE_EDIT");
-			_originDelete = new AsyncEvent<MessageDeleteEventArgs>(HandleExceptions, "ORIGIN_MESSAGE_DELETE");
-			_onClose = new AsyncEvent(HandleExceptions, "INTERACTION_CLOSED");
+			UserMessages.Add(new InteractionMessage(origin,this));
 			_lifetime.Token.Register(() => Task.Run(async () => await Close()).Wait());
 			SetLifetime(TimeSpan.FromMinutes(5));
 			IMC.AddInteraction(this);
@@ -237,16 +49,32 @@ namespace sisbase.Interactivity
 			if (ex is AggregateException age)
 				age.Handle(x => { HandleExceptions(eventName, x); return false; });
 			else
-				Logger.Warn("InteractionAPI", $"An {ex.GetType()} happened in {eventName}."); 
+				Logger.Warn("InteractionAPI", $"An {ex.GetType()} happened in {eventName}.");
 		}
 
-		public async Task SendMessageAsync(MessageBuilder message)
+		public async Task<InteractionMessage> SendMessageAsync(MessageBuilder message)
 		{
 			LifeCheck();
 			var msg = await message.Build(Origin.Channel);
-			BotMessages.Add(msg);
+			var imsg = new InteractionMessage(msg, this);
+			BotMessages.Add(imsg);
+			return imsg;
 		}
-
+		public async Task<InteractionMessage> SendFileAsync(MessageBuilder message, Stream data)
+		{
+			var msg = await message.Bind(data as FileStream).Build(Origin.Channel);
+			var imsg = new InteractionMessage(msg, this);
+			BotMessages.Add(imsg);
+			return imsg;
+		}
+		public async Task RemoveAsync(InteractionMessage interactionMessage, string reason = "")
+		{
+			await interactionMessage._Message.DeleteAsync(reason);
+			if (interactionMessage.Author == SisbaseBot.Instance.Client.CurrentUser)
+				BotMessages.Remove(interactionMessage);
+			else
+				UserMessages.Remove(interactionMessage);
+		}
 		public async Task SendMessageAsync(string content)
 			=> await SendMessageAsync(new MessageBuilder(content));
 		public async Task SendMessageAsync(DiscordEmbed embed)
@@ -255,99 +83,27 @@ namespace sisbase.Interactivity
 		public async Task<DiscordMessage> GetUserResponseAsync()
 		{
 			LifeCheck(strict: true);
-			var msg = await UserMessages.Last().GetNextMessageAsync(MessageTimeout).DetachOnCancel(_lifetime.Token);
-			UserMessages.Add(msg.Result);
+			var msg = await UserMessages.Last()._Message.GetNextMessageAsync(MessageTimeout).DetachOnCancel(_lifetime.Token);
+			UserMessages.Add(new InteractionMessage(msg.Result,this));
 			return msg.Result;
 		}
 
 		public async Task<DiscordMessage> GetUserResponseAsync(Func<DiscordMessage, bool> filter)
 		{
 			LifeCheck(strict: true);
-			var msg = await UserMessages.Last().GetNextMessageAsync(filter, MessageTimeout).DetachOnCancel(_lifetime.Token);
-			UserMessages.Add(msg.Result);
+			var msg = await UserMessages.Last()._Message.GetNextMessageAsync(filter, MessageTimeout).DetachOnCancel(_lifetime.Token);
+			UserMessages.Add(new InteractionMessage(msg.Result,this));
 			return msg.Result;
 		}
 
 		public async Task ModifyLastMessage(Action<MessageBuilder> func)
 		{
 			LifeCheck();
-			var builder = new MessageBuilder(BotMessages.Last());
+			var builder = new MessageBuilder(BotMessages.Last()._Message);
 			func(builder);
 			var msg = await builder.Build(BotMessages.Last().Channel);
 			BotMessages.RemoveAll(x => x.Id == builder.MessageId);
-			BotMessages.Add(msg);
-		}
-
-		public async Task Dispatch(MessageReactionAddEventArgs e)
-		{
-			if(_isClosing) return;
-			if(e.Message == UserMessages.LastOrDefault())
-			{
-				await LastMessageDispatch(e);
-			}
-			if(e.Message == BotMessages.LastOrDefault())
-			{
-				await LastBotMessageDispatch(e);
-			}
-			if(e.Message == Origin)
-			{
-				await OriginDispatch(e);
-			}
-			await MessageDispatch(e);
-		}
-
-		public async Task Dispatch(MessageReactionRemoveEventArgs e)
-		{
-			if(_isClosing) return;
-			if (e.Message == UserMessages.LastOrDefault())
-			{
-				await LastMessageDispatch(e);
-			}
-			if (e.Message == BotMessages.LastOrDefault())
-			{
-				await LastBotMessageDispatch(e);
-			}
-			if (e.Message == Origin)
-			{
-				await OriginDispatch(e);
-			}
-			await MessageDispatch(e);
-		}
-
-		public async Task Dispatch(MessageUpdateEventArgs e)
-		{
-			if(_isClosing) return;
-			if (e.Message == UserMessages.LastOrDefault())
-			{
-				await LastMessageDispatch(e);
-			}
-			if (e.Message == BotMessages.LastOrDefault())
-			{
-				await LastBotMessageDispatch(e);
-			}
-			if (e.Message == Origin)
-			{
-				await OriginDispatch(e);
-			}
-			await MessageDispatch(e);
-		}
-
-		public async Task Dispatch(MessageDeleteEventArgs e)
-		{
-			if(_isClosing) return;
-			if (e.Message == UserMessages.LastOrDefault())
-			{
-				await LastMessageDispatch(e);
-			}
-			if (e.Message == BotMessages.LastOrDefault())
-			{
-				await LastBotMessageDispatch(e);
-			}
-			if (e.Message == Origin)
-			{
-				await OriginDispatch(e);
-			}
-			await MessageDispatch(e);
+			BotMessages.Add(new InteractionMessage(msg,this));
 		}
 
 		public void SetLifetime(TimeSpan time)
@@ -370,7 +126,6 @@ namespace sisbase.Interactivity
 				if (_isClosing) return;
 				_isClosing = true;
 			}
-			await CloseDispatch();
 			_isClosed = true;
 			_lifetime.Cancel();
 			IMC.RemoveIntraction(this);
