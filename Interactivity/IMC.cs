@@ -1,4 +1,5 @@
 ﻿using DSharpPlus.Entities;
+using sisbase.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,5 +19,12 @@ namespace sisbase.Interactivity
 			=> InteractionRegistry.Remove(interaction);
 		internal static Interaction GetInteraction(DiscordMessage origin)
 			=> InteractionRegistry.Find(x => x.Origin == origin);
+		internal static void HandleExceptions(string eventName, Exception ex) {
+			if (ex is OperationCanceledException) return;
+			if (ex is AggregateException age)
+				age.Handle(x => { HandleExceptions(eventName, x); return false; });
+			else
+				Logger.Warn("InteractionAPI", $"An {ex.GetType()} happened in {eventName}.");
+		}
 	}
 }
