@@ -8,4 +8,12 @@ namespace sisbase.Interactivity.Enums
 	{
 		ADDED,REMOVED
 	}
+	public enum InteractionMessageListProxyMode
+	{
+		BOT,USER
+	}
+	public enum InteractionMessageProxyMode
+	{
+		FIRST,LAST
+	}
 }
