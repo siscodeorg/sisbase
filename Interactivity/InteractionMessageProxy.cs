@@ -1,5 +1,6 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
 using sisbase.Interactivity.Enums;
 using sisbase.Interactivity.EventArgs;
 using System;
@@ -57,6 +58,60 @@ namespace sisbase.Interactivity {
         private async Task Dispatch(ReactionRemovedEventArgs e) => await _reactionRemoved.InvokeAsync(e);
         private async Task Dispatch(MessageDeletedEventArgs e) => await _messageDeleted.InvokeAsync(e);
         private async Task Dispatch(MessageUpdatedEventArgs e) => await _messageUpdated.InvokeAsync(e);
+
+        internal async Task Wants(MessageReactionAddEventArgs e) {
+            if (e.Message.Id == Get().Id) {
+                var sbargs = new ReactionAddedEventArgs(e.Client) {
+                    Message = Get(),
+                    User = e.User,
+                    Emoji = e.Emoji
+                };
+                var toggle = new ReactionToggledEventArgs(e.Client) {
+                    Message = Get(),
+                    User = e.User,
+                    Emoji = e.Emoji,
+                    State = ToggleState.ADDED
+                };
+                await Dispatch(sbargs);
+                await Dispatch(toggle);
+            }
+
+        }
+        internal async Task Wants(MessageReactionRemoveEventArgs e) {
+            if (e.Message.Id == Get().Id) {
+                var sbargs = new ReactionRemovedEventArgs(e.Client) {
+                    Message = Get(),
+                    User = e.User,
+                    Emoji = e.Emoji
+                };
+                var toggle = new ReactionToggledEventArgs(e.Client) {
+                    Message = Get(),
+                    User = e.User,
+                    Emoji = e.Emoji,
+                    State = ToggleState.REMOVED
+                };
+                await Dispatch(sbargs);
+            }
+        }
+        internal async Task Wants(MessageDeleteEventArgs e) {
+            if (e.Message.Id == Get().Id) {
+                var sbargs = new MessageDeletedEventArgs(e.Client) {
+                    Message = Get()
+                };
+                await Dispatch(sbargs);
+            }
+
+        }
+        internal async Task Wants(MessageUpdateEventArgs e) {
+            if (e.Message.Id == Get().Id) {
+                var past = new PastInteractionMessage(e.MessageBefore);
+                var sbargs = new MessageUpdatedEventArgs(e.Client) {
+                    After = Get(),
+                    Before = past
+                };
+                await Dispatch(sbargs);
+            }
+        }
         #endregion
         #region D#+ Delegation
         public DiscordChannel Channel => Get().Channel;
