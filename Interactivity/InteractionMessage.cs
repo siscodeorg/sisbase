@@ -4,6 +4,7 @@ using sisbase.Interactivity.EventArgs;
 using sisbase.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,7 +36,7 @@ namespace sisbase.Interactivity
 		public bool Pinned => _Message.Pinned;
 		public IReadOnlyList<DiscordReaction> Reactions => _Message.Reactions;
 		public DiscordMessageReference Reference => _Message.Reference;
-		public DateTimeOffset? Timestamp => _Message.Timestamp;
+		public DateTimeOffset Timestamp => _Message.Timestamp;
 		public ulong? WebhookId => _Message.WebhookId;
 		public bool WebhookMessage => _Message.WebhookMessage;
 		public ulong Id => _Message.Id;
@@ -86,8 +87,8 @@ namespace sisbase.Interactivity
 		internal async Task Dispatch(MessageDeletedEventArgs e)
 			=> await _messageDeleted.InvokeAsync(e);
 		#endregion
-		//public async Task Delete()
-		//	=> await _Owner.Remove(this);
+		public Task DeleteAsync(string reason = "")
+			=> _Owner.RemoveAsync(this, reason);
 
 		public async Task MutateAsync(Action<MessageBuilder> action)
 		{
@@ -110,6 +111,56 @@ namespace sisbase.Interactivity
 			=> _Message.DeleteOwnReactionAsync(emoji);
 		public Task ModifyEmbedSuppressionAsync(bool hideEmbeds) 
 			=> _Message.ModifyEmbedSuppressionAsync(hideEmbeds);
+		public async Task<InteractionMessage> ModifyAsync(Optional<string> content = default,
+				Optional<DiscordEmbed> embed = default)
+		{ await _Message.ModifyAsync(content, embed); return this; }
+		public Task<InteractionMessage> RespondAsync(string content = null, bool tts = false, DiscordEmbed embed = null,
+				IEnumerable<IMention> mentions = null) 
+			=>  _Owner.SendMessageAsync(new MessageBuilder()
+				.WithContent(content)
+				.WithEmbed(embed)
+				.WithMentions(mentions.ToList())
+				.SetTTS(tts));
+		public Task<InteractionMessage> RespondWithFileAsync(string fileName, Stream fileData, string content = null,
+			   bool tts = false, DiscordEmbed embed = null, IEnumerable<IMention> mentions = null)
+			=> _Owner.SendMessageAsync(new MessageBuilder()
+				.WithContent(content)
+				.WithEmbed(embed)
+				.WithMentions(mentions as List<IMention>)
+				.SetTTS(tts)
+				.Bind(fileData,fileName));
+		public Task<InteractionMessage> RespondWithFileAsync(FileStream fileData, string content = null,
+				bool tts = false, DiscordEmbed embed = null, IEnumerable<IMention> mentions = null) 
+			=> _Owner.SendMessageAsync(new MessageBuilder()
+				.WithContent(content)
+				.WithEmbed(embed)
+				.WithMentions(mentions as List<IMention>)
+				.SetTTS(tts)
+				.Bind(fileData));
+		public Task<InteractionMessage> RespondWithFileAsync(string filePath, string content = null,
+			   bool tts = false, DiscordEmbed embed = null, IEnumerable<IMention> mentions = null) 
+			=> _Owner.SendMessageAsync(new MessageBuilder()
+				.WithContent(content)
+				.WithEmbed(embed)
+				.WithMentions(mentions as List<IMention>)
+				.SetTTS(tts)
+				.Bind(filePath));
+		public Task<InteractionMessage> RespondWithFilesAsync(Dictionary<string, Stream> files, string content = null,
+				bool tts = false, DiscordEmbed embed = null, IEnumerable<IMention> mentions = null)
+			=> _Owner.SendMessageAsync(new MessageBuilder()
+				.WithContent(content)
+				.WithEmbed(embed)
+				.WithMentions(mentions as List<IMention>)
+				.SetTTS(tts)
+				.BindMany(files));
+		public Task<IReadOnlyList<DiscordUser>> GetReactionsAsync(DiscordEmoji emoji, int limit = 25,
+				ulong? after = null)
+			=> _Message.GetReactionsAsync(emoji, limit, after);
+		public Task DeleteAllReactionsAsync(string reason = null)
+			=> _Message.DeleteAllReactionsAsync(reason);
+		public Task DeleteReactionsEmojiAsync(DiscordEmoji emoji)
+			=> _Message.DeleteReactionsEmojiAsync(emoji);
+
 		public Task PinAsync() 
 			=> _Message.PinAsync();
 		public Task UnpinAsync()
