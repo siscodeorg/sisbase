@@ -1,4 +1,5 @@
 using DSharpPlus;
+using System.Threading.Tasks;
 
 namespace sisbase.Utils
 {
@@ -11,6 +12,6 @@ namespace sisbase.Utils
 		/// Applies the current system to the current <see cref="DiscordClient"/>
 		/// </summary>
 		/// <param name="client">The currrent client</param>
-		void ApplyToClient(DiscordClient client);
+		Task ApplyToClient(DiscordClient client);
 	}
 }
