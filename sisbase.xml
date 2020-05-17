@@ -25,7 +25,7 @@
             Constructs a new EmojiAttribute from an unicode name <br></br>
             Eg. :computer: , :white_check_mark:
             </summary>
-            <param name="unicode">The unicode string  (requires being surrounded by colons)</param>
+            <param name="name">The discord name(requires being surrounded by colons)</param>
         </member>
         <member name="M:sisbase.Attributes.EmojiAttribute.#ctor(System.UInt64)">
             <summary>
@@ -134,6 +134,11 @@
             Updates the file of the config with the currently running config
             </summary>
         </member>
+        <member name="T:sisbase.Interactivity.IMC">
+            <summary>
+            Interaction Manager Controller
+            </summary>
+        </member>
         <member name="T:sisbase.SisbaseBot">
             <summary>
             The class all sisbase bots derive from
@@ -223,6 +228,40 @@
             <summary>
             Counts from 0.
             </summary>
+        </member>
+        <member name="M:sisbase.Utils.ConcurrencyUtils.PrepareTimeoutToken(System.Nullable{System.TimeSpan},System.Threading.CancellationToken)">
+             <summary>
+             Produce a new CancellationTokenSource that will become cancelled when either the timeout expires or the
+             passed in token becomes cancelled. This function is intended for use to unify timeout and token based
+             cancellation APIs. 
+            
+             Keep in mind that the returned CancellationTokenSource implements IDisposable, and should therefore be
+             disposed.
+             </summary>
+             <param name="timeout">The timeout to expire after. Never expires if set to null.</param>
+             <param name="token">The token to link. If not specified, an empty token is created.</param>
+             <returns>A token source for the merged timeout/token.</returns>
+        </member>
+        <member name="M:sisbase.Utils.ConcurrencyUtils.DetachOnCancel``1(System.Threading.Tasks.Task{``0},System.Threading.CancellationToken)">
+            <summary>
+            Stop waiting for this Task when the cancellation token fires. Intended to be used to semi-support
+            cancellation for non-cancellable Tasks. This does not cancel the detached Task, but does propagate
+            cancellation upwards from the call. UNSAFE if the detached task owns any resources. Use with care.
+            Catch OperationCancelledException to clean up the detached task if possible.
+            </summary>
+            <param name="task">The task to detach from.</param>
+            <param name="token">The cancellation token for the task.</param>
+            <typeparam name="T">The return type of the wrapped and wrapper tasks.</typeparam>
+            <returns>A wrapper task that will be cancelled according to token</returns>
+        </member>
+        <member name="M:sisbase.Utils.ConcurrencyUtils.WhenCanceled(System.Threading.CancellationToken)">
+            <summary>
+            Return a task that will complete when the cancellation token fires. Used to await cancellation of a token.
+            Only use this method if you know that the cancellation token will fire, or that you will wait on multiple
+            tasks, at least one of which will eventually complete.
+            </summary>
+            <param name="cancellationToken">The token to produce a Task from.</param>
+            <returns>A task that will mirror the cancellation token.</returns>
         </member>
         <member name="T:sisbase.Utils.EmbedBase">
             <summary>
@@ -452,6 +491,20 @@
             Simple utility to log booleans nicely
             </summary>
             <param name="b">The boolean</param>
+        </member>
+        <member name="M:sisbase.Utils.Permissions.GetPermissions(DSharpPlus.Entities.DiscordMember)">
+            <summary>
+            Gets all the global permissions of a <see cref="T:DSharpPlus.Entities.DiscordMember"/> including <seealso cref="P:DSharpPlus.Entities.DiscordGuild.EveryoneRole"/>
+            </summary>
+            <param name="member">The member of the </param>
+            <returns></returns>
+        </member>
+        <member name="M:sisbase.Utils.Permissions.IsModerator(DSharpPlus.Entities.DiscordMember)">
+            <summary>
+            Checks if a <see cref="T:DSharpPlus.Entities.DiscordMember"/> has any permission from <see cref="F:sisbase.Utils.Permissions.AdministrativePermissions"/>
+            </summary>
+            <param name="member"></param>
+            <returns></returns>
         </member>
         <member name="T:sisbase.Utils.SMC">
             <summary>
