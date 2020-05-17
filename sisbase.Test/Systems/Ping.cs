@@ -18,7 +18,7 @@ namespace sisbase.Test.Systems
 			Status = true;
 		}
 
-		public void ApplyToClient(DiscordClient client)
+		public async Task ApplyToClient(DiscordClient client)
 		{
 			client.MessageCreated += MessageCreated;
 		}
