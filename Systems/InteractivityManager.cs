@@ -17,7 +17,7 @@ namespace sisbase.Systems {
 			Description = "Dispatches all Sisbase.Interactivity events.";
 			Status = true;
 		}
-		public void ApplyToClient(DiscordClient client) {
+		public async Task ApplyToClient(DiscordClient client) {
 			client.MessageUpdated += EditHandler;
 			client.MessageReactionAdded += ReactionAddHandler;
 			client.MessageReactionRemoved += ReactionRemovedHandler;
