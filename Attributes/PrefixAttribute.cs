@@ -2,13 +2,11 @@
 using DSharpPlus.CommandsNext.Attributes;
 using System.Threading.Tasks;
 
-namespace sisbase.Attributes
-{
+namespace sisbase.Attributes {
 	/// <summary>
 	/// Attribute that checks if a command was executed with an specified prefix
 	/// </summary>
-	public class PrefixAttribute : CheckBaseAttribute
-	{
+	public class PrefixAttribute : CheckBaseAttribute {
 		/// <summary>
 		/// The prefix
 		/// </summary>

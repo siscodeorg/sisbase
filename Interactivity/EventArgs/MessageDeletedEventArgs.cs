@@ -1,18 +1,12 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace sisbase.Interactivity.EventArgs
-{
-	public class MessageDeletedEventArgs : DiscordEventArgs
-	{
+namespace sisbase.Interactivity.EventArgs {
+	public class MessageDeletedEventArgs : DiscordEventArgs {
 		public InteractionMessage Message { get; internal set; }
 		public DiscordChannel Channel
 			=> Message.Channel;
-		internal MessageDeletedEventArgs(DiscordClient client) : base(client)
-		{}
+		internal MessageDeletedEventArgs(DiscordClient client) : base(client) { }
 	}
 }

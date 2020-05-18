@@ -8,36 +8,29 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace sisbase.Systems
-{
+namespace sisbase.Systems {
 	/// <summary>
 	/// The guild the bot is supossed to run
 	/// </summary>
 #pragma warning disable CS1591
 
-	public class MasterServer : IClientSystem
-	{
+	public class MasterServer : IClientSystem {
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public bool Status { get; set; }
 
-		public void Activate()
-		{
+		public void Activate() {
 			Name = "MasterServer";
 			Description = "MasterServer System";
 			Status = true;
 		}
 
-		public async Task ApplyToClient(DiscordClient client) => client.GuildDownloadCompleted += async delegate (GuildDownloadCompletedEventArgs args)
-		{
-			if (SisbaseBot.Instance.SisbaseConfiguration.Config.MasterId == 0)
-			{
-				if (client.Guilds.Count > 1)
-				{
+		public async Task ApplyToClient(DiscordClient client) => client.GuildDownloadCompleted += async delegate (GuildDownloadCompletedEventArgs args) {
+			if (SisbaseBot.Instance.SisbaseConfiguration.Config.MasterId == 0) {
+				if (client.Guilds.Count > 1) {
 					string names = client.Guilds.Aggregate("", (current, guild) => current + $"{guild.Value.Name}, ");
 
-					foreach (var guild in client.Guilds)
-					{
+					foreach (var guild in client.Guilds) {
 						var ch = guild.Value.GetDefaultChannel();
 						var builder = new DiscordEmbedBuilder();
 
@@ -49,8 +42,7 @@ namespace sisbase.Systems
 						await ch.SendMessageAsync(embed: builder);
 					}
 				}
-				else
-				{
+				else {
 					var ch = client.Guilds.Values.ToList()[0].GetDefaultChannel();
 					var builder = new DiscordEmbedBuilder();
 					builder
@@ -63,16 +55,14 @@ namespace sisbase.Systems
 			}
 		};
 
-		public void Deactivate()
-		{
+		public void Deactivate() {
 			Name = null;
 			Description = null;
 			Status = false;
 			GC.SuppressFinalize(this);
 		}
 
-		public void Execute()
-		{
+		public void Execute() {
 		}
 	}
 }

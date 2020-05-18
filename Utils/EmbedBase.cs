@@ -7,31 +7,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using static sisbase.Utils.Behaviours;
 
-namespace sisbase.Utils
-{
+namespace sisbase.Utils {
 	/// <summary>
 	/// Utility for generating consistant embeds
 	/// </summary>
-	public static class EmbedBase
-	{
+	public static class EmbedBase {
 		/// <summary>
 		/// Generates a new group help embed from an specified command <br></br> The comand must be
 		/// a GroupCommand.
 		/// </summary>
 		/// <param name="Command"></param>
 		/// <returns></returns>
-		public static DiscordEmbed GroupHelpEmbed(Command Command)
-		{
+		public static DiscordEmbed GroupHelpEmbed(Command Command) {
 			var commands = new List<Command>();
 			CommandGroup cG = null;
-			if (Command is CommandGroup cGroup)
-			{
+			if (Command is CommandGroup cGroup) {
 				commands = cGroup.Children.ToList();
 				cG = cGroup;
 			}
 			string commandList = "";
-			foreach (var command in commands)
-			{
+			foreach (var command in commands) {
 				commandList += $"{command.Name} - {command.Description}\n";
 			}
 			var groupHelpEmbed = new DiscordEmbedBuilder();
@@ -51,14 +46,11 @@ namespace sisbase.Utils
 		/// <param name="ctx"></param>
 		/// <param name="showHidden"></param>
 		/// <returns></returns>
-		public static async Task<DiscordEmbed> HelpEmbed(this CommandsNextExtension cne, CommandContext ctx, bool showHidden = false)
-		{
+		public static async Task<DiscordEmbed> HelpEmbed(this CommandsNextExtension cne, CommandContext ctx, bool showHidden = false) {
 			var RegisteredCommands = cne.RegisteredCommands.Values.ToList();
 			var groups = new List<CommandGroup>();
-			foreach (var command in RegisteredCommands)
-			{
-				if (command is CommandGroup group)
-				{
+			foreach (var command in RegisteredCommands) {
+				if (command is CommandGroup group) {
 					if ((await group.RunChecksAsync(ctx, true)).Count() > 0) continue;
 					if (group.IsHidden && !showHidden) continue;
 					groups.Add(group);
@@ -66,8 +58,7 @@ namespace sisbase.Utils
 			}
 			var helpBuilder = new DiscordEmbedBuilder();
 			var unk = DiscordEmoji.FromName(SisbaseBot.Instance.Client, ":grey_question:");
-			foreach (var commandGroup in groups)
-			{
+			foreach (var commandGroup in groups) {
 				var children = commandGroup.Children.ToList();
 				commandGroup.Children.ToList().ForEach(x => RegisteredCommands.Remove(x));
 				RegisteredCommands.Remove(commandGroup);
@@ -78,8 +69,7 @@ namespace sisbase.Utils
 			}
 
 			string misc = "";
-			foreach (var command in RegisteredCommands)
-			{
+			foreach (var command in RegisteredCommands) {
 				if ((await command.RunChecksAsync(ctx, true)).Count() > 0) continue;
 				if (command.IsHidden && !showHidden) continue;
 				misc += $"`{command.Name}` ";
@@ -100,8 +90,7 @@ namespace sisbase.Utils
 		/// </summary>
 		/// <param name="input">The string</param>
 		/// <returns></returns>
-		public static DiscordEmbed InputEmbed(string input)
-		{
+		public static DiscordEmbed InputEmbed(string input) {
 			var inputEmbedBuilder = new DiscordEmbedBuilder();
 			inputEmbedBuilder
 				.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
@@ -115,8 +104,7 @@ namespace sisbase.Utils
 		/// </summary>
 		/// <param name="output">The string that will be set as the description</param>
 		/// <returns></returns>
-		public static DiscordEmbed OutputEmbed(string output)
-		{
+		public static DiscordEmbed OutputEmbed(string output) {
 			var outputEmbedBuilder = new DiscordEmbedBuilder();
 			outputEmbedBuilder
 				.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
@@ -135,11 +123,9 @@ namespace sisbase.Utils
 		/// <param name="behaviour">An <see cref="CountingBehaviour"/>, defaults to <see cref="CountingBehaviour.Default"/></param>
 		/// <returns></returns>
 		public static DiscordEmbed OrderedListEmbed<T>(List<T> list, string name,
-			CountingBehaviour behaviour = CountingBehaviour.Default)
-		{
+			CountingBehaviour behaviour = CountingBehaviour.Default) {
 			string data = "";
-			foreach (var item in list)
-			{
+			foreach (var item in list) {
 				if (behaviour == CountingBehaviour.Ordinal) data += $"{list.IndexOf(item) + 1}・{item.ToString()}\n";
 				else data += $"{list.IndexOf(item)}・{item.ToString()}\n";
 			}
@@ -159,8 +145,7 @@ namespace sisbase.Utils
 		/// <param name="list">The list</param>
 		/// <param name="name">Name that will be displayed on the embed.</param>
 		/// <returns></returns>
-		public static DiscordEmbed ListEmbed<T>(IEnumerable<T> list, string name)
-		{
+		public static DiscordEmbed ListEmbed<T>(IEnumerable<T> list, string name) {
 			string data = list.Aggregate("", (current, item) => current + $"・{item.ToString()}\n");
 			var listBuilder = new DiscordEmbedBuilder();
 			listBuilder
@@ -176,22 +161,17 @@ namespace sisbase.Utils
 		/// </summary>
 		/// <param name="command">The command</param>
 		/// <returns></returns>
-		public static DiscordEmbed CommandHelpEmbed(Command command)
-		{
-			if (command.Overloads?.Any() == true)
-			{
+		public static DiscordEmbed CommandHelpEmbed(Command command) {
+			if (command.Overloads?.Any() == true) {
 				string use = "";
 				var o = command.Overloads.ToList();
 				var arguments = new List<CommandArgument>();
 				o.RemoveAll(x => x.Arguments.Count == 0);
-				foreach (var overload in o)
-				{
+				foreach (var overload in o) {
 					string inner = "";
 					var args = overload.Arguments.ToList();
-					foreach (var argument in args)
-					{
-						if (!arguments.Contains(argument))
-						{
+					foreach (var argument in args) {
+						if (!arguments.Contains(argument)) {
 							arguments.Add(argument);
 						}
 						inner += $"`{argument.Name}` ";
@@ -210,8 +190,7 @@ namespace sisbase.Utils
 					.WithColor(DiscordColor.Gray);
 				return commandHelpEmbed.Build();
 			}
-			else
-			{
+			else {
 				var commandHelpEmbed = new DiscordEmbedBuilder();
 				commandHelpEmbed
 					.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
@@ -228,8 +207,7 @@ namespace sisbase.Utils
 		/// <param name="embed">The embed that will be mutated</param>
 		/// <param name="func">The transformation</param>
 		/// <returns></returns>
-		public static DiscordEmbed Mutate(this DiscordEmbed embed, Action<DiscordEmbedBuilder> func)
-		{
+		public static DiscordEmbed Mutate(this DiscordEmbed embed, Action<DiscordEmbedBuilder> func) {
 			var builder = new DiscordEmbedBuilder(embed);
 			func(builder);
 			return builder.Build();

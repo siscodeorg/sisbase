@@ -5,13 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace sisbase.Utils
-{
+namespace sisbase.Utils {
 	/// <summary>
 	/// General utilities class
 	/// </summary>
-	public static class General
-	{
+	public static class General {
 		internal static Version Version = typeof(SisbaseBot)
 			.Assembly
 			.GetName()
@@ -21,8 +19,7 @@ namespace sisbase.Utils
 
 		internal static string GetVersion() => Format(Version);
 
-		internal static Json TUI_cfg()
-		{
+		internal static Json TUI_cfg() {
 			var c = new Json();
 			Console.WriteLine("Please Input the TOKEN :");
 			c.Token = Console.ReadLine();
@@ -40,8 +37,7 @@ namespace sisbase.Utils
 		/// <param name="s"></param>
 		/// <param name="key">The name of the custom configuration</param>
 		/// <param name="value"></param>
-		public static void AddCustomConfiguration<T>(this Sisbase s, string key, T value)
-		{
+		public static void AddCustomConfiguration<T>(this Sisbase s, string key, T value) {
 			s.Config.CustomSettings ??= new Dictionary<string, object>();
 			s.Config.CustomSettings.TryAdd(key, value);
 			s.Update();
@@ -52,8 +48,7 @@ namespace sisbase.Utils
 		/// </summary>
 		/// <param name="s"></param>
 		/// <param name="key">The name of the custom configuration</param>
-		public static void RemoveCustomConfiguration(this Sisbase s, string key)
-		{
+		public static void RemoveCustomConfiguration(this Sisbase s, string key) {
 			s.Config.CustomSettings ??= new Dictionary<string, object>();
 			s.Config.CustomSettings.Remove(key);
 			s.Update();
@@ -66,8 +61,7 @@ namespace sisbase.Utils
 		/// <param name="s"></param>
 		/// <param name="key">The name of the custom configuration</param>
 		/// <param name="newValue">The updated value</param>
-		public static void UpdateCustomConfiguration<T>(this Sisbase s, string key, T newValue)
-		{
+		public static void UpdateCustomConfiguration<T>(this Sisbase s, string key, T newValue) {
 			s.Config.CustomSettings ??= new Dictionary<string, object>();
 			s.Config.CustomSettings.TryGetValue(key, out object value);
 			if (value != null) s.RemoveCustomConfiguration(key);
@@ -80,8 +74,7 @@ namespace sisbase.Utils
 		/// <typeparam name="T">Type of the custom configuration</typeparam>
 		/// <param name="s"></param>
 		/// <param name="key">The name of the custom configuration</param>
-		public static T GetCustomConfiguration<T>(this Sisbase s, string key)
-		{
+		public static T GetCustomConfiguration<T>(this Sisbase s, string key) {
 			s.Config.CustomSettings ??= new Dictionary<string, object>();
 			s.Config.CustomSettings.TryGetValue(key, out object value);
 			return (T)value;
@@ -100,8 +93,7 @@ namespace sisbase.Utils
 		/// </summary>
 		/// <param name="m">The message</param>
 		/// <returns></returns>
-		public static DiscordEmoji FirstEmoji(this DiscordMessage m)
-		{
+		public static DiscordEmoji FirstEmoji(this DiscordMessage m) {
 			string str = m.Content.Split(" ").Where(x => Emoji.EmojiLiterals.Contains(x) || Regex.IsMatch(x, @"\<\:([a-zA-Z_0-9]+)\:([0-9]+)\>|\<\:([a-zA-Z_0-9]+)\:\>")).FirstOrDefault();
 			if (string.IsNullOrEmpty(str)) return null;
 			if (Emoji.EmojiLiterals.Contains(str)) return DiscordEmoji.FromUnicode(str);

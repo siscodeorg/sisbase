@@ -1,13 +1,11 @@
 ﻿using System;
 
-namespace sisbase.Utils
-{
+namespace sisbase.Utils {
 	/// <summary>
 	/// Interface for running a scheduled function on systems
 	/// </summary>
 
-	public interface IScheduledSystem : ISystem
-	{
+	public interface IScheduledSystem : ISystem {
 		/// <summary>
 		/// Timeout for the schedule
 		/// </summary>

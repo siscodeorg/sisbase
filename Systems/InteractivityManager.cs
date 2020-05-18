@@ -2,8 +2,6 @@
 using DSharpPlus.EventArgs;
 using sisbase.Interactivity;
 using sisbase.Utils;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace sisbase.Systems {

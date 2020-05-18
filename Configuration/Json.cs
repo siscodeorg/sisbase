@@ -1,13 +1,11 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace sisbase
-{
+namespace sisbase {
 	/// <summary>
 	/// The configuration whichs is saved to the config.json file
 	/// </summary>
-	public class Json
-	{
+	public class Json {
 		[JsonProperty] internal string Token { get; set; }
 
 		/// <summary>

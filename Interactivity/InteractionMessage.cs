@@ -9,10 +9,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace sisbase.Interactivity
-{
-	public class InteractionMessage 
-	{
+namespace sisbase.Interactivity {
+	public class InteractionMessage {
 		public DiscordMessage _Message;
 		internal Interaction _Owner;
 		internal List<PastInteractionMessage> _history = new List<PastInteractionMessage>();
@@ -45,35 +43,30 @@ namespace sisbase.Interactivity
 		public ulong Id => _Message.Id;
 		#endregion
 		#region Delegates
-		private AsyncEvent<ReactionAddedEventArgs> _reactionAdded;
-		private AsyncEvent<ReactionRemovedEventArgs> _reactionRemoved;
-		private AsyncEvent<ReactionToggledEventArgs> _reactionToggled;
-		private AsyncEvent<MessageDeletedEventArgs> _messageDeleted;
-		private AsyncEvent<MessageUpdatedEventArgs> _messageUpdated;
+		private readonly AsyncEvent<ReactionAddedEventArgs> _reactionAdded;
+		private readonly AsyncEvent<ReactionRemovedEventArgs> _reactionRemoved;
+		private readonly AsyncEvent<ReactionToggledEventArgs> _reactionToggled;
+		private readonly AsyncEvent<MessageDeletedEventArgs> _messageDeleted;
+		private readonly AsyncEvent<MessageUpdatedEventArgs> _messageUpdated;
 		#endregion
 		#region Events
-		public event AsyncEventHandler<ReactionAddedEventArgs> ReactionAdded
-		{
+		public event AsyncEventHandler<ReactionAddedEventArgs> ReactionAdded {
 			add => _reactionAdded.Register(value);
 			remove => _reactionAdded.Unregister(value);
 		}
-		public event AsyncEventHandler<ReactionRemovedEventArgs> ReactionRemoved
-		{
+		public event AsyncEventHandler<ReactionRemovedEventArgs> ReactionRemoved {
 			add => _reactionRemoved.Register(value);
 			remove => _reactionRemoved.Register(value);
 		}
-		public event AsyncEventHandler<ReactionToggledEventArgs> ReactionToggled
-		{
+		public event AsyncEventHandler<ReactionToggledEventArgs> ReactionToggled {
 			add => _reactionToggled.Register(value);
 			remove => _reactionToggled.Unregister(value);
 		}
-		public event AsyncEventHandler<MessageDeletedEventArgs> MessageDeleted
-		{
+		public event AsyncEventHandler<MessageDeletedEventArgs> MessageDeleted {
 			add => _messageDeleted.Register(value);
 			remove => _messageDeleted.Unregister(value);
 		}
-		public event AsyncEventHandler<MessageUpdatedEventArgs> MessageUpdated
-		{
+		public event AsyncEventHandler<MessageUpdatedEventArgs> MessageUpdated {
 			add => _messageUpdated.Register(value);
 			remove => _messageUpdated.Unregister(value);
 		}
@@ -105,7 +98,7 @@ namespace sisbase.Interactivity
 				await Dispatch(toggle);
 				await Dispatch(sbargs);
 			}
-				
+
 		}
 		internal async Task Wants(MessageReactionRemoveEventArgs e) {
 			if (e.Message.Id == Id) {
@@ -135,47 +128,44 @@ namespace sisbase.Interactivity
 		internal async Task Wants(MessageUpdateEventArgs e) {
 			if (e.MessageBefore.Id == Id) {
 				var past = new PastInteractionMessage(e.MessageBefore);
-				if(!History.Contains(past)) _history.Add(past);
+				if (!History.Contains(past)) _history.Add(past);
 				var sbargs = new MessageUpdatedEventArgs(e.Client) {
 					After = this,
 					Before = past
 				};
 				await Dispatch(sbargs);
 			}
-				
+
 		}
 
 		#endregion
 		public Task DeleteAsync(string reason = "")
 			=> _Owner.RemoveAsync(this, reason);
 
-		public async Task MutateAsync(Action<MessageBuilder> action)
-		{
+		public async Task MutateAsync(Action<MessageBuilder> action) {
 			var builder = new MessageBuilder(_Message);
 			action(builder);
 			_Message = await builder.Build(_Message.Channel);
 		}
-		public Task RespondAsync(MessageBuilder message) 
-			=>  _Owner.SendMessageAsync(message);
-		public async Task ToggleReactionAsync(DiscordEmoji reaction)
-		{
+		public Task RespondAsync(MessageBuilder message)
+			=> _Owner.SendMessageAsync(message);
+		public async Task ToggleReactionAsync(DiscordEmoji reaction) {
 			if ((await _Message.GetReactionsAsync(reaction)).Contains(SisbaseBot.Instance.Client.CurrentUser))
 				await _Message.DeleteOwnReactionAsync(reaction);
 			else
 				await _Message.CreateReactionAsync(reaction);
 		}
-		public Task CreateReactionAsync(DiscordEmoji emoji) 
+		public Task CreateReactionAsync(DiscordEmoji emoji)
 			=> _Message.CreateReactionAsync(emoji);
-		public Task DeleteOwnReactionAsync(DiscordEmoji emoji) 
+		public Task DeleteOwnReactionAsync(DiscordEmoji emoji)
 			=> _Message.DeleteOwnReactionAsync(emoji);
-		public Task ModifyEmbedSuppressionAsync(bool hideEmbeds) 
+		public Task ModifyEmbedSuppressionAsync(bool hideEmbeds)
 			=> _Message.ModifyEmbedSuppressionAsync(hideEmbeds);
 		public async Task<InteractionMessage> ModifyAsync(Optional<string> content = default,
-				Optional<DiscordEmbed> embed = default)
-		{ await _Message.ModifyAsync(content, embed); return this; }
+				Optional<DiscordEmbed> embed = default) { await _Message.ModifyAsync(content, embed); return this; }
 		public Task<InteractionMessage> RespondAsync(string content = null, bool tts = false, DiscordEmbed embed = null,
-				IEnumerable<IMention> mentions = null) 
-			=>  _Owner.SendMessageAsync(new MessageBuilder()
+				IEnumerable<IMention> mentions = null)
+			=> _Owner.SendMessageAsync(new MessageBuilder()
 				.WithContent(content)
 				.WithEmbed(embed)
 				.WithMentions(mentions.ToList())
@@ -190,7 +180,7 @@ namespace sisbase.Interactivity
 				.Bind(fileName)
 				.Bind(fileData));
 		public Task<InteractionMessage> RespondWithFileAsync(FileStream fileData, string content = null,
-				bool tts = false, DiscordEmbed embed = null, IEnumerable<IMention> mentions = null) 
+				bool tts = false, DiscordEmbed embed = null, IEnumerable<IMention> mentions = null)
 			=> _Owner.SendMessageAsync(new MessageBuilder()
 				.WithContent(content)
 				.WithEmbed(embed)
@@ -198,7 +188,7 @@ namespace sisbase.Interactivity
 				.SetTTS(tts)
 				.Bind(fileData));
 		public Task<InteractionMessage> RespondWithFileAsync(string filePath, string content = null,
-			   bool tts = false, DiscordEmbed embed = null, IEnumerable<IMention> mentions = null) 
+			   bool tts = false, DiscordEmbed embed = null, IEnumerable<IMention> mentions = null)
 			=> _Owner.SendMessageAsync(new MessageBuilder()
 				.WithContent(content)
 				.WithEmbed(embed)
@@ -221,15 +211,14 @@ namespace sisbase.Interactivity
 		public Task DeleteReactionsEmojiAsync(DiscordEmoji emoji)
 			=> _Message.DeleteReactionsEmojiAsync(emoji);
 
-		public Task PinAsync() 
+		public Task PinAsync()
 			=> _Message.PinAsync();
 		public Task UnpinAsync()
 			=> _Message.UnpinAsync();
 		public Task DeleteReactionAsync(DiscordEmoji emoji, DiscordUser user, string reason = null) =>
 			_Message.DeleteReactionAsync(emoji, user, reason);
 		#region Constr
-		public InteractionMessage(DiscordMessage m, Interaction i)
-		{
+		public InteractionMessage(DiscordMessage m, Interaction i) {
 			_Message = m;
 			_Owner = i;
 			_messageDeleted = new AsyncEvent<MessageDeletedEventArgs>(IMC.HandleExceptions, "SISBASE_MESSAGE_DELETED_EVENT");

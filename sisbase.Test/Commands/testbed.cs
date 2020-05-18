@@ -85,8 +85,9 @@ namespace sisbase.Test.Commands {
                 await interaction.ModifyLastMessage(m =>
                     m.WithEmbed(EmbedBase.InputEmbed("I wonder what this used to say?")));
             }
-            else
+            else {
                 await interaction.SendMessageAsync("Kyaah, kawaii~!");
+            }
         }
         [Command("interactEvents")]
         public async Task interactEvents(CommandContext ctx) {
@@ -149,7 +150,7 @@ namespace sisbase.Test.Commands {
             var mb = new MessageBuilder("`sisbase.png` was bound to this messagebuilder")
                 .WithEmbed(EmbedBase.OutputEmbed("With an embed"))
                 .Bind("sisbase.png");
-            
+
             await mb.Build(ctx.Channel);
         }
         [Command("firstInt")]

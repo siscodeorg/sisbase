@@ -11,15 +11,13 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace sisbase
-{
+namespace sisbase {
 #pragma warning disable CS1591
 
 	/// <summary>
 	/// The class all sisbase bots derive from
 	/// </summary>
-	public class SisbaseBot : IDisposable
-	{
+	public class SisbaseBot : IDisposable {
 		/// <summary>
 		/// The currently running Instance
 		/// </summary>
@@ -56,8 +54,7 @@ namespace sisbase
 		/// Constructs a new <see cref="SisbaseBot"/> from a given configuration
 		/// </summary>
 		/// <param name="configDirectory">The directory used to store the configuration.</param>
-		public SisbaseBot(string configDirectory)
-		{
+		public SisbaseBot(string configDirectory) {
 			if (Instance != null)
 				throw new InvalidOperationException("Instance is already running");
 			Instance = this;
@@ -65,8 +62,7 @@ namespace sisbase
 			CreateNewBot();
 		}
 
-		public SisbaseBot()
-		{
+		public SisbaseBot() {
 			if (Instance != null)
 				throw new InvalidOperationException("Instance is already running");
 			Instance = this;
@@ -74,26 +70,22 @@ namespace sisbase
 			CreateNewBot();
 		}
 
-		internal void CreateNewBot()
-		{
+		internal void CreateNewBot() {
 			Client = new DiscordClient(
-				new DiscordConfiguration
-				{
+				new DiscordConfiguration {
 					AutoReconnect = true,
 					Token = SisbaseConfiguration.Config.Token,
 					UseInternalLogHandler = false
 				}
 			);
 			CommandsNext = Client.UseCommandsNext(
-				new CommandsNextConfiguration
-				{
+				new CommandsNextConfiguration {
 					EnableDefaultHelp = false,
 					PrefixResolver = RTPR
 				}
 			);
 			Interactivity = Client.UseInteractivity(
-				new InteractivityConfiguration
-				{
+				new InteractivityConfiguration {
 					Timeout = TimeSpan.FromMinutes(15),
 					PaginationBehaviour = PaginationBehaviour.WrapAround,
 					PaginationDeletion = PaginationDeletion.DeleteEmojis,
@@ -111,14 +103,11 @@ namespace sisbase
 		/// </summary>
 #pragma warning disable CS1998
 
-		private async Task<int> RTPR(DiscordMessage msg)
-		{
-			switch (msg.GetMentionPrefixLength(Instance.Client.CurrentUser))
-			{
+		private async Task<int> RTPR(DiscordMessage msg) {
+			switch (msg.GetMentionPrefixLength(Instance.Client.CurrentUser)) {
 				case -1:
 					int x;
-					foreach (string prefix in Instance.SisbaseConfiguration.Config.Prefixes)
-					{
+					foreach (string prefix in Instance.SisbaseConfiguration.Config.Prefixes) {
 						x = msg.GetStringPrefixLength(prefix);
 						if (x != -1)
 							return x;
@@ -138,18 +127,15 @@ namespace sisbase
 		/// need to be public for registration
 		/// </summary>
 		/// <param name="asm">The assembly</param>
-		public void RegisterBot(Assembly asm)
-		{ Systems.RegisterSystems(asm); CommandsNext.RegisterCommands(asm); }
+		public void RegisterBot(Assembly asm) { Systems.RegisterSystems(asm); CommandsNext.RegisterCommands(asm); }
 
 #pragma warning restore CS1998
 		/// <summary>
 		/// Starts the bot instance
 		/// </summary>
 		/// <returns></returns>
-		public async Task Start()
-		{
-			Console.CancelKeyPress += (sender, e) =>
-			{
+		public async Task Start() {
+			Console.CancelKeyPress += (sender, e) => {
 				if (!_cts.IsCancellationRequested)
 					Stop();
 				e.Cancel = true;
@@ -161,7 +147,7 @@ namespace sisbase
 
 		public void Stop() => _cts.Cancel();
 
-	
+
 		internal Task Connect()
 			=> Client.ConnectAsync();
 
@@ -175,16 +161,13 @@ namespace sisbase
 		~SisbaseBot() =>
 			Dispose(false);
 
-		public void Dispose()
-		{
+		public void Dispose() {
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
+		protected virtual void Dispose(bool disposing) {
+			if (disposing) {
 				Client.Dispose();
 			}
 		}

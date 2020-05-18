@@ -1,15 +1,12 @@
-﻿namespace sisbase.Utils
-{
+﻿namespace sisbase.Utils {
 	/// <summary>
 	/// Stores all of the currently available behaviours
 	/// </summary>
-	public static class Behaviours
-	{
+	public static class Behaviours {
 		/// <summary>
 		/// The counting behaviour for ListEmbeds
 		/// </summary>
-		public enum CountingBehaviour
-		{
+		public enum CountingBehaviour {
 			/// <summary>
 			/// Counts from 1.
 			/// </summary>
