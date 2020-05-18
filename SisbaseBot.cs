@@ -141,8 +141,7 @@ namespace sisbase {
 				e.Cancel = true;
 			};
 			await Connect();
-			while (!_cts.IsCancellationRequested)
-				await Task.Delay(1, _cts.Token);
+			await _cts.Token.WhenCanceled();
 		}
 
 		public void Stop() => _cts.Cancel();
