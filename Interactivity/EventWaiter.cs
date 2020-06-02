@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DSharpPlus.EventArgs;
 using sisbase.Utils;
 
 namespace sisbase.Interactivity {
@@ -36,7 +37,7 @@ namespace sisbase.Interactivity {
             waiters.Add(waiter);
         }
 
-        public void Offer(T args) {
+        public async Task Offer(T args) {
             waiters = waiters.Where((waiter => !waiter.Offer(args))).ToList();
         }
     }
