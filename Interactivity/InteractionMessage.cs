@@ -82,7 +82,7 @@ namespace sisbase.Interactivity {
 			=> await _messageUpdated.InvokeAsync(e);
 		private async Task Dispatch(MessageDeletedEventArgs e)
 			=> await _messageDeleted.InvokeAsync(e);
-		internal async Task Wants(MessageReactionAddEventArgs e) {
+		internal async Task Offer(MessageReactionAddEventArgs e) {
 			if (e.Message.Id == Id) {
 				var sbargs = new ReactionAddedEventArgs(e.Client) {
 					Emoji = e.Emoji,
@@ -100,7 +100,7 @@ namespace sisbase.Interactivity {
 			}
 
 		}
-		internal async Task Wants(MessageReactionRemoveEventArgs e) {
+		internal async Task Offer(MessageReactionRemoveEventArgs e) {
 			if (e.Message.Id == Id) {
 				var sbargs = new ReactionRemovedEventArgs(e.Client) {
 					Emoji = e.Emoji,
@@ -117,7 +117,7 @@ namespace sisbase.Interactivity {
 				await Dispatch(sbargs);
 			}
 		}
-		internal async Task Wants(MessageDeleteEventArgs e) {
+		internal async Task Offer(MessageDeleteEventArgs e) {
 			if (e.Message.Id == Id) {
 				var sbargs = new MessageDeletedEventArgs(e.Client) {
 					Message = this
@@ -125,7 +125,7 @@ namespace sisbase.Interactivity {
 				await Dispatch(sbargs);
 			}
 		}
-		internal async Task Wants(MessageUpdateEventArgs e) {
+		internal async Task Offer(MessageUpdateEventArgs e) {
 			if (e.MessageBefore.Id == Id) {
 				var past = new PastInteractionMessage(e.MessageBefore);
 				if (!History.Contains(past)) _history.Add(past);

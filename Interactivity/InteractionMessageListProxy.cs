@@ -60,7 +60,7 @@ namespace sisbase.Interactivity {
         private async Task Dispatch(MessageDeletedEventArgs e) => await _messageDeleted.InvokeAsync(e);
         private async Task Dispatch(MessageUpdatedEventArgs e) => await _messageUpdated.InvokeAsync(e);
 
-        internal async Task Wants(MessageReactionAddEventArgs e) {
+        internal async Task Offer(MessageReactionAddEventArgs e) {
             var message = Get().Find(x => x.Id == e.Message.Id);
             if (message == null) return;
             var sbargs = new ReactionAddedEventArgs(e.Client) {
@@ -77,11 +77,11 @@ namespace sisbase.Interactivity {
 
             await Dispatch(sbargs);
             await Dispatch(toggle);
-            await First.Wants(e);
-            await Last.Wants(e);
+            await First.Offer(e);
+            await Last.Offer(e);
 
         }
-        internal async Task Wants(MessageReactionRemoveEventArgs e) {
+        internal async Task Offer(MessageReactionRemoveEventArgs e) {
             var message = Get().Find(x => x.Id == e.Message.Id);
             if (message == null) return;
             var sbargs = new ReactionRemovedEventArgs(e.Client) {
@@ -98,10 +98,10 @@ namespace sisbase.Interactivity {
 
             await Dispatch(sbargs);
             await Dispatch(toggle);
-            await First.Wants(e);
-            await Last.Wants(e);
+            await First.Offer(e);
+            await Last.Offer(e);
         }
-        internal async Task Wants(MessageDeleteEventArgs e) {
+        internal async Task Offer(MessageDeleteEventArgs e) {
             var message = Get().Find(x => x.Id == e.Message.Id);
             if (message == null) return;
             var sbargs = new MessageDeletedEventArgs(e.Client) {
@@ -109,10 +109,10 @@ namespace sisbase.Interactivity {
             };
 
             await Dispatch(sbargs);
-            await First.Wants(e);
-            await Last.Wants(e);
+            await First.Offer(e);
+            await Last.Offer(e);
         }
-        internal async Task Wants(MessageUpdateEventArgs e) {
+        internal async Task Offer(MessageUpdateEventArgs e) {
             var message = Get().Find(x => x.Id == e.Message.Id);
             if (message == null) return;
             var past = new PastInteractionMessage(e.MessageBefore);
@@ -121,8 +121,8 @@ namespace sisbase.Interactivity {
                 Before = past
             };
             await Dispatch(sbargs);
-            await First.Wants(e);
-            await Last.Wants(e);
+            await First.Offer(e);
+            await Last.Offer(e);
         }
         #endregion
         #region IReadOnlyList<T> Implementations

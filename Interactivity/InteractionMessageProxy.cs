@@ -59,7 +59,7 @@ namespace sisbase.Interactivity {
         private async Task Dispatch(MessageDeletedEventArgs e) => await _messageDeleted.InvokeAsync(e);
         private async Task Dispatch(MessageUpdatedEventArgs e) => await _messageUpdated.InvokeAsync(e);
 
-        internal async Task Wants(MessageReactionAddEventArgs e) {
+        internal async Task Offer(MessageReactionAddEventArgs e) {
             if (e.Message.Id == Get().Id) {
                 var sbargs = new ReactionAddedEventArgs(e.Client) {
                     Message = Get(),
@@ -77,7 +77,7 @@ namespace sisbase.Interactivity {
             }
 
         }
-        internal async Task Wants(MessageReactionRemoveEventArgs e) {
+        internal async Task Offer(MessageReactionRemoveEventArgs e) {
             if (e.Message.Id == Get().Id) {
                 var sbargs = new ReactionRemovedEventArgs(e.Client) {
                     Message = Get(),
@@ -93,7 +93,7 @@ namespace sisbase.Interactivity {
                 await Dispatch(sbargs);
             }
         }
-        internal async Task Wants(MessageDeleteEventArgs e) {
+        internal async Task Offer(MessageDeleteEventArgs e) {
             if (e.Message.Id == Get().Id) {
                 var sbargs = new MessageDeletedEventArgs(e.Client) {
                     Message = Get()
@@ -102,7 +102,7 @@ namespace sisbase.Interactivity {
             }
 
         }
-        internal async Task Wants(MessageUpdateEventArgs e) {
+        internal async Task Offer(MessageUpdateEventArgs e) {
             if (e.Message.Id == Get().Id) {
                 var past = new PastInteractionMessage(e.MessageBefore);
                 var sbargs = new MessageUpdatedEventArgs(e.Client) {
