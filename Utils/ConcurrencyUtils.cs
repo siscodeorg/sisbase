@@ -17,7 +17,10 @@ namespace sisbase.Utils {
         /// <param name="token">The token to link. If not specified, an empty token is created.</param>
         /// <returns>A token source for the merged timeout/token.</returns>
         internal static CancellationTokenSource PrepareTimeoutToken(TimeSpan? timeout = null, CancellationToken token = default) {
-            var timeoutSource = new CancellationTokenSource(timeout ?? TimeSpan.MaxValue);
+            var timeoutSource = new CancellationTokenSource();
+            if (timeout != TimeSpan.Zero) {
+                timeoutSource.CancelAfter(timeout ?? TimeSpan.MaxValue);
+            }
             var linked = CancellationTokenSource.CreateLinkedTokenSource(timeoutSource.Token, token);
             linked.Token.Register(() => timeoutSource.Dispose());
             return linked;
