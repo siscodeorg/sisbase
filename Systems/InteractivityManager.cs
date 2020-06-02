@@ -11,7 +11,22 @@ namespace sisbase.Systems {
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public bool Status { get; set; }
+		
+		public readonly EventWaitHandler<MessageReactionAddEventArgs> ReactionAddWaiter = new EventWaitHandler<MessageReactionAddEventArgs>();
+		public readonly EventWaitHandler<MessageReactionRemoveEventArgs> ReactionRemoveWaiter = new EventWaitHandler<MessageReactionRemoveEventArgs>();
+		public readonly EventWaitHandler<DiscordEventArgs> ReactionToggleWaiter = new EventWaitHandler<DiscordEventArgs>();
+		public readonly EventWaitHandler<MessageDeleteEventArgs> MessageDeleteWaiter = new EventWaitHandler<MessageDeleteEventArgs>();
+		public readonly EventWaitHandler<MessageUpdateEventArgs> EditWaiter = new EventWaitHandler<MessageUpdateEventArgs>();
 
+		public void InitWaitListeners(DiscordClient client) {
+			client.MessageUpdated += EditWaiter.Offer;
+			client.MessageDeleted += MessageDeleteWaiter.Offer;
+			client.MessageReactionAdded += ReactionAddWaiter.Offer;
+			client.MessageReactionRemoved += ReactionRemoveWaiter.Offer;
+			client.MessageReactionRemoved += ReactionToggleWaiter.Offer;
+			client.MessageReactionAdded += ReactionToggleWaiter.Offer;
+		}
+		
 		public void Activate() {
 			Name = "InteractivityManager";
 			Description = "Dispatches all Sisbase.Interactivity events.";
@@ -22,6 +37,7 @@ namespace sisbase.Systems {
 			client.MessageReactionAdded += ReactionAddHandler;
 			client.MessageReactionRemoved += ReactionRemovedHandler;
 			client.MessageDeleted += DeleteHandler;
+			InitWaitListeners(client);
 		}
 
 		private async Task ReactionRemovedHandler(MessageReactionRemoveEventArgs e) {

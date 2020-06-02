@@ -12,6 +12,7 @@ namespace sisbase.Interactivity
 	public static class IMC
 	{
 		static IMC() => InteractionRegistry = new List<Interaction>();
+
 		internal static List<Interaction> InteractionRegistry { get; } = new List<Interaction>();
 		internal static void AddInteraction(Interaction interaction)
 			=> InteractionRegistry.Add(interaction);
