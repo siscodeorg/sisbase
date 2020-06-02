@@ -20,5 +20,10 @@ namespace sisbase.Interactivity.EventArgs {
 		public IReadOnlyList<DiscordChannel> MentionedChannels
 			=> After.MentionedChannels;
 		internal MessageUpdatedEventArgs(DiscordClient client) : base(client) { }
+		
+		internal MessageUpdatedEventArgs(MessageUpdateEventArgs dspargs, InteractionMessage owner) : base(dspargs.Client) {
+			After = owner;
+			Before = new PastInteractionMessage(dspargs.MessageBefore);
+		}
 	}
 }

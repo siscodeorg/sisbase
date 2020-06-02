@@ -11,5 +11,11 @@ namespace sisbase.Interactivity.EventArgs {
 			=> Message.Channel;
 		internal ReactionAddedEventArgs(DiscordClient client) : base(client) { }
 
+		internal ReactionAddedEventArgs(MessageReactionAddEventArgs dspargs, InteractionMessage owner) : base(dspargs.Client) {
+			Emoji = dspargs.Emoji;
+			User = dspargs.User;
+			Message = owner;
+		}
+
 	}
 }

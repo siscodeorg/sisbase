@@ -12,5 +12,19 @@ namespace sisbase.Interactivity.EventArgs {
 			=> Message._Message.Channel;
 		public InteractionMessage Message { get; internal set; }
 		internal ReactionToggledEventArgs(DiscordClient client) : base(client) { }
+		
+		internal ReactionToggledEventArgs(MessageReactionRemoveEventArgs dspargs, InteractionMessage owner) : base(dspargs.Client) {
+			Emoji = dspargs.Emoji;
+			User = dspargs.User;
+			State = ToggleState.REMOVED;
+			Message = owner;
+		}
+		
+		internal ReactionToggledEventArgs(MessageReactionAddEventArgs dspargs, InteractionMessage owner) : base(dspargs.Client) {
+			Emoji = dspargs.Emoji;
+			User = dspargs.User;
+			State = ToggleState.ADDED;
+			Message = owner;
+		}
 	}
 }
