@@ -16,7 +16,7 @@ namespace sisbase.Utils {
 			=> WithEmbed(embed);
 		public MessageBuilder()
 			=> ClearEmbed().ClearContent();
-		internal Stream Data;
+		internal Stream Data = Stream.Null;
 		internal string FilePath;
 		internal Dictionary<string, Stream> ManyData = new Dictionary<string, Stream>();
 		public MessageBuilder(DiscordMessage msg) {
