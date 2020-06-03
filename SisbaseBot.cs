@@ -155,6 +155,7 @@ namespace sisbase
 				e.Cancel = true;
 			};
 			await Connect();
+			Client.GuildDownloadCompleted += async (e) => { Logger.Log("DSharpPlus","The bot is ready for usage. [GuildDownloadCompleted]");};
 			while (!_cts.IsCancellationRequested)
 				await Task.Delay(1, _cts.Token);
 		}
