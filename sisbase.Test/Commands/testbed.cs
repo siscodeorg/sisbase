@@ -6,6 +6,7 @@ using DSharpPlus.Interactivity;
 using sisbase.Interactivity;
 using sisbase.Utils;
 using System;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -171,6 +172,28 @@ namespace sisbase.Test.Commands {
         [Command("isMod")]
         public async Task isMod(CommandContext ctx, DiscordMember member)
             => await ctx.RespondAsync(embed: EmbedBase.OutputEmbed(member.IsModerator() ? "TRUE" : "FALSE"));
+
+        [Command("waitReact")]
+        public async Task waitReact(CommandContext ctx) {
+            var intr = ctx.AsInteraction();
+            await intr.SendMessageAsync("Please add any reaction to this message");
+            var ev = await intr.BotMessages.Last().WaitReactionAdded(e => true);
+            await intr.SendMessageAsync($"you added ${ev.Emoji}!");
+            await intr.Close();
+        }
+        
+        [Command("toggle3")]
+        public async Task toggle3(CommandContext ctx) {
+            var intr = ctx.AsInteraction();
+            await intr.SendMessageAsync("Please add any reaction to this message, and then have someone else toggle it three times");
+            var waiter = IMC.GetInteractivityManager().ReactionToggleWaiter;
+            var ev = await intr.BotMessages.First().WaitReactionAdded(e => true);
+            await intr.BotMessages.First().WaitReactionToggled(e => e.Emoji == ev.Emoji);
+            await intr.BotMessages.First().WaitReactionToggled(e => e.Emoji == ev.Emoji);
+            await intr.BotMessages.First().WaitReactionToggled(e => e.Emoji == ev.Emoji);
+            await intr.SendMessageAsync("Thank you for shopping with togglecorp™");
+            await intr.Close();
+        }
     }
 
     [Group("stubgroup")]
