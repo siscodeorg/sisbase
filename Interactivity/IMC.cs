@@ -2,14 +2,14 @@
 using sisbase.Utils;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using sisbase.Systems;
 
 namespace sisbase.Interactivity
 {
 	/// <summary>
 	/// Interaction Manager Controller
 	/// </summary>
-	internal static class IMC 
+	public static class IMC
 	{
 		static IMC() => InteractionRegistry = new List<Interaction>();
 		internal static List<Interaction> InteractionRegistry { get; } = new List<Interaction>();
@@ -25,6 +25,11 @@ namespace sisbase.Interactivity
 				age.Handle(x => { HandleExceptions(eventName, x); return false; });
 			else
 				Logger.Warn("InteractionAPI", $"An {ex.GetType()} happened in {eventName}.");
+		}
+
+		public static InteractivityManager GetInteractivityManager() {
+			return SMC.RegisteredSystems[typeof(InteractivityManager)] as InteractivityManager ??
+				throw new Exception("InteractivityManager system is not registered");
 		}
 	}
 }
