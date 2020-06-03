@@ -9,7 +9,7 @@ using sisbase.Utils;
 namespace sisbase.Interactivity {
     public class EventWaiter<T> {
         private readonly Func<T, bool> pred;
-        private readonly TaskCompletionSource<T> taskSource = new TaskCompletionSource<T>();
+        private readonly TaskCompletionSource<T> taskSource = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly CancellationTokenSource token;
 
         public Task<T> Task => taskSource.Task;
