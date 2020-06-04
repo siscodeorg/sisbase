@@ -108,5 +108,8 @@ namespace sisbase.Utils
 			string customEmoji = Regex.Match(str, @"\:([a-zA-Z_0-9]+)\:").Value;
 			return DiscordEmoji.FromName(SisbaseBot.Instance.Client, customEmoji);
 		}
+
+		internal static string ToCustomName(this Type T) 
+			=> $"{T.Namespace}::{T.Name}";
 	}
 }
