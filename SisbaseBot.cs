@@ -32,6 +32,8 @@ namespace sisbase
 		/// </summary>
 		public Sisbase SisbaseConfiguration { get; private set; }
 
+		public SystemConfig SystemCfg { get; } = new SystemConfig();
+
 		/// <summary>
 		/// The DiscordClient
 		/// </summary>
@@ -63,6 +65,7 @@ namespace sisbase
 			Instance = this;
 			SisbaseConfiguration = new Sisbase(configDirectory);
 			CreateNewBot();
+			SystemCfg.Create(Directory.CreateDirectory(configDirectory));
 		}
 
 		public SisbaseBot()
@@ -72,6 +75,7 @@ namespace sisbase
 			Instance = this;
 			SisbaseConfiguration = new Sisbase(Directory.GetCurrentDirectory());
 			CreateNewBot();
+			SystemCfg.Create(Directory.CreateDirectory(Directory.GetCurrentDirectory()));
 		}
 
 		internal void CreateNewBot()

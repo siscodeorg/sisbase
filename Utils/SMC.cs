@@ -27,14 +27,21 @@ namespace sisbase.Utils
 
 		internal static List<Assembly> RegisteredAssemblies { get; set; } = new List<Assembly>();
 
-		internal Dictionary<Type, bool> RegisterSystems(Assembly assembly)
-		{
+		internal Dictionary<Type, bool> RegisterSystems(Assembly assembly) {
+			var instance = SisbaseBot.Instance;
 			var response = new Dictionary<Type, bool>();
 			if (!RegisteredAssemblies.Contains(assembly)) RegisteredAssemblies.Add(assembly);
 			var Ts = assembly.ExportedTypes.Where(T => T.GetTypeInfo().IsSystemCandidate());
 			foreach (var T in Ts)
 			{
 				if (RegisteredSystems.ContainsKey(T)) continue;
+				if (instance.SystemCfg != null && instance.SystemCfg.Systems.ContainsKey(T.ToCustomName())) {
+					if (!instance.SystemCfg.Systems[T.ToCustomName()].Enabled) {
+						Logger.Warn("SMC",$"{T.ToCustomName()} was disabled on the config file.");
+						response.Add(T,false);
+						continue;
+					}
+				}
 				if (T.GetInterfaces().Contains(typeof(IClientSystem)))
 				{
 					response.Add(T, SisbaseBot.Instance.Client.Register(T));
@@ -43,6 +50,9 @@ namespace sisbase.Utils
 				{
 					response.Add(T, Register(T));
 				}
+				if(assembly == typeof(SisbaseBot).Assembly) continue;
+				if (Ts.Last() != T || instance.SystemCfg?.Systems.Count > RegisteredSystems.Count) continue;
+				instance.SystemCfg?.Flush(); instance.SystemCfg?.Update();
 			}
 			return response;
 		}

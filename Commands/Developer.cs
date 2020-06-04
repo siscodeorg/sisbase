@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using sisbase.Systems;
 
 namespace sisbase.Commands
 {
@@ -20,7 +21,7 @@ namespace sisbase.Commands
 	public class Developer : BaseCommandModule
 	{
 		[Command("setMaster")]
-		[RequireOwner]
+		[RequireOwner,RequireSystem(typeof(MasterServer))]
 		public async Task SetMaster(CommandContext ctx)
 		{
 			var guilds = SisbaseBot.Instance.Client.Guilds.Values.ToList();
@@ -60,12 +61,20 @@ namespace sisbase.Commands
 		{
 			var allSystems = SMC.RegisteredSystems.ToList().Select(x => $"{(x.Value.IsVital() ? "\\⚠️" : "")} {x.Value.Name} - `{x.Key.Assembly.GetName().Name}`");
 			var embed = EmbedBase.ListEmbed(allSystems, "Systems");
+			embed = embed.Mutate(x => x
+				.AddField("Permanently disabled systems [Systems.json]",
+					string.Join("\n",
+						SisbaseBot.Instance.SystemCfg.Systems.Where(kvp => !kvp.Value.Enabled)
+							.Select(kvp => kvp.Key))));
 			await ctx.RespondAsync(embed: embed.Mutate(x => x.WithFooter($"{x.Footer.Text}  | ⚠️ - Vital")));
 		}
 
 		[Command("disable")]
 		[Description("Disables and unregisters a system")]
-		public async Task Disable(CommandContext ctx)
+		public async Task DisableFail(CommandContext ctx) =>
+			await ctx.RespondAsync(embed: EmbedBase.CommandHelpEmbed(ctx.Command));
+		[Command("disable")]
+		public async Task Disable(CommandContext ctx, [DSharpPlus.CommandsNext.Attributes.Description("If the system is to be disabled permanently `true`|`false`")] bool permanent)
 		{
 			var allSystems = SMC.RegisteredSystems.Where(s => !s.Value.IsVital()).Select(k => k.Value.Name).ToList();
 			var embed = EmbedBase.OrderedListEmbed(allSystems, "Systems").Mutate(x =>
@@ -74,12 +83,16 @@ namespace sisbase.Commands
 			 .WithColor(DiscordColor.Red));
 			var message = await ctx.RespondAsync(embed: embed);
 			var response = await ctx.Message.GetNextMessageAsync();
-			int.TryParse(response.Result.Content.Split(" ").Where(x => int.TryParse(x, out _)).ToList()[0], out int select);
+			if(response.TimedOut) return;
+			var select = response.Result.FirstInt();
 			var systemType = SMC.RegisteredSystems.Where(x => x.Value.Name == allSystems[select]).FirstOrDefault();
 			SMC.Unregister(systemType.Key);
-			await message.ModifyAsync(embed: EmbedBase.OutputEmbed($"Sucesfully unregistered {allSystems[select]}"));
+			if (permanent) {
+				SisbaseBot.Instance.SystemCfg.Systems[systemType.Key.ToCustomName()].Enabled = false;
+				SisbaseBot.Instance.SystemCfg.Update();
+			}
+			await message.ModifyAsync(embed: EmbedBase.OutputEmbed($"Successfully unregistered {allSystems[select]} {(permanent?"permanently":"temporarily")}."));
 		}
-
 		[Command("reload")]
 		[Description("Reloads the SMC and registers any Systems that weren't registered")]
 		public async Task Reload(CommandContext ctx)
