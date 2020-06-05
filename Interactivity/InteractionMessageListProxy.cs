@@ -1,10 +1,12 @@
-﻿using DSharpPlus;
+﻿using System;
+using DSharpPlus;
 using DSharpPlus.EventArgs;
 using sisbase.Interactivity.Enums;
 using sisbase.Interactivity.EventArgs;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace sisbase.Interactivity {
@@ -124,6 +126,96 @@ namespace sisbase.Interactivity {
             await Dispatch(sbargs);
             await First.Offer(e);
             await Last.Offer(e);
+        }
+        #endregion
+        #region Awaitables
+
+        public async Task<ReactionAddedEventArgs> WaitReactionAdded(Func<ReactionAddedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+            var waiter = new EventWaiter<MessageReactionAddEventArgs>(args => { return Get()
+                .Where(msg => msg.Id == args.Message.Id)
+                .Any(msg => pred(new ReactionAddedEventArgs(args, msg))); 
+            });
+            IMC.GetInteractivityManager().ReactionAddWaiter.Register(waiter);
+            var dspargs = await waiter.Task;
+            foreach (var msg in Get().Where(msg => msg.Id == dspargs.Message.Id)) {
+                return new ReactionAddedEventArgs(dspargs, msg);
+            }
+
+            throw new Exception("A InteractionMessageListProxy waiter matched an irrelevant message. please report this to the sisbase devs");
+        }
+        
+        public async Task<ReactionRemovedEventArgs> WaitReactionRemoved(Func<ReactionRemovedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+            var waiter = new EventWaiter<MessageReactionRemoveEventArgs>(args => { return Get()
+                .Where(msg => msg.Id == args.Message.Id)
+                .Any(msg => pred(new ReactionRemovedEventArgs(args, msg))); 
+            });
+            IMC.GetInteractivityManager().ReactionRemoveWaiter.Register(waiter);
+            var dspargs = await waiter.Task;
+            foreach (var msg in Get().Where(msg => msg.Id == dspargs.Message.Id)) {
+                return new ReactionRemovedEventArgs(dspargs, msg);
+            }
+
+            throw new Exception("A InteractionMessageListProxy waiter matched an irrelevant message. please report this to the sisbase devs");
+        }
+        
+        public async Task<ReactionToggledEventArgs> WaitReactionToggled(Func<ReactionToggledEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+            var waiter = new EventWaiter<DiscordEventArgs>(args => {
+                if (args is MessageReactionAddEventArgs added) {
+                    return Get()
+                        .Where(msg => msg.Id == added.Message.Id)
+                        .Any(msg => pred(new ReactionToggledEventArgs(added, msg)));
+                }
+                if (args is MessageReactionRemoveEventArgs removed) {
+                    return Get()
+                        .Where(msg => msg.Id == removed.Message.Id)
+                        .Any(msg => pred(new ReactionToggledEventArgs(removed, msg)));
+                }
+
+                return false;
+            });
+            IMC.GetInteractivityManager().ReactionToggleWaiter.Register(waiter);
+            var dspargs = await waiter.Task;
+            if (dspargs is MessageReactionAddEventArgs added) {
+                foreach (var msg in Get().Where(msg => msg.Id == added.Message.Id)) {
+                    return new ReactionToggledEventArgs(added, msg);
+                }
+                throw new Exception("A InteractionMessageListProxy waiter matched an irrelevant message. please report this to the sisbase devs");
+            }
+            if (dspargs is MessageReactionRemoveEventArgs removed) {
+                foreach (var msg in Get().Where(msg => msg.Id == removed.Message.Id)) {
+                    return new ReactionToggledEventArgs(removed, msg);
+                }
+                throw new Exception("A InteractionMessageListProxy waiter matched an irrelevant message. please report this to the sisbase devs");
+            }
+            throw new Exception("ReactionToggled waiter returned a non-reaction event. Please report this to the sisbase devs");
+        }
+        
+        public async Task<MessageDeletedEventArgs> WaitMessageDeleted(Func<MessageDeletedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+            var waiter = new EventWaiter<MessageDeleteEventArgs>(args => { return Get()
+                .Where(msg => msg.Id == args.Message.Id)
+                .Any(msg => pred(new MessageDeletedEventArgs(args, msg))); 
+            });
+            IMC.GetInteractivityManager().MessageDeleteWaiter.Register(waiter);
+            var dspargs = await waiter.Task;
+            foreach (var msg in Get().Where(msg => msg.Id == dspargs.Message.Id)) {
+                return new MessageDeletedEventArgs(dspargs, msg);
+            }
+
+            throw new Exception("A InteractionMessageListProxy waiter matched an irrelevant message. please report this to the sisbase devs");
+        }
+        
+        public async Task<MessageUpdatedEventArgs> WaitMessageEdited(Func<MessageUpdatedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+            var waiter = new EventWaiter<MessageUpdateEventArgs>(args => { return Get()
+                .Where(msg => msg.Id == args.Message.Id)
+                .Any(msg => pred(new MessageUpdatedEventArgs(args, msg))); 
+            });
+            IMC.GetInteractivityManager().EditWaiter.Register(waiter);
+            var dspargs = await waiter.Task;
+            foreach (var msg in Get().Where(msg => msg.Id == dspargs.Message.Id)) {
+                return new MessageUpdatedEventArgs(dspargs, msg);
+            }
+
+            throw new Exception("A InteractionMessageListProxy waiter matched an irrelevant message. please report this to the sisbase devs");
         }
         #endregion
         #region IReadOnlyList<T> Implementations
