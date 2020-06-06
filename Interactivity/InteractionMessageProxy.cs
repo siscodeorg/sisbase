@@ -91,6 +91,7 @@ namespace sisbase.Interactivity {
                     State = ToggleState.REMOVED
                 };
                 await Dispatch(sbargs);
+                await Dispatch(toggle);
             }
         }
         internal async Task Offer(MessageDeleteEventArgs e) {
