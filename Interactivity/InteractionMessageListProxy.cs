@@ -134,7 +134,7 @@ namespace sisbase.Interactivity {
             var waiter = new EventWaiter<MessageReactionAddEventArgs>(args => { return Get()
                 .Where(msg => msg.Id == args.Message.Id)
                 .Any(msg => pred(new ReactionAddedEventArgs(args, msg))); 
-            });
+            }, timeout, token);
             IMC.GetInteractivityManager().ReactionAddWaiter.Register(waiter);
             var dspargs = await waiter.Task;
             foreach (var msg in Get().Where(msg => msg.Id == dspargs.Message.Id)) {
@@ -148,7 +148,7 @@ namespace sisbase.Interactivity {
             var waiter = new EventWaiter<MessageReactionRemoveEventArgs>(args => { return Get()
                 .Where(msg => msg.Id == args.Message.Id)
                 .Any(msg => pred(new ReactionRemovedEventArgs(args, msg))); 
-            });
+            }, timeout, token);
             IMC.GetInteractivityManager().ReactionRemoveWaiter.Register(waiter);
             var dspargs = await waiter.Task;
             foreach (var msg in Get().Where(msg => msg.Id == dspargs.Message.Id)) {
@@ -172,7 +172,7 @@ namespace sisbase.Interactivity {
                 }
 
                 return false;
-            });
+            }, timeout, token);
             IMC.GetInteractivityManager().ReactionToggleWaiter.Register(waiter);
             var dspargs = await waiter.Task;
             if (dspargs is MessageReactionAddEventArgs added) {
@@ -194,7 +194,7 @@ namespace sisbase.Interactivity {
             var waiter = new EventWaiter<MessageDeleteEventArgs>(args => { return Get()
                 .Where(msg => msg.Id == args.Message.Id)
                 .Any(msg => pred(new MessageDeletedEventArgs(args, msg))); 
-            });
+            }, timeout, token);
             IMC.GetInteractivityManager().MessageDeleteWaiter.Register(waiter);
             var dspargs = await waiter.Task;
             foreach (var msg in Get().Where(msg => msg.Id == dspargs.Message.Id)) {
@@ -208,7 +208,7 @@ namespace sisbase.Interactivity {
             var waiter = new EventWaiter<MessageUpdateEventArgs>(args => { return Get()
                 .Where(msg => msg.Id == args.Message.Id)
                 .Any(msg => pred(new MessageUpdatedEventArgs(args, msg))); 
-            });
+            }, timeout, token);
             IMC.GetInteractivityManager().EditWaiter.Register(waiter);
             var dspargs = await waiter.Task;
             foreach (var msg in Get().Where(msg => msg.Id == dspargs.Message.Id)) {

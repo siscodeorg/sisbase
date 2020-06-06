@@ -155,7 +155,7 @@ namespace sisbase.Interactivity
 			var waiter = new EventWaiter<MessageReactionAddEventArgs>(e => {
 				if (e.Message.Id != Id) return false;
 				return pred(new ReactionAddedEventArgs(e, this));
-			});
+			}, timeout, token);
 			IMC.GetInteractivityManager().ReactionAddWaiter.Register(waiter);
 			var args = await waiter.Task;
 			return new ReactionAddedEventArgs(args, this);
@@ -165,7 +165,7 @@ namespace sisbase.Interactivity
 			var waiter = new EventWaiter<MessageReactionRemoveEventArgs>(e => {
 				if (e.Message.Id != Id) return false;
 				return pred(new ReactionRemovedEventArgs(e, this));
-			});
+			}, timeout, token);
 			IMC.GetInteractivityManager().ReactionRemoveWaiter.Register(waiter);
 			var args = await waiter.Task;
 			return new ReactionRemovedEventArgs(args, this);
@@ -183,7 +183,7 @@ namespace sisbase.Interactivity
 				}
 
 				return false;
-			});
+			}, timeout, token);
 			IMC.GetInteractivityManager().ReactionToggleWaiter.Register(waiter);
 			var args = await waiter.Task;
 			if (args is MessageReactionAddEventArgs added) {
@@ -199,7 +199,7 @@ namespace sisbase.Interactivity
 			var waiter = new EventWaiter<MessageDeleteEventArgs>(e => {
 				if (e.Message.Id != Id) return false;
 				return pred(new MessageDeletedEventArgs(e, this));
-			});
+			}, timeout, token);
 			IMC.GetInteractivityManager().MessageDeleteWaiter.Register(waiter);
 			var args = await waiter.Task;
 			return new MessageDeletedEventArgs(args, this);
@@ -209,7 +209,7 @@ namespace sisbase.Interactivity
 			var waiter = new EventWaiter<MessageUpdateEventArgs>(e => {
 				if (e.Message.Id != Id) return false;
 				return pred(new MessageUpdatedEventArgs(e, this));
-			});
+			}, timeout, token);
 			IMC.GetInteractivityManager().EditWaiter.Register(waiter);
 			var args = await waiter.Task;
 			return new MessageUpdatedEventArgs(args, this);

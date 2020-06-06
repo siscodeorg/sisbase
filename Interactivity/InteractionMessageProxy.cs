@@ -122,7 +122,7 @@ namespace sisbase.Interactivity {
                 var msg = Get();
                 if (e.Message.Id != msg.Id) return false;
                 return pred(new ReactionAddedEventArgs(e, msg));
-            });
+            }, timeout, token);
             IMC.GetInteractivityManager().ReactionAddWaiter.Register(waiter);
             var args = await waiter.Task;
             return new ReactionAddedEventArgs(args, Get());
@@ -133,7 +133,7 @@ namespace sisbase.Interactivity {
                 var msg = Get();
                 if (e.Message.Id != msg.Id) return false;
 				return pred(new ReactionRemovedEventArgs(e, msg));
-			});
+			}, timeout, token);
 			IMC.GetInteractivityManager().ReactionRemoveWaiter.Register(waiter);
 			var args = await waiter.Task;
 			return new ReactionRemovedEventArgs(args, Get());
@@ -153,7 +153,7 @@ namespace sisbase.Interactivity {
 				}
 
 				return false;
-			});
+			}, timeout, token);
 			IMC.GetInteractivityManager().ReactionToggleWaiter.Register(waiter);
 			var args = await waiter.Task;
 			if (args is MessageReactionAddEventArgs added) {
@@ -170,7 +170,7 @@ namespace sisbase.Interactivity {
                 var msg = Get();
                 if (e.Message.Id != msg.Id) return false;
 				return pred(new MessageDeletedEventArgs(e, msg));
-			});
+			}, timeout, token);
 			IMC.GetInteractivityManager().MessageDeleteWaiter.Register(waiter);
 			var args = await waiter.Task;
 			return new MessageDeletedEventArgs(args, Get());
@@ -181,7 +181,7 @@ namespace sisbase.Interactivity {
                 var msg = Get();
                 if (e.Message.Id != msg.Id) return false;
 				return pred(new MessageUpdatedEventArgs(e, msg));
-			});
+			}, timeout, token);
 			IMC.GetInteractivityManager().EditWaiter.Register(waiter);
 			var args = await waiter.Task;
 			return new MessageUpdatedEventArgs(args, Get());
