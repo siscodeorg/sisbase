@@ -73,11 +73,12 @@ namespace sisbase.Interactivity {
 		public async Task SendMessageAsync(DiscordEmbed embed)
 			=> await SendMessageAsync(new MessageBuilder(embed));
 
-		public async Task<DiscordMessage> GetUserResponseAsync() {
+		public async Task<InteractionMessage> GetUserResponseAsync() {
 			LifeCheck(strict: true);
-			var msg = await _userMessages.Last()._Message.GetNextMessageAsync(MessageTimeout).DetachOnCancel(_lifetime.Token);
-			_userMessages.Add(new InteractionMessage(msg.Result, this));
-			return msg.Result;
+			var dspmsg = await _userMessages.Last()._Message.GetNextMessageAsync(MessageTimeout).DetachOnCancel(_lifetime.Token);
+			var imsg = new InteractionMessage(dspmsg.Result, this);
+			_userMessages.Add(imsg);
+			return imsg;
 		}
 
 		public async Task<DiscordMessage> GetUserResponseAsync(Func<DiscordMessage, bool> filter) {

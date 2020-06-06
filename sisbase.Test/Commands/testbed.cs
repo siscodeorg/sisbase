@@ -126,7 +126,7 @@ namespace sisbase.Test.Commands {
         public async Task endReason(CommandContext ctx) {
             var intr = ctx.AsInteraction();
             intr.SetLifetime(TimeSpan.FromSeconds(3));
-            DiscordMessage resp;
+            InteractionMessage resp;
             intr.InteractionClosed += async () =>
                 await intr.SendMessageAsync(new MessageBuilder().WithContent("Interaction closed!"));
             try {
