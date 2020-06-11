@@ -17,6 +17,7 @@ namespace sisbase.Systems {
 		public readonly EventWaitHandler<DiscordEventArgs> ReactionToggleWaiter = new EventWaitHandler<DiscordEventArgs>();
 		public readonly EventWaitHandler<MessageDeleteEventArgs> MessageDeleteWaiter = new EventWaitHandler<MessageDeleteEventArgs>();
 		public readonly EventWaitHandler<MessageUpdateEventArgs> EditWaiter = new EventWaitHandler<MessageUpdateEventArgs>();
+		public readonly EventWaitHandler<MessageCreateEventArgs> CreateWaiter = new EventWaitHandler<MessageCreateEventArgs>();
 
 		public void InitWaitListeners(DiscordClient client) {
 			client.MessageUpdated += EditWaiter.Offer;
@@ -25,6 +26,7 @@ namespace sisbase.Systems {
 			client.MessageReactionRemoved += ReactionRemoveWaiter.Offer;
 			client.MessageReactionRemoved += ReactionToggleWaiter.Offer;
 			client.MessageReactionAdded += ReactionToggleWaiter.Offer;
+			client.MessageCreated += CreateWaiter.Offer;
 		}
 		
 		public void Activate() {

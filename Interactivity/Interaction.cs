@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DSharpPlus.EventArgs;
 
 namespace sisbase.Interactivity {
 #nullable enable
@@ -75,17 +76,18 @@ namespace sisbase.Interactivity {
 
 		public async Task<InteractionMessage> GetUserResponseAsync() {
 			LifeCheck(strict: true);
-			var dspmsg = await _userMessages.Last()._Message.GetNextMessageAsync(MessageTimeout).DetachOnCancel(_lifetime.Token);
-			var imsg = new InteractionMessage(dspmsg.Result, this);
+			var dspmsg = await WaitNextMessageAsync((e) => true, MessageTimeout ?? default, _lifetime.Token);
+			var imsg = new InteractionMessage(dspmsg, this);
 			_userMessages.Add(imsg);
 			return imsg;
 		}
 
-		public async Task<DiscordMessage> GetUserResponseAsync(Func<DiscordMessage, bool> filter) {
+		public async Task<InteractionMessage> GetUserResponseAsync(Func<DiscordMessage, bool> filter) {
 			LifeCheck(strict: true);
-			var msg = await _userMessages.Last()._Message.GetNextMessageAsync(filter, MessageTimeout).DetachOnCancel(_lifetime.Token);
-			_userMessages.Add(new InteractionMessage(msg.Result, this));
-			return msg.Result;
+			var dspmsg = await WaitNextMessageAsync(filter, MessageTimeout ?? default, _lifetime.Token);
+			var imsg = new InteractionMessage(dspmsg, this);
+			_userMessages.Add(imsg);
+			return imsg;
 		}
 
 		public async Task ModifyLastMessage(Action<MessageBuilder> func) {
@@ -103,6 +105,15 @@ namespace sisbase.Interactivity {
 			if (_isClosed || (strict && _isClosing)) {
 				throw new OperationCanceledException(_lifetime.Token);
 			}
+		}
+
+		internal async Task<DiscordMessage> WaitNextMessageAsync(Func<DiscordMessage, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+			var waiter = new EventWaiter<MessageCreateEventArgs>(e => 
+				    e.Channel == Origin.Channel && e.Author == Origin.Author && pred(e.Message)
+				, timeout, token);
+			IMC.GetInteractivityManager().CreateWaiter.Register(waiter);
+			var dspargs = await waiter.Task;
+			return dspargs.Message;
 		}
 
 		public async Task Close() {
