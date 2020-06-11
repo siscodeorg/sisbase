@@ -194,6 +194,18 @@ namespace sisbase.Test.Commands {
             await intr.SendMessageAsync("Thank you for shopping with togglecorp™");
             await intr.Close();
         }
+
+        [Command("awaitDelete")]
+        public async Task awaitDelete(CommandContext ctx) {
+            var intr = ctx.AsInteraction();
+            await intr.SendMessageAsync("Please send three messages, and then delete *one* of them");
+            var m1 = await intr.GetUserResponseAsync();
+            var m2 = await intr.GetUserResponseAsync();
+            var m3 = await intr.GetUserResponseAsync();
+            await intr.SendMessageAsync("Thank you for the messages. please delete one of them");
+            var args = await intr.UserMessages.WaitMessageDeleted((e) => true);
+            await intr.SendMessageAsync($"you deleted a message that said: {args.Message.Content}");
+        }
     }
 
     [Group("stubgroup")]
