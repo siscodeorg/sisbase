@@ -38,7 +38,8 @@ namespace sisbase.Interactivity {
         }
 
         public async Task Offer(T args) {
-            waiters = waiters.Where((waiter => !waiter.Offer(args))).ToList();
+            var toRemove = waiters.Where((waiter => !waiter.Offer(args))).ToList();
+            waiters = waiters.Except(toRemove).ToList();
         }
     }
 }
