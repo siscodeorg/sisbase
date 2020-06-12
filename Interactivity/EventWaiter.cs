@@ -9,23 +9,26 @@ using sisbase.Utils;
 #nullable enable
 namespace sisbase.Interactivity {
     public class EventWaiter<T> : IDisposable where T : AsyncEventArgs {
-        private readonly Func<T, bool> pred;
+        private readonly Func<T, Task<bool>> pred;
         private readonly TaskCompletionSource<T> taskSource = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly CancellationTokenSource token;
 
         internal Task<T> Task => taskSource.Task;
 
-        internal EventWaiter(Func<T, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+        internal EventWaiter(Func<T, Task<bool>> pred, TimeSpan timeout = default, CancellationToken token = default) {
             this.token = ConcurrencyUtils.PrepareTimeoutToken(timeout, token);
             this.pred = pred;
         }
 
-        internal bool Offer(T args) {
+        internal EventWaiter(Func<T, bool> pred, TimeSpan timeout = default, CancellationToken token = default)
+            : this(e => System.Threading.Tasks.Task.FromResult(pred(e)), timeout, token) { }
+
+        internal async Task<bool> Offer(T args) {
             if (token.IsCancellationRequested) {
                 taskSource.SetCanceled();
                 return true;
             }
-            if (pred(args))
+            if (await pred(args))
                 return taskSource.TrySetResult(args);
             return false;
         }
@@ -39,11 +42,15 @@ namespace sisbase.Interactivity {
             }
         }
 
-        public static async Task<T> Wait(Func<T, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+        public static async Task<T> Wait(Func<T, Task<bool>> pred, TimeSpan timeout = default, CancellationToken token = default) {
             if (Handler == null) throw new InvalidOperationException($"The listener for EventWaiter<{typeof(T).Name}> has not been registered");
             var waiter = new EventWaiter<T>(pred, timeout, token);
             Handler.Register(waiter);
             return await waiter.Task;
+        }
+
+        public static Task<T> Wait(Func<T, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+            return Wait(e => System.Threading.Tasks.Task.FromResult(pred(e)), timeout, token);
         }
 
         public void Dispose() {
@@ -59,7 +66,10 @@ namespace sisbase.Interactivity {
         }
 
         public async Task Offer(T args) {
-            var toRemove = waiters.Where((waiter => !waiter.Offer(args))).ToList();
+            var toRemove = new List<EventWaiter<T>>();
+            foreach (var waiter in waiters) {
+                if (await waiter.Offer(args)) toRemove.Add(waiter);
+            }
             waiters = waiters.Except(toRemove).ToList();
             toRemove.ForEach(waiter => waiter.Dispose());
         }
