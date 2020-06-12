@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DSharpPlus.EventArgs;
+using DSharpPlus;
 using sisbase.Utils;
 
+#nullable enable
 namespace sisbase.Interactivity {
-    public class EventWaiter<T> : IDisposable {
+    public class EventWaiter<T> : IDisposable where T : AsyncEventArgs {
         private readonly Func<T, bool> pred;
         private readonly TaskCompletionSource<T> taskSource = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly CancellationTokenSource token;
@@ -29,12 +30,28 @@ namespace sisbase.Interactivity {
             return false;
         }
 
+        internal static EventWaitHandler<T>? Handler;
+
+        public static AsyncEventHandler<T> Listener {
+            get {
+                Handler ??= new EventWaitHandler<T>();
+                return Handler.Offer;
+            }
+        }
+
+        public static async Task<T> Wait(Func<T, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+            if (Handler == null) throw new InvalidOperationException($"The listener for EventWaiter<{typeof(T).Name}> has not been registered");
+            var waiter = new EventWaiter<T>(pred, timeout, token);
+            Handler.Register(waiter);
+            return await waiter.Task;
+        }
+
         public void Dispose() {
             token?.Dispose();
         }
     }
 
-    public class EventWaitHandler<T> {
+    public class EventWaitHandler<T> where T : AsyncEventArgs {
         private List<EventWaiter<T>> waiters = new List<EventWaiter<T>>();
 
         public void Register(EventWaiter<T> waiter) {
