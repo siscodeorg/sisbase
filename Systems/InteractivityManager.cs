@@ -12,7 +12,7 @@ namespace sisbase.Systems {
 		public string Description { get; set; }
 		public bool Status { get; set; }
 		
-		public readonly EventWaitHandler<DiscordEventArgs> ReactionToggleWaiter = new EventWaitHandler<DiscordEventArgs>();
+		internal readonly EventWaitHandler<DiscordEventArgs> ReactionToggleWaiter = new EventWaitHandler<DiscordEventArgs>();
 
 		public void InitWaitListeners(DiscordClient client) {
 			client.MessageUpdated += EventWaiter<MessageUpdateEventArgs>.Listener;

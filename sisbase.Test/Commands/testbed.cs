@@ -186,7 +186,6 @@ namespace sisbase.Test.Commands {
         public async Task toggle3(CommandContext ctx) {
             var intr = ctx.AsInteraction();
             await intr.SendMessageAsync("Please add any reaction to this message, and then have someone else toggle it three times");
-            var waiter = IMC.GetInteractivityManager().ReactionToggleWaiter;
             var ev = await intr.BotMessages.First().WaitReactionAdded(e => true);
             await intr.BotMessages.First().WaitReactionToggled(e => e.Emoji == ev.Emoji);
             await intr.BotMessages.First().WaitReactionToggled(e => e.Emoji == ev.Emoji);

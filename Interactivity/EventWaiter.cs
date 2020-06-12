@@ -13,14 +13,14 @@ namespace sisbase.Interactivity {
         private readonly TaskCompletionSource<T> taskSource = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly CancellationTokenSource token;
 
-        public Task<T> Task => taskSource.Task;
+        internal Task<T> Task => taskSource.Task;
 
-        public EventWaiter(Func<T, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+        internal EventWaiter(Func<T, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
             this.token = ConcurrencyUtils.PrepareTimeoutToken(timeout, token);
             this.pred = pred;
         }
 
-        public bool Offer(T args) {
+        internal bool Offer(T args) {
             if (token.IsCancellationRequested) {
                 taskSource.SetCanceled();
                 return true;
@@ -51,7 +51,7 @@ namespace sisbase.Interactivity {
         }
     }
 
-    public class EventWaitHandler<T> where T : AsyncEventArgs {
+    internal class EventWaitHandler<T> where T : AsyncEventArgs {
         private List<EventWaiter<T>> waiters = new List<EventWaiter<T>>();
 
         public void Register(EventWaiter<T> waiter) {
