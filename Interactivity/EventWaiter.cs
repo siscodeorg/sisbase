@@ -7,7 +7,7 @@ using DSharpPlus.EventArgs;
 using sisbase.Utils;
 
 namespace sisbase.Interactivity {
-    public class EventWaiter<T> {
+    public class EventWaiter<T> : IDisposable {
         private readonly Func<T, bool> pred;
         private readonly TaskCompletionSource<T> taskSource = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly CancellationTokenSource token;
@@ -28,6 +28,10 @@ namespace sisbase.Interactivity {
                 return taskSource.TrySetResult(args);
             return false;
         }
+
+        public void Dispose() {
+            token?.Dispose();
+        }
     }
 
     public class EventWaitHandler<T> {
@@ -40,6 +44,7 @@ namespace sisbase.Interactivity {
         public async Task Offer(T args) {
             var toRemove = waiters.Where((waiter => !waiter.Offer(args))).ToList();
             waiters = waiters.Except(toRemove).ToList();
+            toRemove.ForEach(waiter => waiter.Dispose());
         }
     }
 }
