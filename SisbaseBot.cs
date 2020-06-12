@@ -30,7 +30,7 @@ namespace sisbase
 		/// <summary>
 		/// The configuration for the bot.
 		/// </summary>
-		public Sisbase SisbaseConfiguration { get; private set; }
+		public MainConfig SisbaseConfiguration { get; } = new MainConfig();
 
 		public SystemConfig SystemCfg { get; } = new SystemConfig();
 
@@ -63,7 +63,7 @@ namespace sisbase
 			if (Instance != null)
 				throw new InvalidOperationException("Instance is already running");
 			Instance = this;
-			SisbaseConfiguration = new Sisbase(configDirectory);
+			SisbaseConfiguration.Create(Directory.CreateDirectory(Directory.GetCurrentDirectory()));
 			CreateNewBot();
 			SystemCfg.Create(Directory.CreateDirectory(configDirectory));
 		}
@@ -73,7 +73,7 @@ namespace sisbase
 			if (Instance != null)
 				throw new InvalidOperationException("Instance is already running");
 			Instance = this;
-			SisbaseConfiguration = new Sisbase(Directory.GetCurrentDirectory());
+			SisbaseConfiguration.Create(Directory.CreateDirectory(Directory.GetCurrentDirectory()));
 			CreateNewBot();
 			SystemCfg.Create(Directory.CreateDirectory(Directory.GetCurrentDirectory()));
 		}
@@ -84,7 +84,7 @@ namespace sisbase
 				new DiscordConfiguration
 				{
 					AutoReconnect = true,
-					Token = SisbaseConfiguration.Config.Token,
+					Token = SisbaseConfiguration.Data.Token,
 					UseInternalLogHandler = false
 				}
 			);
@@ -121,7 +121,7 @@ namespace sisbase
 			{
 				case -1:
 					int x;
-					foreach (string prefix in Instance.SisbaseConfiguration.Config.Prefixes)
+					foreach (string prefix in Instance.SisbaseConfiguration.Data.Prefixes)
 					{
 						x = msg.GetStringPrefixLength(prefix);
 						if (x != -1)
