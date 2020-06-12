@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace sisbase.Interactivity {
 #nullable enable
 
-	public class Interaction {
+	public class Interaction : IDisposable {
 		internal List<InteractionMessage> _botMessages { get; } = new List<InteractionMessage>();
 		internal List<InteractionMessage> _userMessages { get; } = new List<InteractionMessage>();
 		public InteractionMessageListProxy BotMessages { get; }
@@ -119,6 +119,10 @@ namespace sisbase.Interactivity {
 			_userMessages.Clear();
 		}
 		public Task CompletionTask() => _lifetime.Token.WhenCanceled();
+
+		public void Dispose() {
+			_lifetime.Dispose();
+		}
 	}
 
 	public static class InteractionExtensions {
