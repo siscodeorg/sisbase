@@ -7,8 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using sisbase.Utils;
 
-namespace sisbase.Utils
+namespace sisbase.Systems
 {
 	/// <summary>
 	/// The System Management Controller Now with 100% less PPBUS_G3H

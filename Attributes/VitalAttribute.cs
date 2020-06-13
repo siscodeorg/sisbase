@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Text;
+using sisbase.Systems;
 
 namespace sisbase.Attributes
 {

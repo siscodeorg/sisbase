@@ -1,4 +1,4 @@
-﻿namespace sisbase.Utils
+﻿namespace sisbase.Systems
 {
 	/// <summary>
 	/// The base interface for all systems

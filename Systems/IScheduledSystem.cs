@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace sisbase.Utils
+namespace sisbase.Systems
 {
 	/// <summary>
 	/// Interface for running a scheduled function on systems

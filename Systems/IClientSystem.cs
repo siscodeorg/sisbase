@@ -1,6 +1,6 @@
 using DSharpPlus;
 
-namespace sisbase.Utils
+namespace sisbase.Systems
 {
 	/// <summary>
 	/// Interface for <see cref="ISystem"/> that can be applied to <see cref="DiscordClient"/>
