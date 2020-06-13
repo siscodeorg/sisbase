@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using sisbase.Utils;
 
 namespace sisbase.Configuration {
-    public class SystemConfig {
+    public class SystemConfig : IConfiguration {
         public string Path { get; set; }
         [JsonProperty] public Dictionary<string,SystemConfigData> Systems { get; set; } = new Dictionary<string, SystemConfigData>();
 

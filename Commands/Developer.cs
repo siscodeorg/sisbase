@@ -25,18 +25,17 @@ namespace sisbase.Commands
 		public async Task SetMaster(CommandContext ctx)
 		{
 			var guilds = SisbaseBot.Instance.Client.Guilds.Values.ToList();
-			var ids = new List<ulong?>();
+			var ids = new List<ulong>();
 			var embed = new DiscordEmbedBuilder();
 			embed
 				.WithAuthor($"Set {ctx.Guild.Name} as MASTER")
 				.WithColor(DiscordColor.PhthaloGreen);
 
 			guilds.Remove(ctx.Guild);
-			SisbaseBot.Instance.SisbaseConfiguration.Config.MasterId = ctx.Guild.Id;
+			SisbaseBot.Instance.SisbaseConfiguration.Data.MasterId = ctx.Guild.Id;
 			guilds.ForEach(x => ids.Add(x.Id));
-			SisbaseBot.Instance.SisbaseConfiguration.Config.PuppetId = ids;
-			File.WriteAllText(Directory.GetCurrentDirectory() + "/Config.json",
-				JsonConvert.SerializeObject(SisbaseBot.Instance.SisbaseConfiguration.Config, Formatting.Indented));
+			SisbaseBot.Instance.SisbaseConfiguration.Data.PuppetId = ids;
+			SisbaseBot.Instance.SisbaseConfiguration.Update();
 			await ctx.RespondAsync(embed: embed);
 		}
 	}
@@ -152,15 +151,14 @@ namespace sisbase.Commands
 					var msg = await ctx.RespondAsync(embed: EmbedBase.InputEmbed("Prefix to be added"));
 					var response = await ctx.Message.GetNextMessageAsync();
 					string prefix = response.Result.Content;
-					if (SisbaseBot.Instance.SisbaseConfiguration.Config.Prefixes.Contains(prefix.ToLowerInvariant()))
+					if (SisbaseBot.Instance.SisbaseConfiguration.Data.Prefixes.Contains(prefix.ToLowerInvariant()))
 					{
 						await msg.ModifyAsync(embed: EmbedBase.OutputEmbed($"This prefix is already added."));
 					}
 					else
 					{
-						SisbaseBot.Instance.SisbaseConfiguration.Config.Prefixes.Add(prefix.ToLowerInvariant());
-						File.WriteAllText(SisbaseBot.Instance.SisbaseConfiguration.JsonPath,
-							JsonConvert.SerializeObject(SisbaseBot.Instance.SisbaseConfiguration.Config, Formatting.Indented));
+						SisbaseBot.Instance.SisbaseConfiguration.Data.Prefixes.Add(prefix.ToLowerInvariant());
+						SisbaseBot.Instance.SisbaseConfiguration.Update();
 						await msg.ModifyAsync(embed: EmbedBase.OutputEmbed($"Prefix added without errors."));
 					}
 
@@ -170,21 +168,20 @@ namespace sisbase.Commands
 					var msg2 = await ctx.RespondAsync(embed: EmbedBase.InputEmbed("Prefix to be removed"));
 					var response2 = await ctx.Message.GetNextMessageAsync();
 					string prefix2 = response2.Result.Content;
-					if (!SisbaseBot.Instance.SisbaseConfiguration.Config.Prefixes.Contains(prefix2.ToLowerInvariant()))
+					if (!SisbaseBot.Instance.SisbaseConfiguration.Data.Prefixes.Contains(prefix2.ToLowerInvariant()))
 					{
 						await msg2.ModifyAsync(embed: EmbedBase.OutputEmbed($"This prefix doesn't exists."));
 					}
 					else
 					{
-						SisbaseBot.Instance.SisbaseConfiguration.Config.Prefixes.Remove(prefix2.ToLowerInvariant());
-						File.WriteAllText(SisbaseBot.Instance.SisbaseConfiguration.JsonPath,
-							JsonConvert.SerializeObject(SisbaseBot.Instance.SisbaseConfiguration.Config, Formatting.Indented));
+						SisbaseBot.Instance.SisbaseConfiguration.Data.Prefixes.Remove(prefix2.ToLowerInvariant());
+						SisbaseBot.Instance.SisbaseConfiguration.Update();
 						await msg2.ModifyAsync(embed: EmbedBase.OutputEmbed($"Prefix removed without errors."));
 					}
 					break;
 
 				case "list":
-					await ctx.RespondAsync(embed: EmbedBase.OrderedListEmbed(SisbaseBot.Instance.SisbaseConfiguration.Config.Prefixes, "Prefixes"));
+					await ctx.RespondAsync(embed: EmbedBase.OrderedListEmbed(SisbaseBot.Instance.SisbaseConfiguration.Data.Prefixes, "Prefixes"));
 					break;
 
 				default:

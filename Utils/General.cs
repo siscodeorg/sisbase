@@ -21,13 +21,13 @@ namespace sisbase.Utils
 
 		internal static string GetVersion() => Format(Version);
 
-		internal static Json TUI_cfg()
+		internal static MainConfigData TUI_cfg()
 		{
-			var c = new Json();
+			var c = new MainConfigData();
 			Console.WriteLine("Please Input the TOKEN :");
 			c.Token = Console.ReadLine();
 			c.MasterId = 0;
-			c.PuppetId = new List<ulong?>();
+			c.PuppetId = new List<ulong>();
 			c.Prefixes = new List<string>();
 			Console.WriteLine("Configuration Completed.");
 			return c;
@@ -40,10 +40,10 @@ namespace sisbase.Utils
 		/// <param name="s"></param>
 		/// <param name="key">The name of the custom configuration</param>
 		/// <param name="value"></param>
-		public static void AddCustomConfiguration<T>(this Sisbase s, string key, T value)
+		public static void AddCustomConfiguration<T>(this MainConfig s, string key, T value)
 		{
-			s.Config.CustomSettings ??= new Dictionary<string, object>();
-			s.Config.CustomSettings.TryAdd(key, value);
+			s.Data.CustomSettings ??= new Dictionary<string, object>();
+			s.Data.CustomSettings.TryAdd(key, value);
 			s.Update();
 		}
 
@@ -52,10 +52,10 @@ namespace sisbase.Utils
 		/// </summary>
 		/// <param name="s"></param>
 		/// <param name="key">The name of the custom configuration</param>
-		public static void RemoveCustomConfiguration(this Sisbase s, string key)
+		public static void RemoveCustomConfiguration(this MainConfig s, string key)
 		{
-			s.Config.CustomSettings ??= new Dictionary<string, object>();
-			s.Config.CustomSettings.Remove(key);
+			s.Data.CustomSettings ??= new Dictionary<string, object>();
+			s.Data.CustomSettings.Remove(key);
 			s.Update();
 		}
 
@@ -66,10 +66,10 @@ namespace sisbase.Utils
 		/// <param name="s"></param>
 		/// <param name="key">The name of the custom configuration</param>
 		/// <param name="newValue">The updated value</param>
-		public static void UpdateCustomConfiguration<T>(this Sisbase s, string key, T newValue)
+		public static void UpdateCustomConfiguration<T>(this MainConfig s, string key, T newValue)
 		{
-			s.Config.CustomSettings ??= new Dictionary<string, object>();
-			s.Config.CustomSettings.TryGetValue(key, out object value);
+			s.Data.CustomSettings ??= new Dictionary<string, object>();
+			s.Data.CustomSettings.TryGetValue(key, out object value);
 			if (value != null) s.RemoveCustomConfiguration(key);
 			s.AddCustomConfiguration<T>(key, newValue);
 		}
@@ -80,10 +80,10 @@ namespace sisbase.Utils
 		/// <typeparam name="T">Type of the custom configuration</typeparam>
 		/// <param name="s"></param>
 		/// <param name="key">The name of the custom configuration</param>
-		public static T GetCustomConfiguration<T>(this Sisbase s, string key)
+		public static T GetCustomConfiguration<T>(this MainConfig s, string key)
 		{
-			s.Config.CustomSettings ??= new Dictionary<string, object>();
-			s.Config.CustomSettings.TryGetValue(key, out object value);
+			s.Data.CustomSettings ??= new Dictionary<string, object>();
+			s.Data.CustomSettings.TryGetValue(key, out object value);
 			return (T)value;
 		}
 
