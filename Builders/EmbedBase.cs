@@ -5,9 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using sisbase.Utils;
 using static sisbase.Utils.Behaviours;
 
-namespace sisbase.Utils
+namespace sisbase.Builders
 {
 	/// <summary>
 	/// Utility for generating consistant embeds

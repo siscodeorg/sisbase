@@ -1,7 +1,7 @@
 ﻿using DSharpPlus.Entities;
 using System.Threading.Tasks;
 
-namespace sisbase.Utils
+namespace sisbase.Builders
 {
 	public class MessageBuilder
 	{
