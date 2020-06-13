@@ -34,60 +34,6 @@ namespace sisbase.Utils
 		}
 
 		/// <summary>
-		/// Adds a new custom configuration onto the bot config.
-		/// </summary>
-		/// <typeparam name="T">Type of the custom configuration</typeparam>
-		/// <param name="s"></param>
-		/// <param name="key">The name of the custom configuration</param>
-		/// <param name="value"></param>
-		public static void AddCustomConfiguration<T>(this MainConfig s, string key, T value)
-		{
-			s.Data.CustomSettings ??= new Dictionary<string, object>();
-			s.Data.CustomSettings.TryAdd(key, value);
-			s.Update();
-		}
-
-		/// <summary>
-		/// Removes an existing custom configuration from the bot config.
-		/// </summary>
-		/// <param name="s"></param>
-		/// <param name="key">The name of the custom configuration</param>
-		public static void RemoveCustomConfiguration(this MainConfig s, string key)
-		{
-			s.Data.CustomSettings ??= new Dictionary<string, object>();
-			s.Data.CustomSettings.Remove(key);
-			s.Update();
-		}
-
-		/// <summary>
-		/// Updates an existing custom configuration from the bot config.
-		/// </summary>
-		/// <typeparam name="T">Type of the custom configuration</typeparam>
-		/// <param name="s"></param>
-		/// <param name="key">The name of the custom configuration</param>
-		/// <param name="newValue">The updated value</param>
-		public static void UpdateCustomConfiguration<T>(this MainConfig s, string key, T newValue)
-		{
-			s.Data.CustomSettings ??= new Dictionary<string, object>();
-			s.Data.CustomSettings.TryGetValue(key, out object value);
-			if (value != null) s.RemoveCustomConfiguration(key);
-			s.AddCustomConfiguration<T>(key, newValue);
-		}
-
-		/// <summary>
-		/// Gets the value of an existing custom configuration from the bot config.
-		/// </summary>
-		/// <typeparam name="T">Type of the custom configuration</typeparam>
-		/// <param name="s"></param>
-		/// <param name="key">The name of the custom configuration</param>
-		public static T GetCustomConfiguration<T>(this MainConfig s, string key)
-		{
-			s.Data.CustomSettings ??= new Dictionary<string, object>();
-			s.Data.CustomSettings.TryGetValue(key, out object value);
-			return (T)value;
-		}
-
-		/// <summary>
 		/// Returns the first integer value found on a <see cref="DiscordMessage"/>
 		/// </summary>
 		/// <param name="m">The message</param>
