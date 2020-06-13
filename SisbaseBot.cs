@@ -10,6 +10,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using DSharpPlus.EventArgs;
 
 namespace sisbase
 {
@@ -175,7 +176,9 @@ namespace sisbase
 		/// <returns></returns>
 		public Task DisconnectAsync()
 			=> Client.DisconnectAsync();
-
+		public void RegisterLogHandler(EventHandler<DebugLogMessageEventArgs> logger) {
+			Client.DebugLogger.LogMessageReceived += logger;
+		}
 		~SisbaseBot() =>
 			Dispose(false);
 
