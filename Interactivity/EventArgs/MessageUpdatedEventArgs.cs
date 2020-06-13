@@ -3,8 +3,10 @@ using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using System.Collections.Generic;
 
-namespace sisbase.Interactivity.EventArgs {
-	public class MessageUpdatedEventArgs : DiscordEventArgs {
+namespace sisbase.Interactivity.EventArgs
+{
+	public class MessageUpdatedEventArgs : DiscordEventArgs
+	{
 		public InteractionMessage After { get; internal set; }
 		public PastInteractionMessage Before { get; internal set; }
 		public DiscordChannel Channel
@@ -21,7 +23,8 @@ namespace sisbase.Interactivity.EventArgs {
 			=> After.MentionedChannels;
 		internal MessageUpdatedEventArgs(DiscordClient client) : base(client) { }
 		
-		internal MessageUpdatedEventArgs(MessageUpdateEventArgs dspargs, InteractionMessage owner) : base(dspargs.Client) {
+		internal MessageUpdatedEventArgs(MessageUpdateEventArgs dspargs, InteractionMessage owner) : base(dspargs.Client)
+		{
 			After = owner;
 			Before = new PastInteractionMessage(dspargs.MessageBefore);
 		}

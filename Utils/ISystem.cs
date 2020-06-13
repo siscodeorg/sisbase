@@ -1,9 +1,11 @@
-﻿namespace sisbase.Utils {
+﻿namespace sisbase.Utils
+{
 	/// <summary>
 	/// The base interface for all systems
 	/// </summary>
 
-	public interface ISystem {
+	public interface ISystem
+	{
 		/// <summary>
 		/// Name of the system
 		/// </summary>

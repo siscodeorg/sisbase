@@ -5,8 +5,10 @@ using sisbase.Test.Systems;
 using sisbase.Utils;
 using System.Threading.Tasks;
 
-namespace sisbase.Test.Commands {
-	public class attributes : BaseCommandModule {
+namespace sisbase.Test.Commands
+{
+	public class attributes : BaseCommandModule
+	{
 		//With the prefix attribute commands are only executed if run under that specific prefix.
 		//It is CaSe InsEnSitiVE
 		[Prefix("l!")]

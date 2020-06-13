@@ -1,20 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 // Code originated from D#+ <https://github.com/DSharpPlus/DSharpPlus>
-namespace sisbase.Utils {
+namespace sisbase.Utils
+{
 	/// <summary>
 	/// Wraps all Unicode Emojis.
 	/// </summary>
-	public static class Emoji {
+	public static class Emoji
+	{
 		public static IReadOnlyDictionary<string, string> Emojis { get; }
 		public static IReadOnlyDictionary<string, string> UnicodeEmojisByDiscordName { get; }
 		public static IReadOnlyList<string> EmojiLiterals { get; }
 
-		static Emoji() {
+		static Emoji()
+		{
 #pragma warning disable IDE0021
-			Emojis = new Dictionary<string, string> {
+			Emojis = new Dictionary<string, string>
+			{
 				[",:("] = "\U0001f613",
 				[",:)"] = "\U0001f605",
 				[",:-("] = "\U0001f613",
@@ -5879,7 +5884,7 @@ namespace sisbase.Utils {
 #pragma warning restore IDE0021
 			UnicodeEmojisByDiscordName = Emojis.GroupBy(e => e.Value, (key, xg) => xg.FirstOrDefault())
 				.ToDictionary(xkvp => xkvp.Value, xkvp => xkvp.Key);
-			string[] emojiArray = Emojis.Values.Distinct().ToArray();
+			var emojiArray = Emojis.Values.Distinct().ToArray();
 			Array.Sort(emojiArray);
 			EmojiLiterals = emojiArray;
 		}

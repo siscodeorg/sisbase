@@ -7,11 +7,13 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-namespace sisbase.Utils {
+namespace sisbase.Utils
+{
 	/// <summary>
 	/// The System Management Controller Now with 100% less PPBUS_G3H
 	/// </summary>
-	public class SMC {
+	public class SMC
+	{
 		/// <summary>
 		/// All of the current registerred systems on the SMC
 		/// </summary>
@@ -24,25 +26,31 @@ namespace sisbase.Utils {
 
 		internal static List<Assembly> RegisteredAssemblies { get; set; } = new List<Assembly>();
 
-		internal Dictionary<Type, bool> RegisterSystems(Assembly assembly) {
+		internal Dictionary<Type, bool> RegisterSystems(Assembly assembly)
+		{
 			var response = new Dictionary<Type, bool>();
 			if (!RegisteredAssemblies.Contains(assembly)) RegisteredAssemblies.Add(assembly);
 			var Ts = assembly.ExportedTypes.Where(T => T.GetTypeInfo().IsSystemCandidate());
-			foreach (var T in Ts) {
+			foreach (var T in Ts)
+			{
 				if (RegisteredSystems.ContainsKey(T)) continue;
-				if (T.GetInterfaces().Contains(typeof(IClientSystem))) {
+				if (T.GetInterfaces().Contains(typeof(IClientSystem)))
+				{
 					response.Add(T, SisbaseBot.Instance.Client.Register(T));
 				}
-				else {
+				else
+				{
 					response.Add(T, Register(T));
 				}
 			}
 			return response;
 		}
 
-		internal Dictionary<Assembly, Dictionary<string, bool>> Reload() {
+		internal Dictionary<Assembly, Dictionary<string, bool>> Reload()
+		{
 			var data = new Dictionary<Assembly, Dictionary<string, bool>>();
-			foreach (var asm in RegisteredAssemblies) {
+			foreach (var asm in RegisteredAssemblies)
+			{
 				var systems = RegisterSystems(asm);
 				var nDict = systems.Select(x =>
 				new KeyValuePair<string, bool>(
@@ -55,27 +63,33 @@ namespace sisbase.Utils {
 			return data;
 		}
 
-		internal static void ReloadCommands() {
+		internal static void ReloadCommands()
+		{
 			//Unregisters all commands
 			SisbaseBot.Instance.CommandsNext.UnregisterCommands(SisbaseBot.Instance.CommandsNext.RegisteredCommands.Select(x => x.Value).ToArray());
 			//Re-registers the commands
 			RegisteredAssemblies.ForEach(x => SisbaseBot.Instance.CommandsNext.RegisterCommands(x));
 		}
 
-		internal bool Register(Type t) {
-			if (RegisteredSystems.ContainsKey(t)) {
+		internal bool Register(Type t)
+		{
+			if (RegisteredSystems.ContainsKey(t))
+			{
 				RegisteredSystems.TryGetValue(t, out var system);
 				system.Warn("This system is already registered");
 				return true;
 			}
-			else {
+			else
+			{
 				var system = (ISystem)Activator.CreateInstance(t);
 
 				system.Activate();
 				system.Log("System Started");
 				system.Execute();
-				if (system.Status == true) {
-					if (typeof(IScheduledSystem).IsAssignableFrom(t)) {
+				if (system.Status == true)
+				{
+					if (typeof(IScheduledSystem).IsAssignableFrom(t))
+					{
 						RegisteredTimers.TryAdd(t, CreateNewTimer(
 							((IScheduledSystem)system).Timeout,
 							((IScheduledSystem)system).RunContinuous
@@ -86,18 +100,23 @@ namespace sisbase.Utils {
 					system.Log("System Loaded");
 					return true;
 				}
-				else {
+				else
+				{
 					Logger.Warn("SMC", $"A system was unloaded.");
 					return false;
 				}
 			}
 		}
 
-		internal static bool Unregister(Type t) {
-			if (RegisteredSystems.ContainsKey(t)) {
-				RegisteredSystems.TryGetValue(t, out var system);
+		internal static bool Unregister(Type t)
+		{
+			if (RegisteredSystems.ContainsKey(t))
+			{
+				ISystem system;
+				RegisteredSystems.TryGetValue(t, out system);
 				system.Warn("System is disabling...");
-				if (typeof(IScheduledSystem).IsAssignableFrom(t)) {
+				if (typeof(IScheduledSystem).IsAssignableFrom(t))
+				{
 					RegisteredTimers[t].Dispose();
 					RegisteredTimers.TryRemove(t, out _);
 					system.Warn("Timer stopped");
@@ -108,7 +127,8 @@ namespace sisbase.Utils {
 				ReloadCommands();
 				return true;
 			}
-			else {
+			else
+			{
 				Logger.Warn("SMC", "An unregistered system has attemped unregistering.");
 				return false;
 			}
@@ -121,23 +141,29 @@ namespace sisbase.Utils {
 	/// <summary>
 	/// Provides extension methods for the <see cref="SMC"/>
 	/// </summary>
-	public static class SMCExtensions {
-		internal static bool Register(this DiscordClient client, Type t) {
-			if (SMC.RegisteredSystems.ContainsKey(t)) {
+	public static class SMCExtensions
+	{
+		internal static bool Register(this DiscordClient client, Type t)
+		{
+			if (SMC.RegisteredSystems.ContainsKey(t))
+			{
 				SMC.RegisteredSystems.TryGetValue(t, out var system);
 				system.Warn("This system is already registered");
 				return true;
 			}
-			else {
+			else
+			{
 				var system = (IClientSystem)Activator.CreateInstance(t);
 
 				system.Activate();
 				system.Log("System Started");
 				system.Execute();
-				if (system.Status == true) {
+				if (system.Status == true)
+				{
 					system.ApplyToClient(client);
 					system.Log("System applied to client");
-					if (typeof(IScheduledSystem).IsAssignableFrom(t)) {
+					if (typeof(IScheduledSystem).IsAssignableFrom(t))
+					{
 						SMC.RegisteredTimers.TryAdd(t, SMC.CreateNewTimer(
 							((IScheduledSystem)system).Timeout,
 							((IScheduledSystem)system).RunContinuous
@@ -148,14 +174,16 @@ namespace sisbase.Utils {
 					system.Log("System Loaded");
 					return true;
 				}
-				else {
+				else
+				{
 					Logger.Warn("SMC", $"A system was unloaded.");
 					return false;
 				}
 			}
 		}
 
-		internal static bool IsSystemCandidate(this TypeInfo ti) {
+		internal static bool IsSystemCandidate(this TypeInfo ti)
+		{
 			// check if compiler-generated
 			if (ti.GetCustomAttribute<CompilerGeneratedAttribute>(false) != null)
 				return false;

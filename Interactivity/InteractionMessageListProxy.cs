@@ -4,6 +4,7 @@ using sisbase.Interactivity.Enums;
 using sisbase.Interactivity.EventArgs;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace sisbase.Interactivity {
@@ -63,7 +64,7 @@ namespace sisbase.Interactivity {
         internal async Task Offer(MessageReactionAddEventArgs e) {
             var message = Get().Find(x => x.Id == e.Message.Id);
             if (message == null) return;
-            var sbargs = new ReactionAddedEventArgs(e.Client) {
+            var sbargs = new ReactionAddedEventArgs(e.Client) { 
                 Message = message,
                 User = e.User,
                 Emoji = e.Emoji
@@ -107,7 +108,7 @@ namespace sisbase.Interactivity {
             var sbargs = new MessageDeletedEventArgs(e.Client) {
                 Message = message
             };
-
+   
             await Dispatch(sbargs);
             await First.Offer(e);
             await Last.Offer(e);

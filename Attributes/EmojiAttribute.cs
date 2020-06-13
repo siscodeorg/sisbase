@@ -1,11 +1,13 @@
 using DSharpPlus.Entities;
 using System;
 
-namespace sisbase.Attributes {
+namespace sisbase.Attributes
+{
 	/// <summary>
 	/// Atribute that sets the emoji for the command group
 	/// </summary>
-	public class EmojiAttribute : Attribute {
+	public class EmojiAttribute : Attribute
+	{
 		/// <summary>
 		/// The emoji that will be used by the command group
 		/// </summary>

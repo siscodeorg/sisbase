@@ -10,16 +10,19 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace sisbase.Commands {
+namespace sisbase.Commands
+{
 #pragma warning disable CS1591
 
 	/// <summary>
 	/// Bot-Owner Only Commands
 	/// </summary>
-	public class Developer : BaseCommandModule {
+	public class Developer : BaseCommandModule
+	{
 		[Command("setMaster")]
 		[RequireOwner]
-		public async Task SetMaster(CommandContext ctx) {
+		public async Task SetMaster(CommandContext ctx)
+		{
 			var guilds = SisbaseBot.Instance.Client.Guilds.Values.ToList();
 			var ids = new List<ulong?>();
 			var embed = new DiscordEmbedBuilder();
@@ -42,16 +45,19 @@ namespace sisbase.Commands {
 	[Emoji(":computer:")]
 	[Group("system")]
 	[Description("This group configures the systems.")]
-	public class System : BaseCommandModule {
+	public class System : BaseCommandModule
+	{
 		[GroupCommand]
-		public async Task Command(CommandContext ctx) {
+		public async Task Command(CommandContext ctx)
+		{
 			var embed = EmbedBase.GroupHelpEmbed(ctx.Command);
 			await ctx.RespondAsync(embed: embed);
 		}
 
 		[Command("list")]
 		[Description("Lists all active systems")]
-		public async Task List(CommandContext ctx) {
+		public async Task List(CommandContext ctx)
+		{
 			var allSystems = new List<string>();
 			SMC.RegisteredSystems.ToList().ForEach(x => allSystems.Add($"{x.Value.Name} - `{x.Key.Assembly.GetName().Name}`"));
 			var embed = EmbedBase.ListEmbed(allSystems, "Systems");
@@ -60,7 +66,8 @@ namespace sisbase.Commands {
 
 		[Command("disable")]
 		[Description("Disables and unregisters a system")]
-		public async Task Disable(CommandContext ctx) {
+		public async Task Disable(CommandContext ctx)
+		{
 			var allSystems = SMC.RegisteredSystems.Select(k => k.Value.Name).ToList();
 			var embed = EmbedBase.OrderedListEmbed(allSystems, "Systems").Mutate(x =>
 			x.WithTitle("Please select the system you want to disable [number]")
@@ -76,12 +83,15 @@ namespace sisbase.Commands {
 
 		[Command("reload")]
 		[Description("Reloads the SMC and registers any Systems that weren't registered")]
-		public async Task Reload(CommandContext ctx) {
+		public async Task Reload(CommandContext ctx)
+		{
 			var Data = SisbaseBot.Instance.Systems.Reload();
-			if (Data.Any(k => k.Value.Count > 0)) {
+			if (Data.Any(k => k.Value.Count > 0))
+			{
 				var Embed = EmbedBase.OutputEmbed("SMC Reloaded. ΔSystem Status:");
 
-				foreach (var kvp in Data) {
+				foreach (var kvp in Data)
+				{
 					var i1 = kvp.Value.Select(x => $"{(x.Value ? "✅" : "❌")} - `{x.Key}`").ToList();
 					string i0 = string.Join("\n", i1);
 					string i2 = kvp.Key.GetName().Name;
@@ -90,7 +100,8 @@ namespace sisbase.Commands {
 				}
 				await ctx.RespondAsync(embed: Embed);
 			}
-			else {
+			else
+			{
 				await ctx.RespondAsync(embed: EmbedBase.OutputEmbed("All Systems were already loaded. No new systems were registerd"));
 			}
 		}
@@ -101,16 +112,19 @@ namespace sisbase.Commands {
 	[Emoji(":wrench:")] // Sets the emoji for the group
 	[Group("config")]
 	[Description("This group configures the bot.")]
-	public class Config : BaseCommandModule {
+	public class Config : BaseCommandModule
+	{
 		[GroupCommand]
-		public async Task Command(CommandContext ctx) {
+		public async Task Command(CommandContext ctx)
+		{
 			var embed = EmbedBase.GroupHelpEmbed(ctx.Command);
 			await ctx.RespondAsync(embed: embed);
 		}
 
 		[Command("prefix")]
 		[Description("Changes the custom prefixes")]
-		public async Task PrefixError(CommandContext ctx) {
+		public async Task PrefixError(CommandContext ctx)
+		{
 			var embed = EmbedBase.CommandHelpEmbed(ctx.Command);
 			await ctx.RespondAsync(embed: embed);
 		}
@@ -118,16 +132,20 @@ namespace sisbase.Commands {
 		// Sample of a command that uses interactivity and sisbase to input/output text data.
 		[Command("prefix")]
 		public async Task PrefixSuccess(CommandContext ctx, [DSharpPlus.CommandsNext.Attributes.Description("The operation to be executed [add/list/del] ")]
-			string operation) {
-			switch (operation.ToLowerInvariant()) {
+			string operation)
+		{
+			switch (operation.ToLowerInvariant())
+			{
 				case "add":
 					var msg = await ctx.RespondAsync(embed: EmbedBase.InputEmbed("Prefix to be added"));
 					var response = await ctx.Message.GetNextMessageAsync();
 					string prefix = response.Result.Content;
-					if (SisbaseBot.Instance.SisbaseConfiguration.Config.Prefixes.Contains(prefix.ToLowerInvariant())) {
+					if (SisbaseBot.Instance.SisbaseConfiguration.Config.Prefixes.Contains(prefix.ToLowerInvariant()))
+					{
 						await msg.ModifyAsync(embed: EmbedBase.OutputEmbed($"This prefix is already added."));
 					}
-					else {
+					else
+					{
 						SisbaseBot.Instance.SisbaseConfiguration.Config.Prefixes.Add(prefix.ToLowerInvariant());
 						File.WriteAllText(SisbaseBot.Instance.SisbaseConfiguration.JsonPath,
 							JsonConvert.SerializeObject(SisbaseBot.Instance.SisbaseConfiguration.Config, Formatting.Indented));
@@ -140,10 +158,12 @@ namespace sisbase.Commands {
 					var msg2 = await ctx.RespondAsync(embed: EmbedBase.InputEmbed("Prefix to be removed"));
 					var response2 = await ctx.Message.GetNextMessageAsync();
 					string prefix2 = response2.Result.Content;
-					if (!SisbaseBot.Instance.SisbaseConfiguration.Config.Prefixes.Contains(prefix2.ToLowerInvariant())) {
+					if (!SisbaseBot.Instance.SisbaseConfiguration.Config.Prefixes.Contains(prefix2.ToLowerInvariant()))
+					{
 						await msg2.ModifyAsync(embed: EmbedBase.OutputEmbed($"This prefix doesn't exists."));
 					}
-					else {
+					else
+					{
 						SisbaseBot.Instance.SisbaseConfiguration.Config.Prefixes.Remove(prefix2.ToLowerInvariant());
 						File.WriteAllText(SisbaseBot.Instance.SisbaseConfiguration.JsonPath,
 							JsonConvert.SerializeObject(SisbaseBot.Instance.SisbaseConfiguration.Config, Formatting.Indented));

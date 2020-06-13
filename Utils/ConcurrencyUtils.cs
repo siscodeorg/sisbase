@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
 #nullable enable
-namespace sisbase.Utils {
-    public static class ConcurrencyUtils {
+namespace sisbase.Utils
+{
+    public static class ConcurrencyUtils
+    {
         /// <summary>
         /// Produce a new CancellationTokenSource that will become cancelled when either the timeout expires or the
         /// passed in token becomes cancelled. This function is intended for use to unify timeout and token based
@@ -25,7 +28,7 @@ namespace sisbase.Utils {
             linked.Token.Register(() => timeoutSource.Dispose());
             return linked;
         }
-
+        
         // The following two methods are shamelessly borrowed from kjbartel on StackExchange. 
         // https://stackoverflow.com/a/53393575
         /// <summary>
@@ -38,7 +41,8 @@ namespace sisbase.Utils {
         /// <param name="token">The cancellation token for the task.</param>
         /// <typeparam name="T">The return type of the wrapped and wrapper tasks.</typeparam>
         /// <returns>A wrapper task that will be cancelled according to token</returns>
-        internal static async Task<T> DetachOnCancel<T>(this Task<T> task, CancellationToken token) {
+        internal static async Task<T> DetachOnCancel<T>(this Task<T> task, CancellationToken token)
+        {
             token.ThrowIfCancellationRequested();
             await Task.WhenAny(task, token.WhenCanceled());
             token.ThrowIfCancellationRequested();
@@ -53,7 +57,8 @@ namespace sisbase.Utils {
         /// </summary>
         /// <param name="cancellationToken">The token to produce a Task from.</param>
         /// <returns>A task that will mirror the cancellation token.</returns>
-        internal static Task WhenCanceled(this CancellationToken cancellationToken) {
+        internal static Task WhenCanceled(this CancellationToken cancellationToken)
+        {
             var tcs = new TaskCompletionSource<bool>();
             cancellationToken.Register(s => ((TaskCompletionSource<bool>)s)!.SetResult(true), tcs);
             return tcs.Task;
