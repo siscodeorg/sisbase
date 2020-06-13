@@ -28,6 +28,7 @@ namespace sisbase.Configuration {
         [JsonProperty] public ulong MasterId { get; set; }
         [JsonProperty] public List<ulong> PuppetId { get; set; } = new List<ulong>();
         [JsonProperty] public List<string> Prefixes { get; set; } = new List<string>();
+        [JsonProperty] public bool EnableDspLogger { get; set; }
         [JsonProperty] internal Dictionary<string,object> CustomSettings { get; set; } = new Dictionary<string, object>();
         
     }

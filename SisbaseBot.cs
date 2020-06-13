@@ -85,7 +85,7 @@ namespace sisbase
 				{
 					AutoReconnect = true,
 					Token = SisbaseConfiguration.Data.Token,
-					UseInternalLogHandler = false
+					UseInternalLogHandler = SisbaseConfiguration.Data.EnableDspLogger
 				}
 			);
 			CommandsNext = Client.UseCommandsNext(
