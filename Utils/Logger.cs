@@ -13,7 +13,7 @@ namespace sisbase.Utils
 		private static void WriteDate()
 		{
 			stdout.ResetColor();
-			stdout.Write($"\n <{DateTime.Now:MM/dd - HH:mm:ss}> ");
+			stdout.Write($"<{DateTime.Now:MM/dd - HH:mm:ss}> ");
 		}
 
 		/// <summary>
@@ -28,7 +28,7 @@ namespace sisbase.Utils
 			stdout.ForegroundColor = s.IsVital() ? color.Yellow : color.Cyan;
 			stdout.Write($"{s.Name} ");
 			stdout.ForegroundColor = color.Cyan;
-			stdout.Write($"| {message} \t");
+			stdout.Write($"| {message} \n");
 			stdout.ResetColor();
 		}
 
@@ -42,7 +42,7 @@ namespace sisbase.Utils
 			WriteDate();
 			s.Status.Write();
 			stdout.ForegroundColor = color.Yellow;
-			stdout.Write($" {s.Name} | {message} \t");
+			stdout.Write($" {s.Name} | {message} \n");
 			stdout.ResetColor();
 		}
 
@@ -55,7 +55,7 @@ namespace sisbase.Utils
 		{
 			WriteDate();
 			stdout.ForegroundColor = color.Cyan;
-			stdout.Write($" {source} | {message} \t");
+			stdout.Write($" {source} | {message} \n");
 			stdout.ResetColor();
 		}
 
@@ -68,7 +68,7 @@ namespace sisbase.Utils
 		{
 			WriteDate();
 			stdout.ForegroundColor = color.Yellow;
-			stdout.Write($" {source} | {message} \t");
+			stdout.Write($" {source} | {message} \n");
 			stdout.ResetColor();
 		}
 
