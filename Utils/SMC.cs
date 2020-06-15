@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using DSharpPlus.CommandsNext;
 
 namespace sisbase.Utils
 {
@@ -80,6 +81,7 @@ namespace sisbase.Utils
 			SisbaseBot.Instance.CommandsNext.UnregisterCommands(SisbaseBot.Instance.CommandsNext.RegisteredCommands.Select(x => x.Value).ToArray());
 			//Re-registers the commands
 			RegisteredAssemblies.ForEach(x => SisbaseBot.Instance.CommandsNext.RegisterCommands(x));
+			DisableCommands();
 		}
 
 		internal bool Register(Type t)
@@ -150,7 +152,17 @@ namespace sisbase.Utils
 				return false;
 			}
 		}
-
+		internal static void DisableCommands() {
+			var commands = new List<Command>();
+			foreach (var command in SisbaseBot.Instance.CommandsNext.RegisteredCommands.Values) {
+				foreach (var attribute in command.ExecutionChecks) {
+					if (!(attribute is RequireSystemAttribute rsa)) continue;
+					if (rsa.System == null) commands.Add(command);
+				}
+			}
+			SisbaseBot.Instance.CommandsNext.UnregisterCommands(commands.ToArray());
+			Logger.Warn("SisbaseBot", $"The following commands : [{string.Join(",", commands.Select(x => x.Name))}] were unregistered because systems were disabled");
+		}
 		internal static Timer CreateNewTimer(TimeSpan timeout, Action action) =>
 			new Timer(new TimerCallback(x => action()), null, TimeSpan.FromSeconds(1), timeout);
 	}

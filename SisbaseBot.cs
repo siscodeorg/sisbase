@@ -3,10 +3,13 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
+using sisbase.Attributes;
 using sisbase.Configuration;
 using sisbase.Utils;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -64,8 +67,8 @@ namespace sisbase
 				throw new InvalidOperationException("Instance is already running");
 			Instance = this;
 			SisbaseConfiguration.Create(Directory.CreateDirectory(Directory.GetCurrentDirectory()));
-			CreateNewBot();
 			SystemCfg.Create(Directory.CreateDirectory(configDirectory));
+			CreateNewBot();
 		}
 
 		public SisbaseBot()
@@ -74,8 +77,8 @@ namespace sisbase
 				throw new InvalidOperationException("Instance is already running");
 			Instance = this;
 			SisbaseConfiguration.Create(Directory.CreateDirectory(Directory.GetCurrentDirectory()));
-			CreateNewBot();
 			SystemCfg.Create(Directory.CreateDirectory(Directory.GetCurrentDirectory()));
+			CreateNewBot();
 		}
 
 		internal void CreateNewBot()
@@ -149,8 +152,9 @@ namespace sisbase
 		/// </summary>
 		/// <param name="asm">The assembly</param>
 		public void RegisterBot(Assembly asm)
-		{ Systems.RegisterSystems(asm); CommandsNext.RegisterCommands(asm); }
+		{ Systems.RegisterSystems(asm); CommandsNext.RegisterCommands(asm); SMC.DisableCommands();}
 
+		
 #pragma warning restore CS1998
 		/// <summary>
 		/// Starts the bot instance
