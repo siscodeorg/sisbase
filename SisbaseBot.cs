@@ -108,6 +108,12 @@ namespace sisbase
 			Systems = new SMC();
 			Systems.RegisterSystems(typeof(SisbaseBot).Assembly);
 			CommandsNext.RegisterCommands(typeof(SisbaseBot).Assembly);
+            if (!SisbaseConfiguration.Data.GroupSettings["config"])
+				CommandsNext.UnregisterCommands(CommandsNext.RegisteredCommands["config"] as CommandGroup);
+			if (!SisbaseConfiguration.Data.GroupSettings["system"])
+				CommandsNext.UnregisterCommands(CommandsNext.RegisteredCommands["system"] as CommandGroup);
+			if (!SisbaseConfiguration.Data.EnableSisbaseHelp)
+				CommandsNext.UnregisterCommands(CommandsNext.RegisteredCommands["help"]);
 		}
 
 		/// <summary>

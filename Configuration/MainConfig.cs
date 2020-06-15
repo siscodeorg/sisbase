@@ -18,6 +18,8 @@ namespace sisbase.Configuration {
             }
             else {
                 Data = General.TUI_cfg();
+                Data.GroupSettings["config"] = true;
+                Data.GroupSettings["system"] = true;
                 Update();
             }
         }
@@ -28,7 +30,8 @@ namespace sisbase.Configuration {
         [JsonProperty] public ulong MasterId { get; set; }
         [JsonProperty] public List<ulong> PuppetId { get; set; } = new List<ulong>();
         [JsonProperty] public List<string> Prefixes { get; set; } = new List<string>();
+        [JsonProperty] public bool EnableSisbaseHelp { get; set; } = true;
+        [JsonProperty] public Dictionary<string, bool> GroupSettings { get; set; } = new Dictionary<string, bool>();
         [JsonProperty] internal Dictionary<string,object> CustomSettings { get; set; } = new Dictionary<string, object>();
-        
     }
 }
