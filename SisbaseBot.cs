@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using DSharpPlus.EventArgs;
+using sisbase.EventArgs;
 
 namespace sisbase
 {
@@ -59,6 +60,11 @@ namespace sisbase
 		/// Constructs a new <see cref="SisbaseBot"/> from a given configuration
 		/// </summary>
 		/// <param name="configDirectory">The directory used to store the configuration.</param>
+		internal AsyncEvent<AsyncLogMessageEventArgs> _logMessage;
+		public event AsyncEventHandler<AsyncLogMessageEventArgs> LogMessage {
+			add => _logMessage.Register(value);
+			remove => _logMessage.Unregister(value);
+		}
 		public SisbaseBot(string configDirectory)
 		{
 			if (Instance != null)
