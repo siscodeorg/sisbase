@@ -59,6 +59,7 @@ namespace sisbase.Utils
 			{
 				if (command is CommandGroup group)
 				{
+					if (groups.Contains(group)) continue;
 					if ((await group.RunChecksAsync(ctx, true)).Count() > 0) continue;
 					if (group.IsHidden && !showHidden) continue;
 					groups.Add(group);
