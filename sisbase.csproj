@@ -12,11 +12,11 @@
         <Copyright>© siscode , All Rights Registered, 2020</Copyright>
         <NeutralLanguage>en</NeutralLanguage>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <AssemblyVersion>1.3.1.0</AssemblyVersion>
-        <FileVersion>1.3.1.0</FileVersion>
-        <Version>1.3.1</Version>
-        <RepositoryUrl>https://gitlab.com/siscode/sisbase/</RepositoryUrl>
-        <PackageProjectUrl>https://gitlab.com/siscode/sisbase/-/</PackageProjectUrl>
+        <AssemblyVersion>1.3.2.0</AssemblyVersion>
+        <FileVersion>1.3.2.0</FileVersion>
+        <Version>1.3.2</Version>
+        <RepositoryUrl>https://github.com/siscodeorg/sisbase</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/siscodeorg/sisbase</PackageProjectUrl>
         <PackageIcon>sisbase.png</PackageIcon>
     </PropertyGroup>
 
