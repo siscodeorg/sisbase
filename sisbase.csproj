@@ -16,6 +16,7 @@
         <FileVersion>2.0.0.0</FileVersion>
 		<VersionPrefix>2.0.0.0</VersionPrefix>
         <RepositoryUrl>https://github.com/siscodeorg/sisbase</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
         <PackageProjectUrl>https://github.com/siscodeorg/sisbase</PackageProjectUrl>
         <PackageIcon>sisbase.png</PackageIcon>
     </PropertyGroup>
