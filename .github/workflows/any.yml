@@ -1,0 +1,22 @@
+name: any
+on:
+  [push,pull_request]
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Download latest NuGet (cross-platform)
+      uses: NuGet/setup-nuget@v1.0.2
+    - name: Add DsharpPlus
+      run: nuget sources add -name DSharpPlus -source https://nuget.emzi0767.com/api/v3/index.json
+    - name: Install dependencies
+      run: nuget restore
+    - name: Build & Pack
+      run: nuget pack -Version 2.0.0 -Suffix alpha-$BUILD_NUMBER -Build -Prop Configuration=Release

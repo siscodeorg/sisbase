@@ -1,0 +1,37 @@
+name: stable
+on:
+  push:
+    branches: [ stable ]
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    if: github.repository == 'siscodeorg/sisbase'
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Generate build number
+      id: buildnumber
+      uses: einaregilsson/build-number@v2
+      with:
+        token: ${{secrets.github_token}}
+        prefix: stable
+    - name : Print build number
+      run: echo "Build number is 2.0.0-preview-$BUILD_NUMBER"
+    - name: Download latest NuGet (cross-platform)
+      uses: NuGet/setup-nuget@v1.0.2
+    - name: Add DsharpPlus Source
+      run: nuget sources add -name DSharpPlus -source https://nuget.emzi0767.com/api/v3/index.json
+    - name: Add Github Packages
+      run: nuget sources add -name github -source "https://nuget.pkg.github.com/siscodeorg/index.json" -Username siscodeorg -Password ${{secrets.github_token}}
+    - name: Install dependencies
+      run: nuget restore
+    - name: Build
+      run: dotnet build ./sisbase.csproj --configuration Release
+    - name: Pack
+      run: dotnet pack ./sisbase.csproj --configuration Release --version-suffix preview-$BUILD_NUMBER
+    - name: Push Nupkg to GitHub Packages
+      run: nuget push "bin/Release/*-preview-*.nupkg" -Source "github" -SkipDuplicate
