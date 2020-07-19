@@ -7,6 +7,7 @@ using sisbase.Utils;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace sisbase.Systems
 {
@@ -28,7 +29,7 @@ namespace sisbase.Systems
 			Status = true;
 		}
 
-		public void ApplyToClient(DiscordClient client) => client.GuildDownloadCompleted += async delegate (GuildDownloadCompletedEventArgs args)
+		public async Task ApplyToClient(DiscordClient client) => client.GuildDownloadCompleted += async delegate (GuildDownloadCompletedEventArgs args)
 		{
 			if (SisbaseBot.Instance.SisbaseConfiguration.Data.MasterId == 0)
 			{
