@@ -15,11 +15,22 @@ namespace sisbase.Configuration {
             Path = $"{di.FullName}/Config.json";
             if (File.Exists(Path)) {
                 Data = JsonConvert.DeserializeObject<MainConfig>(File.ReadAllText(Path)).Data;
+                Data ??= UpdateLegacyConfig();
             }
             else {
                 Data = General.TUI_cfg();
                 Update();
             }
+        }
+        internal MainConfigData UpdateLegacyConfig() {
+            Data = JsonConvert.DeserializeObject<MainConfigData>(File.ReadAllText(Path));
+            if (Data != null) {
+                Update();
+                Logger.Log("sisbase", "config.json updated to latest version.");
+                return Data;
+            }
+            Logger.Warn("ERROR", "Couldn't update config.json!");
+            return null;
         }
     }
 
@@ -29,6 +40,5 @@ namespace sisbase.Configuration {
         [JsonProperty] public List<ulong> PuppetId { get; set; } = new List<ulong>();
         [JsonProperty] public List<string> Prefixes { get; set; } = new List<string>();
         [JsonProperty] internal Dictionary<string,object> CustomSettings { get; set; } = new Dictionary<string, object>();
-        
     }
 }
