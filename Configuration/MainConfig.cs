@@ -1,18 +1,20 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
+using Newtonsoft.Json.Schema.Generation;
+using sisbase.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using sisbase.Utils;
 
 namespace sisbase.Configuration {
     public class MainConfig : IConfiguration {
         public string Path { get; set; }
         [JsonProperty] internal int ConfigVersion { get; set; } = 2;
-        public MainConfigData Data { get; set; }
+
+        public MainConfigData Data { get; private set; }
         public void Update() {
-            File.WriteAllText(Path,JsonConvert.SerializeObject(this,Formatting.Indented));
+            File.WriteAllText(Path, JsonConvert.SerializeObject(this, Formatting.Indented));
         }
 
         public void Create(DirectoryInfo di) {
@@ -24,6 +26,13 @@ namespace sisbase.Configuration {
                         UpdateLegacyFormats(jtoken);
                     }
                     else {
+                        if (!jtoken.IsValid(SchemaUtils.For<MainConfig>(), out IList<string> errors)) {
+                            Logger.Warn("sisbase", $"The provided config file is invalid!");
+                            LogSchemaErrors(errors);
+                            Logger.Warn("sisbase", $"Bot config was set to default values. Old config available on {Path}.backup");
+                            File.WriteAllText($"{Path}.backup", JsonConvert.SerializeObject(jtoken, Formatting.Indented));
+                            ResetAndExit();
+                        }
                         Data = jtoken["Data"].ToObject<MainConfigData>();
                     }
                 }
@@ -33,11 +42,7 @@ namespace sisbase.Configuration {
                     if (File.Exists($"{Path}.err"))
                         File.Delete($"{Path}.err");
                     File.Move(Path, $"{Path}.err");
-                    Data = new MainConfigData();
-                    Update();
-                    Logger.Warn("sisbase", $"Bot config was set to default values. Old config available on {Path}.err");
-                    Logger.Log("sisbase", $"Bot will now exit. Please edit the config @ {Path}");
-                    Environment.Exit(-1);
+                    ResetAndExit();
                 }
             }
             else {
@@ -50,15 +55,29 @@ namespace sisbase.Configuration {
             File.WriteAllText($"{Path}.backup",JsonConvert.SerializeObject(config,Formatting.Indented));
             if (config["ConfigVersion"] == null) { //First config. (sisbase 1.0)
                 Logger.Log("sisbase", "ConfigVersion [Unknown] -> 2");
-                dynamic ndat = config.ToObject<MainConfigData>();
-                if (ndat == default(MainConfigData)) {
+                if (!config.IsValid(SchemaUtils.For<MainConfigData>(), out IList<string> errors)) {
                     Logger.Warn("sisbase", $"Couldn't convert Config.json to Version 2");
-                    Data = new MainConfigData();
-                }else {
-                    Data = ndat;
+                    LogSchemaErrors(errors);
+                    Logger.Warn("sisbase", $"Bot config was set to default values. Old config available on {Path}.backup");
+                    ResetAndExit();
+                }
+                else {
+                    Data = config.ToObject<MainConfigData>();
                 }
                 Update();
             }
+        }
+        internal void LogSchemaErrors(IList<string> errors) {
+            Logger.Warn("sisbase", $"Details :");
+            foreach (var error in errors) {
+                Logger.Warn("sisbase", $"    - {error}");
+            }
+        }
+        internal void ResetAndExit() {
+            Data = new MainConfigData();
+            Update();
+            Logger.Log("sisbase", $"Bot will now exit. Please edit the config @ {Path}");
+            Environment.Exit(-1);
         }
         internal bool IsLegacy(JToken config) =>
             config["ConfigVersion"] == null || config["ConfigVersion"].ToObject<int>() < 2;
