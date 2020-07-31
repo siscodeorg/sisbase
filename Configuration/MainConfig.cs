@@ -26,28 +26,35 @@ namespace sisbase.Configuration {
                         UpdateLegacyFormats(jtoken);
                     }
                     else {
-                        if (!jtoken.IsValid(SchemaUtils.For<MainConfig>(), out IList<string> errors)) {
-                            Logger.Warn("sisbase", $"The provided config file is invalid!");
-                            LogSchemaErrors(errors);
-                            Logger.Warn("sisbase", $"Bot config was set to default values. Old config available on {Path}.backup");
-                            File.WriteAllText($"{Path}.backup", JsonConvert.SerializeObject(jtoken, Formatting.Indented));
-                            ResetAndExit();
-                        }
-                        Data = jtoken["Data"].ToObject<MainConfigData>();
+                        CheckSchemaErrors(jtoken);
+                        Data = jtoken["Data"]!.ToObject<MainConfigData>();
                     }
-                }
-                catch (JsonException ex) {
-                    Logger.Warn("sisbase", "The provided config file is malformed!");
-                    Logger.Warn("sisbase", $"Details :\n    {ex.Message}");
-                    if (File.Exists($"{Path}.err"))
-                        File.Delete($"{Path}.err");
-                    File.Move(Path, $"{Path}.err");
-                    ResetAndExit();
+                } catch (JsonException ex) {
+                    HandleJsonParseError(ex);
                 }
             }
             else {
                 Data = General.TUI_cfg();
                 Update();
+            }
+        }
+
+        private void HandleJsonParseError(JsonException ex) {
+            Logger.Warn("sisbase", "The provided config file is malformed!");
+            Logger.Warn("sisbase", $"Details :\n    {ex.Message}");
+            if (File.Exists($"{Path}.err"))
+                File.Delete($"{Path}.err");
+            File.Move(Path, $"{Path}.err");
+            ResetAndExit();
+        }
+
+        private void CheckSchemaErrors(JToken jtoken) {
+            if (!jtoken.IsValid(SchemaUtils.For<MainConfig>(), out IList<string> errors)) {
+                Logger.Warn("sisbase", $"The provided config file is invalid!");
+                LogSchemaErrors(errors);
+                Logger.Warn("sisbase", $"Bot config was set to default values. Old config available on {Path}.backup");
+                File.WriteAllText($"{Path}.backup", JsonConvert.SerializeObject(jtoken, Formatting.Indented));
+                ResetAndExit();
             }
         }
         internal void UpdateLegacyFormats(JToken config) {
