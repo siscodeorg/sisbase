@@ -55,10 +55,11 @@ namespace sisbase.Configuration {
                 ResetAndExit();
             }
         }
+
         internal void UpdateLegacyFormats(JToken config) {
             Logger.Log("sisbase", "Outdated Config.json format. Updating process has begun.");
-            File.WriteAllText($"{Path}.backup",JsonConvert.SerializeObject(config,Formatting.Indented));
-            if (config["ConfigVersion"] == null) { //First config. (sisbase 1.0)
+            File.WriteAllText($"{Path}.backup", JsonConvert.SerializeObject(config, Formatting.Indented));
+            if (config["ConfigVersion"] == null) {  //First config. (sisbase 1.0)
                 Logger.Log("sisbase", "ConfigVersion [Unknown] -> 2");
                 if (!config.IsValid(SchemaUtils.For<MainConfigData>(), out IList<string> errors)) {
                     Logger.Warn("sisbase", $"Couldn't convert Config.json to Version 2");
@@ -75,18 +76,21 @@ namespace sisbase.Configuration {
                 ResetAndExit();
             }
         }
+
         internal void LogSchemaErrors(IList<string> errors) {
             Logger.Warn("sisbase", $"Details :");
             foreach (var error in errors) {
                 Logger.Warn("sisbase", $"    - {error}");
             }
         }
+
         internal void ResetAndExit() {
             Data = new MainConfigData();
             Update();
             Logger.Log("sisbase", $"Bot will now exit. Please edit the config @ {Path}");
             Environment.Exit(-1);
         }
+
         internal bool IsLegacy(JToken config) =>
             config["ConfigVersion"] == null || config["ConfigVersion"].ToObject<int>() < 2;
     }
