@@ -70,6 +70,9 @@ namespace sisbase.Configuration {
                     Data = config.ToObject<MainConfigData>();
                 }
                 Update();
+            } else {
+                Logger.Warn("sisbase", "Could not determine legacy config version");
+                ResetAndExit();
             }
         }
         internal void LogSchemaErrors(IList<string> errors) {
