@@ -7,15 +7,15 @@ using System.Text;
 
 namespace sisbase.Attributes
 {
-	[AttributeUsage(AttributeTargets.Class)]
-	public class VitalAttribute : Attribute
-	{
+    [AttributeUsage(AttributeTargets.Class)]
+    public class VitalAttribute : Attribute
+    {
 
-	}
+    }
 
-	public static class VitalExtensions
-	{
-		public static bool IsVital(this ISystem t)
-		 => t.GetType().GetCustomAttribute<VitalAttribute>() != null;
-	}
+    public static class VitalExtensions
+    {
+        public static bool IsVital(this ISystem t)
+         => t.GetType().GetCustomAttribute<VitalAttribute>() != null;
+    }
 }
