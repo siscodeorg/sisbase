@@ -19,23 +19,21 @@ namespace sisbase.Configuration {
 
         public void Create(DirectoryInfo di) {
             Path = $"{di.FullName}/Config.json";
-            if (File.Exists(Path)) {
-                try {
-                    var jtoken = JsonConvert.DeserializeObject<JToken>(File.ReadAllText(Path));
-                    if (IsLegacy(jtoken)) {
-                        UpdateLegacyFormats(jtoken);
-                    }
-                    else {
-                        CheckSchemaErrors(jtoken);
-                        Data = jtoken["Data"]!.ToObject<MainConfigData>();
-                    }
-                } catch (JsonException ex) {
-                    HandleJsonParseError(ex);
-                }
-            }
-            else {
+            if (!File.Exists(Path)) {
                 Data = General.TUI_cfg();
                 Update();
+                return;
+            }
+            try {
+                var jtoken = JsonConvert.DeserializeObject<JToken>(File.ReadAllText(Path));
+                if (IsLegacy(jtoken)) {
+                    UpdateLegacyFormats(jtoken);
+                } else {
+                    CheckSchemaErrors(jtoken);
+                    Data = jtoken["Data"]!.ToObject<MainConfigData>();
+                }
+            } catch (JsonException ex) {
+                HandleJsonParseError(ex);
             }
         }
 
