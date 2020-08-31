@@ -153,7 +153,7 @@ namespace sisbase.Utils
 		/// <returns></returns>
 		public static DiscordEmbed ListEmbed<T>(List<T> list, string name)
 		{
-			string data = list.Aggregate("", (current, item) => current + $"・{item.ToString()}\n");
+			string data = string.Join("\n", list);
 			var listBuilder = new DiscordEmbedBuilder();
 			listBuilder
 				.WithAuthor($"List of : {name}")
