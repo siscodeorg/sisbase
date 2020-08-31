@@ -50,7 +50,7 @@ namespace sisbase.Commands
 		[GroupCommand]
 		public async Task Command(CommandContext ctx)
 		{
-			var embed = EmbedBase.GroupHelpEmbed(ctx.Command);
+			var embed = EmbedBase.GroupHelpEmbed(ctx.Command as CommandGroup);
 			await ctx.RespondAsync(embed: embed);
 		}
 
@@ -128,7 +128,7 @@ namespace sisbase.Commands
 		[GroupCommand]
 		public async Task Command(CommandContext ctx)
 		{
-			var embed = EmbedBase.GroupHelpEmbed(ctx.Command);
+			var embed = EmbedBase.GroupHelpEmbed(ctx.Command as CommandGroup);
 			await ctx.RespondAsync(embed: embed);
 		}
 

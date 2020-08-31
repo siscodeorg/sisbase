@@ -73,6 +73,6 @@ namespace sisbase.Test.Commands
 	public class stub : BaseCommandModule
 	{
 		[GroupCommand()]
-		public async Task stubCmd(CommandContext ctx) => await ctx.RespondAsync(embed: EmbedBase.GroupHelpEmbed(ctx.Command));
+		public async Task stubCmd(CommandContext ctx) => await ctx.RespondAsync(embed: EmbedBase.GroupHelpEmbed(ctx.Command as CommandGroup));
 	}
 }

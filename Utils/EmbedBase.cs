@@ -20,27 +20,18 @@ namespace sisbase.Utils
 		/// </summary>
 		/// <param name="Command"></param>
 		/// <returns></returns>
-		public static DiscordEmbed GroupHelpEmbed(Command Command)
+		public static DiscordEmbed GroupHelpEmbed(CommandGroup group)
 		{
-			var commands = new List<Command>();
-			CommandGroup cG = null;
-			if (Command is CommandGroup cGroup)
-			{
-				commands = cGroup.Children.ToList();
-				cG = cGroup;
-			}
-			string commandList = "";
-			foreach (var command in commands)
-			{
-				commandList += $"{command.Name} - {command.Description}\n";
-			}
+			var formattedChilren = group.Children.Distinct().Select(x => $"{x.Name} - {x.Description}");
 			var groupHelpEmbed = new DiscordEmbedBuilder();
 			groupHelpEmbed
 				.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
-				.WithDescription(cG?.Description)
-				.AddField("Commands", string.IsNullOrWhiteSpace(commandList) ? "No sub-commands found" : commandList)
-				.WithAuthor($"Group : {cG?.Name} | Help")
+				.WithDescription(group.Description)
+				.WithAuthor($"Group : {group.Name} | Help")
 				.WithColor(DiscordColor.Gray);
+            if (formattedChilren.Any()) {
+				groupHelpEmbed.AddField("Sub-commands", string.Join("\n", formattedChilren));
+            }
 			return groupHelpEmbed.Build();
 		}
 
