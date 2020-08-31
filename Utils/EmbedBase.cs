@@ -151,7 +151,7 @@ namespace sisbase.Utils
 		/// <param name="list">The list</param>
 		/// <param name="name">Name that will be displayed on the embed.</param>
 		/// <returns></returns>
-		public static DiscordEmbed ListEmbed<T>(IEnumerable<T> list, string name)
+		public static DiscordEmbed ListEmbed<T>(List<T> list, string name)
 		{
 			string data = list.Aggregate("", (current, item) => current + $"・{item.ToString()}\n");
 			var listBuilder = new DiscordEmbedBuilder();
