@@ -129,12 +129,8 @@ namespace sisbase.Utils
 		public static DiscordEmbed OrderedListEmbed<T>(List<T> list, string name,
 			CountingBehaviour behaviour = CountingBehaviour.Default)
 		{
-			string data = "";
-			foreach (var item in list)
-			{
-				if (behaviour == CountingBehaviour.Ordinal) data += $"{list.IndexOf(item) + 1}・{item.ToString()}\n";
-				else data += $"{list.IndexOf(item)}・{item.ToString()}\n";
-			}
+			var listData = list.Select(x => $"{GetNumber(list.IndexOf(x),behaviour)}・{x}");
+			string data = string.Join("\n",listData);
 			var orderedListBuilder = new DiscordEmbedBuilder();
 			orderedListBuilder
 				.WithAuthor($"List of : {name}")
@@ -144,14 +140,21 @@ namespace sisbase.Utils
 			return orderedListBuilder.Build();
 		}
 
-		/// <summary>
-		/// Generates a new <see cref="DiscordEmbed"/> with all the items on that list
-		/// </summary>
-		/// <typeparam name="T">The type of said list</typeparam>
-		/// <param name="list">The list</param>
-		/// <param name="name">Name that will be displayed on the embed.</param>
-		/// <returns></returns>
-		public static DiscordEmbed ListEmbed<T>(List<T> list, string name)
+        internal static int GetNumber(int num, CountingBehaviour behaviour) => behaviour switch
+        {
+            CountingBehaviour.Ordinal => num + 1,
+            CountingBehaviour.Default => num,
+            _ => num
+        };
+
+        /// <summary>
+        /// Generates a new <see cref="DiscordEmbed"/> with all the items on that list
+        /// </summary>
+        /// <typeparam name="T">The type of said list</typeparam>
+        /// <param name="list">The list</param>
+        /// <param name="name">Name that will be displayed on the embed.</param>
+        /// <returns></returns>
+        public static DiscordEmbed ListEmbed<T>(List<T> list, string name)
 		{
 			string data = string.Join("\n", list);
 			var listBuilder = new DiscordEmbedBuilder();
