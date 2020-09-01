@@ -171,50 +171,30 @@ namespace sisbase.Utils
 		/// </summary>
 		/// <param name="command">The command</param>
 		/// <returns></returns>
-		public static DiscordEmbed CommandHelpEmbed(Command command)
-		{
-			if (command.Overloads?.Any() == true)
-			{
-				string use = "";
-				var o = command.Overloads.ToList();
-				var arguments = new List<CommandArgument>();
-				o.RemoveAll(x => x.Arguments.Count == 0);
-				foreach (var overload in o)
-				{
-					string inner = "";
-					var args = overload.Arguments.ToList();
-					foreach (var argument in args)
-					{
-						if (!arguments.Contains(argument))
-						{
-							arguments.Add(argument);
-						}
-						inner += $"`{argument.Name}` ";
-					}
-					use += $"[{command.Name} {inner}] ";
-				}
+		public static DiscordEmbed CommandHelpEmbed(Command command) {
+			var overloads = command.Overloads;
+			var usages = overloads?.Select(overload => overload.GetUsageString(command));
+			var arguments = overloads?.SelectMany(x => x.Arguments)
+				.Distinct()
+				.Select(x => $"`{x.Name}` - **{x.Description}**");
+			var embed = new DiscordEmbedBuilder()
+				.WithAuthor($"Command : {command.Name} | Help")
+				.WithDescription($"Usage : {string.Join(" ", usages)}")
+				.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
+				.WithColor(DiscordColor.Gray);
+			if (arguments.Any())
+				embed.AddField("Arguments", string.Join("\n", arguments));
+			return embed.Build();
+		}
 
-				string argumentExplanation = "";
-				arguments.ForEach(x => argumentExplanation += $"{x.Name} - {x.Description}\n");
-				var commandHelpEmbed = new DiscordEmbedBuilder();
-				commandHelpEmbed
-					.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
-					.AddField("Arguments", argumentExplanation)
-					.WithDescription($"Use : {use}")
-					.WithAuthor($"Command : {command.Name} | Help")
-					.WithColor(DiscordColor.Gray);
-				return commandHelpEmbed.Build();
-			}
-			else
-			{
-				var commandHelpEmbed = new DiscordEmbedBuilder();
-				commandHelpEmbed
-					.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
-					.WithDescription("This command is a stub and was not implemented yet.")
-					.WithAuthor($"Command : {command.Name} | Help")
-					.WithColor(DiscordColor.Gray);
-				return commandHelpEmbed.Build();
-			}
+		internal static string FormatCommandArgs(this IReadOnlyList<CommandArgument> args) {
+			if (!args.Any()) return string.Empty;
+			return string.Join(" ", args.Select(arg => $"`{arg.Name}`"));
+		}
+
+		internal static string GetUsageString(this CommandOverload overload, Command c) {
+			if (overload.Arguments.FormatCommandArgs() == string.Empty) return $"[{c.Name}]";
+			return $"[{c.Name} {FormatCommandArgs(overload.Arguments)}]";
 		}
 
 		/// <summary>
