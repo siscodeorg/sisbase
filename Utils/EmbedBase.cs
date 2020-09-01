@@ -7,12 +7,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using static sisbase.Utils.Behaviours;
 
-namespace sisbase.Utils
-{
-	/// <summary>
-	/// Utility for generating consistant embeds
-	/// </summary>
-	public static class EmbedBase
+namespace sisbase.Utils {
+    /// <summary>
+    /// Utility for generating consistant embeds
+    /// </summary>
+    public static class EmbedBase
 	{
 		/// <summary>
 		/// Generates a new group help embed from an specified command <br></br> The comand must be
@@ -44,46 +43,62 @@ namespace sisbase.Utils
 		/// <returns></returns>
 		public static async Task<DiscordEmbed> HelpEmbed(this CommandsNextExtension cne, CommandContext ctx, bool showHidden = false)
 		{
-			var RegisteredCommands = cne.RegisteredCommands.Values.ToList();
-			var groups = new List<CommandGroup>();
-			foreach (var command in RegisteredCommands)
-			{
-				if (command is CommandGroup group)
-				{
-					if (groups.Contains(group)) continue;
-					if ((await group.RunChecksAsync(ctx, true)).Count() > 0) continue;
-					if (group.IsHidden && !showHidden) continue;
-					groups.Add(group);
-				}
-			}
 			var helpBuilder = new DiscordEmbedBuilder();
 			var unk = DiscordEmoji.FromName(SisbaseBot.Instance.Client, ":grey_question:");
-			foreach (var commandGroup in groups)
+			foreach (var group in await cne.GetAllowedGroupsAsync(ctx, showHidden))
 			{
-				var children = commandGroup.Children.ToList();
-				commandGroup.Children.ToList().ForEach(x => RegisteredCommands.Remove(x));
-				RegisteredCommands.Remove(commandGroup);
-				var attributes = commandGroup.CustomAttributes.ToList();
-				bool HasEmoji = attributes.Any(x => x is EmojiAttribute);
-				var emoji = HasEmoji ? ((EmojiAttribute)attributes.Where(x => x is EmojiAttribute).First()).Emoji : unk;
-				helpBuilder.AddField($"{emoji} ・ {commandGroup.Name}", !string.IsNullOrWhiteSpace(commandGroup.Description) ? commandGroup.Description : $"{commandGroup.Name} - STUB : Doesn't have a description.");
+				helpBuilder.AddField($"{group.GetGroupEmoji(unk)} ・ {group.Name}", group.GetGroupDescription());
 			}
-
-			string misc = "";
-			foreach (var command in RegisteredCommands)
-			{
-				if ((await command.RunChecksAsync(ctx, true)).Count() > 0) continue;
-				if (command.IsHidden && !showHidden) continue;
-				misc += $"`{command.Name}` ";
-			}
-
-			helpBuilder.AddField("❓ ・ Miscellaneous ", misc);
+			var topLevel = await cne.GetAllowedTopLevelCommandsAsync(ctx, showHidden);
+			var remainingCommands = topLevel.Select(x => $"`{x.Name}`");
+			if(remainingCommands.Any()) helpBuilder.AddField("❓ ・ Miscellaneous ", string.Join(" ", remainingCommands));
 			helpBuilder
 				.WithDescription($"To see help for a group run {SisbaseBot.Instance.Client.CurrentUser.Mention} `group name`")
 				.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
 				.WithAuthor("Help | Showing all groups")
 				.WithColor(DiscordColor.CornflowerBlue);
 			return helpBuilder.Build();
+		}
+
+		internal static async Task<List<Command>> GetAllowedTopLevelCommandsAsync(this CommandsNextExtension cne, CommandContext ctx, bool hidden) {
+			var commands = cne.RegisteredCommands.Values.ToList().Distinct();
+			var allowedCommands = new List<Command>();
+			foreach (var command in commands.Distinct()) {
+				if (await command.CheckAsync(ctx, hidden))
+					allowedCommands.Add(command);
+			}
+			return allowedCommands.Where(x => !(x is CommandGroup)).ToList();
+		}
+
+		internal static async Task<List<CommandGroup>> GetAllowedGroupsAsync(this CommandsNextExtension cne, CommandContext ctx, bool hidden) {
+			var groups = cne.RegisteredCommands.Values.ToList().OfType<CommandGroup>().Distinct();
+			var allowedGroups = new List<CommandGroup>();
+			foreach (var group in groups) {
+				if (await group.CheckAsync(ctx, hidden))
+					allowedGroups.Add(group);
+			}
+			return allowedGroups;
+		}
+
+		internal static string GetGroupDescription(this CommandGroup group) {
+            if (string.IsNullOrWhiteSpace(group.Description)) {
+				return $"{group.Name} - STUB : Doesn't have a description.";
+            }
+			return group.Description;
+        }
+
+		internal static DiscordEmoji GetGroupEmoji(this CommandGroup group, DiscordEmoji @default) {
+			var query = group.CustomAttributes.FirstOrDefault(x => x is EmojiAttribute);
+			if (query == default) {
+				return @default;
+            }
+			return ((EmojiAttribute)query).Emoji;
+        }
+
+		internal static async Task<bool> CheckAsync(this Command command, CommandContext ctx, bool hidden) {
+			if ((await command.RunChecksAsync(ctx, true)).Count() > 0) return false;
+			if (command.IsHidden && !hidden) return false;
+			return true;
 		}
 
 		/// <summary>
