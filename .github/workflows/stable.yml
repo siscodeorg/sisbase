@@ -35,3 +35,23 @@ jobs:
       run: dotnet pack ./sisbase.csproj --configuration Release --version-suffix preview-$BUILD_NUMBER
     - name: Push Nupkg to GitHub Packages
       run: nuget push "bin/Release/*-preview-*.nupkg" -Source "github" -SkipDuplicate
+  docfx:
+    runs-on: ubuntu-latest
+    if: github.repository == 'siscodeorg/sisbase'
+    steps:
+    - uses: actions/checkout@v2
+    - name: fetch
+      run: git fetch origin
+    - name: switch branch to temporary branch
+      run: git switch -c temp
+    - name: reset branch to stable
+      run: git reset --hard origin/stable
+    - uses: nikeee/docfx-action@v1.0.0
+      name: Build Documentation
+      with:
+        args: Documentation/docfx.json
+    - uses: maxheld83/ghpages@master
+      name: Publish docs on gh-pages
+      env:
+        BUILD_DIR: Documentation/_site
+        GH_PAT: ${{ secrets.GH_PAT }}
