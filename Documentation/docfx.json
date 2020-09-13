@@ -63,6 +63,9 @@
     "noLangKeyword": false,
     "keepFileLink": false,
     "cleanupCacheHistory": false,
-    "disableGitFeatures": false
+    "disableGitFeatures": false,
+	"xref":[
+		"https://dsharpplus.github.io/xrefmap.yml"
+	]
   }
 }
