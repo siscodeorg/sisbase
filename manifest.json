@@ -1,0 +1,641 @@
+{
+  "homepages": [],
+  "source_base_path": "/github/workspace/Documentation",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html",
+          "hash": "AusYvOEeutoEW9vy6ivXNw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Attributes.EmojiAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Attributes.EmojiAttribute.html",
+          "hash": "RZzCFHKE3vWyG9xxHdJKPg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Attributes.ImoutoAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Attributes.ImoutoAttribute.html",
+          "hash": "56C4e+3lglWMtzKuaYmDUw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Attributes.OniiSanAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Attributes.OniiSanAttribute.html",
+          "hash": "Ral/8ngdvgyoEibAxhWLsQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Attributes.PrefixAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Attributes.PrefixAttribute.html",
+          "hash": "vj+9S+Ob68qgVMvpGdw4qA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Attributes.RequireSystemAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Attributes.RequireSystemAttribute.html",
+          "hash": "YOtBu9HbaC5OKhKyArlOvQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Attributes.VitalAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Attributes.VitalAttribute.html",
+          "hash": "SF+O4USoGfjWYW8AGq44mw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Attributes.VitalExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Attributes.VitalExtensions.html",
+          "hash": "f6KTQqy4YxokTrkRsTwsYQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Attributes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Attributes.html",
+          "hash": "owCBazQnfGVQ1FihD0vgXA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Commands.Config.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Commands.Config.html",
+          "hash": "oolz+PhW+yUE51QPtO72cg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Commands.Developer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Commands.Developer.html",
+          "hash": "fQolJT2YfkUlUmkOUaxExw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Commands.Help.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Commands.Help.html",
+          "hash": "CMhSq8giG3yrMzKzCybEAQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Commands.System.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Commands.System.html",
+          "hash": "uPysjnmLaPLQcFBPWPAV4w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Commands.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Commands.html",
+          "hash": "V2N6aG6Polsoyw6qrVAUUQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Configuration.IConfiguration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Configuration.IConfiguration.html",
+          "hash": "H9HEiIj70rSmuhV7K9UUEw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Configuration.MainConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Configuration.MainConfig.html",
+          "hash": "s3xEk3bLvTmtY2lUWBjbEA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Configuration.MainConfigData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Configuration.MainConfigData.html",
+          "hash": "VmFIg8sDElsKREvTNh643Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Configuration.SystemConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Configuration.SystemConfig.html",
+          "hash": "nv5uFfIwb+EWWG6h2LDfOA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Configuration.SystemConfigData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Configuration.SystemConfigData.html",
+          "hash": "+5YABhG4IisAwUyUmewQig=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Configuration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Configuration.html",
+          "hash": "bADQDat1mjv+Iu9vM9Diig=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.SisbaseBot.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.SisbaseBot.html",
+          "hash": "Z8g/dl1YDnb5UKW9zRX72A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Systems.MasterServer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Systems.MasterServer.html",
+          "hash": "AIa3gIwQtMojUWA7lebjDw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Systems.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Systems.html",
+          "hash": "ljA1Dwh9ii1K3v0PtGKmsg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.Behaviours.CountingBehaviour.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.Behaviours.CountingBehaviour.html",
+          "hash": "NsA6w948dOfIiL1dmucv2w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.Behaviours.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.Behaviours.html",
+          "hash": "Wtb+hmNaqeLJ2N7RCGm00w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.ConcurrencyUtils.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.ConcurrencyUtils.html",
+          "hash": "p+kkNKBTCfIhlGbU8VzhZw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.EmbedBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.EmbedBase.html",
+          "hash": "lKiBG7kq6qdzBXcv0ez6gg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.Emoji.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.Emoji.html",
+          "hash": "Agmr//yY2Dpv42N/q0hCPQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.General.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.General.html",
+          "hash": "d0Xydha0Eowr5FARs5uxpw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.HierarchyUtils.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.HierarchyUtils.html",
+          "hash": "OkMlabWd3tPIvl6WsURAeQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.IClientSystem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.IClientSystem.html",
+          "hash": "nG8BkuFZxfi4mORaHyCpZA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.IScheduledSystem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.IScheduledSystem.html",
+          "hash": "we6aLTZ/zZSp2C8vXTgFmw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.IStaticSystem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.IStaticSystem.html",
+          "hash": "MnD+wIjkKL1M1R6Lj8fz4g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.ISystem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.ISystem.html",
+          "hash": "bndEfELx33KfY77XPln0Tw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.Logger.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.Logger.html",
+          "hash": "PRCSXVwjnvpgCwsMTjqNAQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.MessageBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.MessageBuilder.html",
+          "hash": "u4WOxEQUlC4vCXEmuNUBVg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.Permissions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.Permissions.html",
+          "hash": "iqNklhAunU0N/DuG5jWjrg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.SMC.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.SMC.html",
+          "hash": "SM0c9r4/A5XmtuEIQux20g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.SMCExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.SMCExtensions.html",
+          "hash": "vmVbLOpqLcuC+Jfn9usLBQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.SchemaUtils.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.SchemaUtils.html",
+          "hash": "dYVo1HsFcrZxRX3MAXnO2w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.Utils.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.Utils.html",
+          "hash": "oW5SQBIf36dT56DVJyNOfA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/sisbase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/sisbase.html",
+          "hash": "cY1z5zQu+g7q8RYeeiznNw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "DUQ9dxe95F++NJNfWz5vUw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/hello_world.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/hello_world.html",
+          "hash": "OiBp3Krvun8So9lWGALPgQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/intro.html",
+          "hash": "Zs3VFaLYMwY80/rm7Skikw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html",
+          "hash": "ebCkpWwrBVTg0cN7cj9tiQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "bX5OvK5g1LFVBS83Z17/kQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "k+/dkjFuwAVS32HduMpmBw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot build incrementally because last build info is missing.",
+        "incrementalPhase": "build",
+        "total_file_count": 0,
+        "skipped_file_count": 0,
+        "full_build_reason_code": "NoAvailableBuildCache"
+      },
+      "processors": {
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        },
+        "ConceptualDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 4,
+          "skipped_file_count": 0
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 41,
+          "skipped_file_count": 0
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot support incremental post processing, the reason is: last post processor info is null.",
+        "incrementalPhase": "postProcessing",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
