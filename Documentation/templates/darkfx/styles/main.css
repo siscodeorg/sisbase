@@ -44,6 +44,10 @@ article h4 {
     border-bottom: 2px solid #ddd;
 }
 
+kbd {
+	background-color: #575757
+}
+
 .navbar-brand>img {
     color: #2d2d30;
 }
