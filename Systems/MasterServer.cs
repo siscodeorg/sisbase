@@ -29,7 +29,7 @@ namespace sisbase.Systems
 			Status = true;
 		}
 
-		public async Task ApplyToClient(DiscordClient client) => client.GuildDownloadCompleted += async delegate (GuildDownloadCompletedEventArgs args)
+		public async Task ApplyToClient(DiscordClient client) => client.GuildDownloadCompleted += async delegate (DiscordClient c,GuildDownloadCompletedEventArgs args)
 		{
 			if (SisbaseBot.Instance.SisbaseConfiguration.Data.MasterId == 0)
 			{
