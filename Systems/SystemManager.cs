@@ -21,6 +21,8 @@ namespace sisbase.Systems {
 
         public Task<bool> TryRegisterSystem<T>() where T : BaseSystem => TryRegisterType(typeof(T));
 
+        public Task<bool> TryUnregisterSystem<T>() where T : BaseSystem => TryUnregisterType(typeof(T));
+
         private async Task<bool> TryRegisterType(Type type) {
             var System = (BaseSystem)Activator.CreateInstance(type);
             System.SisbaseInstance = SisbaseInstance;
@@ -35,6 +37,7 @@ namespace sisbase.Systems {
                 return false;
             }
             else {
+                if (UnloadedSystems.ContainsKey(type)) UnloadedSystems.Remove(type);
                 await System.Activate();
                 if (System is ClientSystem _clientSystem){
                     await _clientSystem.ApplyToClient(SisbaseInstance.Client);
@@ -46,6 +49,23 @@ namespace sisbase.Systems {
                 Logger.Warn("SMC v3", $"{System.Name} - System Loaded.");
                 return true;
             }
+        }
+
+        internal async Task<bool> TryUnregisterType(Type type) {
+            if (!Systems.ContainsKey(type)) return false;
+            if (UnloadedSystems.ContainsKey(type)) return true;
+            var system = Systems[type];
+            if(system is IScheduledSystem) {
+                if (RegisteredTimers.ContainsKey(type)) {
+                    RegisteredTimers[type].Dispose();
+                    RegisteredTimers.Remove(type);
+                }
+            }
+            await system.Deactivate();
+            Systems.Remove(type);
+            UnloadedSystems.Add(type, system);
+            Logger.Log("SMC v3", $"{type.ToCustomName()} was unregistered.");
+            return true;
         }
 
         internal Timer GenerateTimer(IScheduledSystem system) =>
