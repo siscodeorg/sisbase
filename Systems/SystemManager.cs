@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace sisbase.Systems {
@@ -15,6 +16,7 @@ namespace sisbase.Systems {
         public SisbaseBot SisbaseInstance { get; set; }
         public Dictionary<Type, BaseSystem> Systems { get; } = new Dictionary<Type, BaseSystem>();
         public Dictionary<Type, BaseSystem> UnloadedSystems { get; } = new Dictionary<Type, BaseSystem>();
+        public Dictionary<Type, Timer> RegisteredTimers { get; } = new Dictionary<Type, Timer>();
         public SystemManager(SisbaseBot sisbaseInstance) => SisbaseInstance = sisbaseInstance;
 
         public Task<bool> TryRegisterSystem<T>() where T : BaseSystem => TryRegisterType(typeof(T));
@@ -37,11 +39,17 @@ namespace sisbase.Systems {
                 if (System is ClientSystem _clientSystem){
                     await _clientSystem.ApplyToClient(SisbaseInstance.Client);
                 }
+                if(System is IScheduledSystem scheduledSystem) {
+                    RegisteredTimers.TryAdd(type, GenerateTimer(scheduledSystem));
+                }
                 Systems.Add(type, System);
                 Logger.Warn("SMC v3", $"{System.Name} - System Loaded.");
                 return true;
             }
         }
+
+        internal Timer GenerateTimer(IScheduledSystem system) =>
+            new Timer(new TimerCallback(x => system.RunContinuous()), null, TimeSpan.FromSeconds(1), system.Timeout);
 
         public T GetOrDefault<T>() where T : BaseSystem => (T) Systems.GetValueOrDefault(typeof(T));
 
