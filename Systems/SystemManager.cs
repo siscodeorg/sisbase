@@ -90,6 +90,14 @@ namespace sisbase.Systems {
             UpdateCNext();
         }
 
+        public async Task ReloadTempUnloadedSystems() {
+            foreach(var system in UnloadedSystems) {
+                if(await system.Value.CheckPreconditions()) {
+                    await TryRegisterType(system.Key);
+                }
+            }
+        }
+
         private bool IsDisabledOnConfig(Type type) {
             if (SisbaseInstance.SystemCfg.Systems.ContainsKey(type.ToCustomName())) {
                 return !SisbaseInstance.SystemCfg.Systems[type.ToCustomName()].Enabled;
