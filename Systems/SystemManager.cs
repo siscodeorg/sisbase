@@ -93,5 +93,20 @@ namespace sisbase.Systems {
                 return false;
             }
         }
+
+        private SystemConfig GenerateConfig(string Path) {
+            var config = new SystemConfig {
+                Path = Path,
+                Systems = SisbaseInstance.SystemCfg.Systems
+            };
+            var allSystems = Systems.Concat(UnloadedSystems);
+            foreach (var sys in allSystems.Distinct()) {
+                var data = sys.Value.ToConfigData();
+                if (IsDisabledOnConfig(sys.Key)) data.Enabled = false;
+                if (!config.Systems.ContainsKey(sys.Key.ToCustomName())) config.Systems.Add(sys.Key.ToCustomName(), data);
+                else config.Systems[sys.Key.ToCustomName()] = data;
+            }
+            return config;
+        }
     }
 }
