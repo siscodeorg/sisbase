@@ -52,7 +52,7 @@ namespace sisbase.Utils
 				}
 				if(assembly == typeof(SisbaseBot).Assembly) continue;
 				if (Ts.Last() != T || instance.SystemCfg?.Systems.Count > RegisteredSystems.Count) continue;
-				instance.SystemCfg?.Flush(); instance.SystemCfg?.Update();
+				instance.SystemCfg?.Update();
 			}
 			return response;
 		}
