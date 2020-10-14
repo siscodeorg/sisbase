@@ -16,20 +16,16 @@ namespace sisbase.Systems
 	/// </summary>
 #pragma warning disable CS1591
 	[Vital]
-	public class MasterServer 
+	public class MasterServer : ClientSystem
 	{
-		public string Name { get; set; }
-		public string Description { get; set; }
-		public bool Status { get; set; }
-
-		public void Activate()
+		public override async Task Activate()
 		{
 			Name = "MasterServer";
 			Description = "MasterServer System";
 			Status = true;
 		}
 
-		public async Task ApplyToClient(DiscordClient client) => client.GuildDownloadCompleted += async delegate (DiscordClient c,GuildDownloadCompletedEventArgs args)
+		public override async Task ApplyToClient(DiscordClient client) => client.GuildDownloadCompleted += async delegate (DiscordClient c,GuildDownloadCompletedEventArgs args)
 		{
 			if (SisbaseBot.Instance.SisbaseConfiguration.Data.MasterId == 0)
 			{
@@ -64,16 +60,11 @@ namespace sisbase.Systems
 			}
 		};
 
-		public void Deactivate()
+		public override async Task Deactivate()
 		{
 			Name = null;
 			Description = null;
 			Status = false;
-			GC.SuppressFinalize(this);
-		}
-
-		public void Execute()
-		{
 		}
 	}
 }
