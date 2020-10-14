@@ -18,6 +18,7 @@ namespace sisbase.Systems {
         public Dictionary<Type, BaseSystem> UnloadedSystems { get; } = new Dictionary<Type, BaseSystem>();
         public Dictionary<Type, Timer> RegisteredTimers { get; } = new Dictionary<Type, Timer>();
         public List<Assembly> LoadedAssemblies { get; } = new List<Assembly>();
+        internal Queue<Assembly> AssemblyQueue { get; } = new Queue<Assembly>();
         public SystemManager(SisbaseBot sisbaseInstance) => SisbaseInstance = sisbaseInstance;
 
         public Task<bool> TryRegisterSystem<T>() where T : BaseSystem => TryRegisterType(typeof(T));
@@ -88,6 +89,13 @@ namespace sisbase.Systems {
             }
             UpdateConfig();
             UpdateCNext();
+        }
+
+        internal async Task LoadAssemblyQueue() {
+            while(AssemblyQueue.TryPeek(out _)) {
+                await RegisterAssembly(AssemblyQueue.Dequeue());
+            }
+            Logger.Log("SMC v3", "Finished loading all assemblies");
         }
 
         public async Task ReloadTempUnloadedSystems() {
