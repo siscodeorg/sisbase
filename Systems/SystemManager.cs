@@ -57,6 +57,10 @@ namespace sisbase.Systems {
             if (!Systems.ContainsKey(type)) return false;
             if (UnloadedSystems.ContainsKey(type)) return true;
             var system = Systems[type];
+            if(system.IsVital()) {
+                system.Warn("Vital system attempted unregistry!");
+                return false;
+            }
             if(system is IScheduledSystem) {
                 if (RegisteredTimers.ContainsKey(type)) {
                     RegisteredTimers[type].Dispose();
