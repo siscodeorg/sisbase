@@ -17,6 +17,7 @@ namespace sisbase.Systems {
         public Dictionary<Type, BaseSystem> Systems { get; } = new Dictionary<Type, BaseSystem>();
         public Dictionary<Type, BaseSystem> UnloadedSystems { get; } = new Dictionary<Type, BaseSystem>();
         public Dictionary<Type, Timer> RegisteredTimers { get; } = new Dictionary<Type, Timer>();
+        public List<Assembly> LoadedAssemblies { get; } = new List<Assembly>();
         public SystemManager(SisbaseBot sisbaseInstance) => SisbaseInstance = sisbaseInstance;
 
         public Task<bool> TryRegisterSystem<T>() where T : BaseSystem => TryRegisterType(typeof(T));
@@ -74,6 +75,7 @@ namespace sisbase.Systems {
         public T GetOrDefault<T>() where T : BaseSystem => (T) Systems.GetValueOrDefault(typeof(T));
 
         public async Task RegisterAssembly(Assembly assembly) {
+            if (!LoadedAssemblies.Contains(assembly)) LoadedAssemblies.Add(assembly);
             var systemTypes = assembly.GetTypes().Where(x => x.GetTypeInfo().IsCandidate()).ToList();
             foreach(var type in systemTypes) {
                 if (Systems.TryGetValue(type, out var _)) continue;
@@ -85,6 +87,7 @@ namespace sisbase.Systems {
                 await TryRegisterType(type);
             }
             UpdateConfig();
+            UpdateCNext();
         }
 
         private bool IsDisabledOnConfig(Type type) {
@@ -114,6 +117,12 @@ namespace sisbase.Systems {
             var cfg = GenerateConfig(SisbaseInstance.SystemCfg.Path);
             SisbaseInstance.SystemCfg.Systems = cfg.Systems;
             cfg.Update();
+        }
+
+        internal void UpdateCNext() {
+            var commands = SisbaseInstance.CommandsNext.RegisteredCommands.Values;
+            SisbaseInstance.CommandsNext.UnregisterCommands(commands.ToArray());
+            foreach (var assembly in LoadedAssemblies) SisbaseInstance.CommandsNext.RegisterCommands(assembly);
         }
     }
 }
