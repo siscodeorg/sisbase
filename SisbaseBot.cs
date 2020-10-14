@@ -4,8 +4,10 @@ using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using sisbase.Configuration;
+using sisbase.Systems;
 using sisbase.Utils;
 using System;
 using System.IO;
@@ -94,7 +96,8 @@ namespace sisbase
 				new CommandsNextConfiguration
 				{
 					EnableDefaultHelp = false,
-					PrefixResolver = RTPR
+					PrefixResolver = RTPR,
+					Services = new ServiceCollection().AddSingleton(this).BuildServiceProvider()
 				}
 			);
 			Interactivity = Client.UseInteractivity(
