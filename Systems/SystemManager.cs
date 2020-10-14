@@ -84,6 +84,7 @@ namespace sisbase.Systems {
                 }
                 await TryRegisterType(type);
             }
+            UpdateConfig();
         }
 
         private bool IsDisabledOnConfig(Type type) {
@@ -107,6 +108,12 @@ namespace sisbase.Systems {
                 else config.Systems[sys.Key.ToCustomName()] = data;
             }
             return config;
+        }
+
+        internal void UpdateConfig() {
+            var cfg = GenerateConfig(SisbaseInstance.SystemCfg.Path);
+            SisbaseInstance.SystemCfg.Systems = cfg.Systems;
+            cfg.Update();
         }
     }
 }
