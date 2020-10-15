@@ -16,7 +16,7 @@ namespace sisbase.Systems
 	/// </summary>
 #pragma warning disable CS1591
 	[Vital]
-	public class MasterServer : IClientSystem
+	public class MasterServer 
 	{
 		public string Name { get; set; }
 		public string Description { get; set; }

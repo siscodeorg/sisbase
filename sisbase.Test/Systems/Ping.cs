@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace sisbase.Test.Systems
 {
-	public class Ping : IClientSystem
+	public class Ping 
 	{
 		public string Name { get; set; }
 		public string Description { get; set; }
@@ -28,7 +28,7 @@ namespace sisbase.Test.Systems
 			if (e.Message.Content == "bot gives ping")
 			{
 				await e.Message.RespondAsync($"Ping : **{c.Ping}ms**");
-				this.Log($"{e.Message.Author.Username} requested the ping");
+				Logger.Log("",$"{e.Message.Author.Username} requested the ping");
 			}
 		}
 
@@ -40,6 +40,6 @@ namespace sisbase.Test.Systems
 			SisbaseBot.Instance.Client.MessageCreated -= MessageCreated;
 		}
 
-		public void Execute() => Logger.Log(this, "This was called inside of an Execute Block");
+		public void Execute() => Logger.Log("", "This was called inside of an Execute Block");
 	}
 }

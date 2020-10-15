@@ -87,7 +87,7 @@ namespace sisbase.Utils
 			if (RegisteredSystems.ContainsKey(t))
 			{
 				RegisteredSystems.TryGetValue(t, out var system);
-				system.Warn("This system is already registered");
+				Logger.Warn("","This system is already registered");
 				return true;
 			}
 			else
@@ -95,7 +95,7 @@ namespace sisbase.Utils
 				var system = (ISystem)Activator.CreateInstance(t);
 
 				system.Activate();
-				system.Log("System Started");
+				Logger.Log("","System Started");
 				system.Execute();
 				if (system.Status == true)
 				{
@@ -105,10 +105,10 @@ namespace sisbase.Utils
 							((IScheduledSystem)system).Timeout,
 							((IScheduledSystem)system).RunContinuous
 							));
-						system.Log("Timer started");
+						Logger.Log("","Timer started");
 					}
 					RegisteredSystems.AddOrUpdate(t, system, (key, old) => system);
-					system.Log("System Loaded");
+					Logger.Log("","System Loaded");
 					return true;
 				}
 				else
@@ -131,12 +131,12 @@ namespace sisbase.Utils
 			{
 				ISystem system;
 				RegisteredSystems.TryGetValue(t, out system);
-				system.Warn("System is disabling...");
+				Logger.Warn("","System is disabling...");
 				if (typeof(IScheduledSystem).IsAssignableFrom(t))
 				{
 					RegisteredTimers[t].Dispose();
 					RegisteredTimers.TryRemove(t, out _);
-					system.Warn("Timer stopped");
+					Logger.Warn("","Timer stopped");
 				}
 				system.Deactivate();
 				RegisteredSystems.TryRemove(t, out system);
@@ -165,7 +165,7 @@ namespace sisbase.Utils
 			if (SMC.RegisteredSystems.ContainsKey(t))
 			{
 				SMC.RegisteredSystems.TryGetValue(t, out var system);
-				system.Warn("This system is already registered");
+				Logger.Warn("","This system is already registered");
 				return true;
 			}
 			else
@@ -173,22 +173,22 @@ namespace sisbase.Utils
 				var system = (IClientSystem)Activator.CreateInstance(t);
 
 				system.Activate();
-				system.Log("System Started");
+				Logger.Log("","System Started");
 				system.Execute();
 				if (system.Status == true)
 				{
 					system.ApplyToClient(client);
-					system.Log("System applied to client");
+					Logger.Log("","System applied to client");
 					if (typeof(IScheduledSystem).IsAssignableFrom(t))
 					{
 						SMC.RegisteredTimers.TryAdd(t, SMC.CreateNewTimer(
 							((IScheduledSystem)system).Timeout,
 							((IScheduledSystem)system).RunContinuous
 							));
-						system.Log("Timer started");
+						Logger.Log("","Timer started");
 					}
 					SMC.RegisteredSystems.AddOrUpdate(t, system, (key, old) => system);
-					system.Log("System Loaded");
+					Logger.Log("","System Loaded");
 					return true;
 				}
 				else

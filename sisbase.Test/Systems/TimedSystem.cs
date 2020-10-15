@@ -3,7 +3,7 @@ using System;
 
 namespace sisbase.Test.Systems
 {
-	public class TimedSystem : ISystem, IScheduledSystem
+	public class TimedSystem : IScheduledSystem
 	{
 		public string Name { get; set; }
 		public string Description { get; set; }
@@ -26,11 +26,11 @@ namespace sisbase.Test.Systems
 			Status = false;
 		}
 
-		public void Execute() => Logger.Log(this, "Command Executed from Execute()");
+		public void Execute() => Logger.Log("", "Command Executed from Execute()");
 
 		public Action RunContinuous => new Action(() =>
 		{
-			Logger.Log(this, "Executed RunContinuous");
+			Logger.Log("", "Executed RunContinuous");
 		});
 	}
 }
