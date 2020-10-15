@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using sisbase.Systems;
 using DSharpPlus.Interactivity.Extensions;
 using sisbase.CommandsNext;
+using System;
 
 namespace sisbase.Commands
 {
@@ -77,13 +78,26 @@ namespace sisbase.Commands
 			await ctx.RespondAsync(embed: embed);
 		}
 
-		[Command("disable")]
-		[Description("Disables and unregisters a system")]
-		public async Task DisableFail(CommandContext ctx) =>
-			await ctx.RespondAsync(embed: EmbedBase.CommandHelpEmbed(ctx.Command));
-		[Command("disable")]
-		public async Task Disable(CommandContext ctx, [DSharpPlus.CommandsNext.Attributes.Description("If the system is to be disabled permanently `true`|`false`")] bool permanent)
-		{
+		[Command("unload")]
+		[Description("Unloads a system")]
+		public async Task Unload(CommandContext ctx) {
+			var loadedSystems = SisbaseInstance.SystemManager.Systems;
+			var embed = EmbedBase.OrderedListEmbed(loadedSystems.Select(x => x.Value.Name).ToList(), "Systems")
+				.Mutate(x => x.WithAuthor("Please select the system to be unloaded [Number]"));
+			var msg = await ctx.RespondAsync(embed: embed);
+			var response = await ctx.Message.GetNextMessageAsync();
+			if (response.TimedOut) {
+				await msg.ModifyAsync(embed: EmbedBase.OutputEmbed("Timed Out."));
+				return;
+			}
+			var num = Math.Clamp(response.Result.FirstInt(), 0, loadedSystems.Count - 1);
+			var system = loadedSystems.Keys.ToList()[num];
+			var result = await SisbaseInstance.SystemManager.TryUnregisterType(system);
+            if (result) {
+				await msg.ModifyAsync(embed: EmbedBase.OutputEmbed($"{system.ToCustomName()} unloaded successfully!"));
+            } else {
+				await msg.ModifyAsync(embed: EmbedBase.OutputEmbed($"{system.ToCustomName()} could not be unloaded."));
+			}
 		}
 		[Command("reload")]
 		[Description("Reloads the SMC and registers any Systems that weren't registered")]
