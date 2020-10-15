@@ -59,14 +59,6 @@ namespace sisbase.Commands
 		[Description("Lists all active systems")]
 		public async Task List(CommandContext ctx)
 		{
-			var allSystems = SMC.RegisteredSystems.ToList().Select(x => $"{(x.Value.IsVital() ? "\\⚠️" : "")} {x.Value.Name} - `{x.Key.Assembly.GetName().Name}`");
-			var embed = EmbedBase.ListEmbed(allSystems, "Systems");
-			embed = embed.Mutate(x => x
-				.AddField("Permanently disabled systems [Systems.json]",
-					string.Join("\n",
-						SisbaseBot.Instance.SystemCfg.Systems.Where(kvp => !kvp.Value.Enabled)
-							.Select(kvp => kvp.Key))));
-			await ctx.RespondAsync(embed: embed.Mutate(x => x.WithFooter($"{x.Footer.Text}  | ⚠️ - Vital")));
 		}
 
 		[Command("disable")]
@@ -76,46 +68,11 @@ namespace sisbase.Commands
 		[Command("disable")]
 		public async Task Disable(CommandContext ctx, [DSharpPlus.CommandsNext.Attributes.Description("If the system is to be disabled permanently `true`|`false`")] bool permanent)
 		{
-			var allSystems = SMC.RegisteredSystems.Where(s => !s.Value.IsVital()).Select(k => k.Value.Name).ToList();
-			var embed = EmbedBase.OrderedListEmbed(allSystems, "Systems").Mutate(x =>
-			x.WithTitle("Please select the system you want to disable [number]")
-			 .WithAuthor(null)
-			 .WithColor(DiscordColor.Red));
-			var message = await ctx.RespondAsync(embed: embed);
-			var response = await ctx.Message.GetNextMessageAsync();
-			if(response.TimedOut) return;
-			var select = response.Result.FirstInt();
-			var systemType = SMC.RegisteredSystems.Where(x => x.Value.Name == allSystems[select]).FirstOrDefault();
-			SMC.Unregister(systemType.Key);
-			if (permanent) {
-				SisbaseBot.Instance.SystemCfg.Systems[systemType.Key.ToCustomName()].Enabled = false;
-				SisbaseBot.Instance.SystemCfg.Update();
-			}
-			await message.ModifyAsync(embed: EmbedBase.OutputEmbed($"Successfully unregistered {allSystems[select]} {(permanent?"permanently":"temporarily")}."));
 		}
 		[Command("reload")]
 		[Description("Reloads the SMC and registers any Systems that weren't registered")]
 		public async Task Reload(CommandContext ctx)
 		{
-			var Data = SisbaseBot.Instance.Systems.Reload();
-			if (Data.Any(k => k.Value.Count > 0))
-			{
-				var Embed = EmbedBase.OutputEmbed("SMC Reloaded. ΔSystem Status:");
-
-				foreach (var kvp in Data)
-				{
-					var i1 = kvp.Value.Select(x => $"{(x.Value ? "✅" : "❌")} - `{x.Key}`").ToList();
-					string i0 = string.Join("\n", i1);
-					string i2 = kvp.Key.GetName().Name;
-					if (string.IsNullOrEmpty(i0)) continue;
-					Embed = Embed.Mutate(x => x.AddField(i2, i0));
-				}
-				await ctx.RespondAsync(embed: Embed);
-			}
-			else
-			{
-				await ctx.RespondAsync(embed: EmbedBase.OutputEmbed("All Systems were already loaded. No new systems were registerd"));
-			}
 		}
 	}
 
