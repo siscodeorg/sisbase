@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using sisbase.Systems;
 using DSharpPlus.Interactivity.Extensions;
+using sisbase.CommandsNext;
 
 namespace sisbase.Commands
 {
@@ -46,7 +47,7 @@ namespace sisbase.Commands
 	[Emoji(":computer:")]
 	[Group("system")]
 	[Description("This group configures the systems.")]
-	public class System : BaseCommandModule
+	public class System : SisbaseCommandModule
 	{
 		[GroupCommand]
 		public async Task Command(CommandContext ctx)
@@ -59,6 +60,21 @@ namespace sisbase.Commands
 		[Description("Lists all active systems")]
 		public async Task List(CommandContext ctx)
 		{
+			var loadedSystems = SisbaseInstance.SystemManager.Systems;
+			var unloadedSystems = SisbaseInstance.SystemManager.UnloadedSystems;
+			var disabledSystems = SisbaseInstance.SystemCfg.Systems.Where(x => x.Value.Enabled == false);
+			string loadedStr = string.Join("\n", loadedSystems.Select(x => $"{(x.Value.IsVital() ? "⛔" : "")} [{x.Key.Assembly.GetName().Name}] {x.Value.Name} {(string.IsNullOrWhiteSpace(x.Value.Description) ? "" : $"<{x.Value.Description}>")}"));
+			string unloadedStr = string.Join("\n", unloadedSystems.Select(x => $"{x.Key.ToCustomName()}"));
+			string disabledStr = string.Join("\n", disabledSystems.Select(x => x.Key));
+			var embed = EmbedBase.OutputEmbed("")
+				.Mutate(x => x
+					.WithAuthor("Systems - List")
+					.AddField("Loaded Systems",$"{(string.IsNullOrEmpty(loadedStr) ? "No systems loaded." : loadedStr)}")
+					.AddField("Unloaded Systems", $"{(string.IsNullOrEmpty(unloadedStr) ? "No systems unloaded." : unloadedStr)}")
+					.AddField("Permanently Disabled Systems", $"{(string.IsNullOrEmpty(disabledStr) ? "No systems disabled." : disabledStr)}")
+					.WithFooter($"{x.Footer.Text} | ⛔ - Vital System",x.Footer.IconUrl)
+				);
+			await ctx.RespondAsync(embed: embed);
 		}
 
 		[Command("disable")]
