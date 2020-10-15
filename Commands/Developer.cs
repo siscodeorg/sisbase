@@ -22,7 +22,7 @@ namespace sisbase.Commands
 	public class Developer : BaseCommandModule
 	{
 		[Command("setMaster")]
-		[RequireOwner,RequireSystem(typeof(MasterServer))]
+		[RequireOwner]
 		public async Task SetMaster(CommandContext ctx)
 		{
 			var guilds = SisbaseBot.Instance.Client.Guilds.Values.ToList();
