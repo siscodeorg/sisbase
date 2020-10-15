@@ -103,6 +103,8 @@ namespace sisbase.Commands
 		[Description("Reloads the SMC and registers any Systems that weren't registered")]
 		public async Task Reload(CommandContext ctx)
 		{
+			await SisbaseInstance.SystemManager.ReloadTempUnloadedSystems();
+			await ctx.RespondAsync(embed: EmbedBase.OutputEmbed("Reload completed."));
 		}
 	}
 
