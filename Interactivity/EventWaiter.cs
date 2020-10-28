@@ -65,7 +65,7 @@ namespace sisbase.Interactivity {
             waiters.Add(waiter);
         }
 
-        public async Task Offer(T args) {
+        internal async Task Offer(T args) {
             var toRemove = new List<EventWaiter<T>>();
             foreach (var waiter in waiters) {
                 if (await waiter.Offer(args)) toRemove.Add(waiter);
@@ -73,6 +73,8 @@ namespace sisbase.Interactivity {
             waiters = waiters.Except(toRemove).ToList();
             toRemove.ForEach(waiter => waiter.Dispose());
         }
+
+        public AsyncEventHandler<T> Listener => Offer;
 
         public Task<T> Wait(Func<T, Task<bool>> pred, TimeSpan timeout = default, CancellationToken token = default) {
             var waiter = new EventWaiter<T>(pred, timeout, token);
