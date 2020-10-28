@@ -80,6 +80,9 @@ namespace sisbase.Interactivity {
 
             await Dispatch(sbargs);
             await Dispatch(toggle);
+            foreach (var msg in Get()) {
+                await msg.Offer(e);
+            }
             await First.Offer(e);
             await Last.Offer(e);
 
@@ -101,6 +104,9 @@ namespace sisbase.Interactivity {
 
             await Dispatch(sbargs);
             await Dispatch(toggle);
+            foreach (var msg in Get()) {
+                await msg.Offer(e);
+            }
             await First.Offer(e);
             await Last.Offer(e);
         }
@@ -112,6 +118,9 @@ namespace sisbase.Interactivity {
             };
    
             await Dispatch(sbargs);
+            foreach (var msg in Get()) {
+                await msg.Offer(e);
+            }
             await First.Offer(e);
             await Last.Offer(e);
         }
@@ -124,6 +133,9 @@ namespace sisbase.Interactivity {
                 Before = past
             };
             await Dispatch(sbargs);
+            foreach (var msg in Get()) {
+                await msg.Offer(e);
+            }
             await First.Offer(e);
             await Last.Offer(e);
         }
