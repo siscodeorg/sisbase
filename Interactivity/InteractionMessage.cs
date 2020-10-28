@@ -7,7 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using sisbase.Systems;
 
 namespace sisbase.Interactivity
 {
@@ -143,6 +145,66 @@ namespace sisbase.Interactivity
 				await Dispatch(sbargs);
 			}
 				
+		}
+
+		#endregion
+
+		#region Wait Dispatchers
+
+		public async Task<ReactionAddedEventArgs> WaitReactionAdded(Func<ReactionAddedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+			var args = await IMC.GetInteractivityManager().messageReactionAddWaiter.Wait(e => {
+				if (e.Message.Id != Id) return false;
+				return pred(new ReactionAddedEventArgs(e, this));
+			}, timeout, token);
+			return new ReactionAddedEventArgs(args, this);
+		}
+		
+		public async Task<ReactionRemovedEventArgs> WaitReactionRemoved(Func<ReactionRemovedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+			var args = await IMC.GetInteractivityManager().messageReactionRemoveWaiter.Wait(e => {
+				if (e.Message.Id != Id) return false;
+				return pred(new ReactionRemovedEventArgs(e, this));
+			}, timeout, token);
+			return new ReactionRemovedEventArgs(args, this);
+		}
+		
+		public async Task<ReactionToggledEventArgs> WaitReactionToggled(Func<ReactionToggledEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+			var waiter = new EventWaiter<DiscordEventArgs>(e => {
+				if (e is MessageReactionAddEventArgs added) {
+					if (added.Message.Id != Id) return false;
+					return pred(new ReactionToggledEventArgs(added, this));
+				}
+				if (e is MessageReactionRemoveEventArgs removed) {
+					if (removed.Message.Id != Id) return false;
+					return pred(new ReactionToggledEventArgs(removed, this));
+				}
+
+				return false;
+			}, timeout, token);
+			IMC.GetInteractivityManager().ReactionToggleWaiter.Register(waiter);
+			var args = await waiter.Task;
+			if (args is MessageReactionAddEventArgs added) {
+				return new ReactionToggledEventArgs(added, this);
+			}
+			if (args is MessageReactionRemoveEventArgs removed) {
+				return new ReactionToggledEventArgs(removed, this);
+			}
+			throw new Exception("ReactionToggled waiter returned a non-reaction event. Please report this to the sisbase devs");
+		}
+		
+		public async Task<MessageDeletedEventArgs> WaitMessageDeleted(Func<MessageDeletedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+			var args = await IMC.GetInteractivityManager().messageDeleteWaiter.Wait(e => {
+				if (e.Message.Id != Id) return false;
+				return pred(new MessageDeletedEventArgs(e, this));
+			}, timeout, token);
+			return new MessageDeletedEventArgs(args, this);
+		}
+		
+		public async Task<MessageUpdatedEventArgs> WaitMessageEdited(Func<MessageUpdatedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+			var args = await IMC.GetInteractivityManager().messageUpdateWaiter.Wait(e => {
+				if (e.Message.Id != Id) return false;
+				return pred(new MessageUpdatedEventArgs(e, this));
+			}, timeout, token);
+			return new MessageUpdatedEventArgs(args, this);
 		}
 
 		#endregion
