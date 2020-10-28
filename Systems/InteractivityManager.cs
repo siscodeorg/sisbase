@@ -12,21 +12,16 @@ namespace sisbase.Systems {
 		public string Description { get; set; }
 		public bool Status { get; set; }
 		
-		public readonly EventWaitHandler<MessageReactionAddEventArgs> ReactionAddWaiter = new EventWaitHandler<MessageReactionAddEventArgs>();
-		public readonly EventWaitHandler<MessageReactionRemoveEventArgs> ReactionRemoveWaiter = new EventWaitHandler<MessageReactionRemoveEventArgs>();
 		public readonly EventWaitHandler<DiscordEventArgs> ReactionToggleWaiter = new EventWaitHandler<DiscordEventArgs>();
-		public readonly EventWaitHandler<MessageDeleteEventArgs> MessageDeleteWaiter = new EventWaitHandler<MessageDeleteEventArgs>();
-		public readonly EventWaitHandler<MessageUpdateEventArgs> EditWaiter = new EventWaitHandler<MessageUpdateEventArgs>();
-		public readonly EventWaitHandler<MessageCreateEventArgs> CreateWaiter = new EventWaitHandler<MessageCreateEventArgs>();
 
 		public void InitWaitListeners(DiscordClient client) {
-			client.MessageUpdated += EditWaiter.Offer;
-			client.MessageDeleted += MessageDeleteWaiter.Offer;
-			client.MessageReactionAdded += ReactionAddWaiter.Offer;
-			client.MessageReactionRemoved += ReactionRemoveWaiter.Offer;
+			client.MessageUpdated += EventWaiter<MessageUpdateEventArgs>.Listener;
+			client.MessageDeleted += EventWaiter<MessageDeleteEventArgs>.Listener;
+			client.MessageReactionAdded += EventWaiter<MessageReactionAddEventArgs>.Listener;
+			client.MessageReactionRemoved += EventWaiter<MessageReactionRemoveEventArgs>.Listener;
+			client.MessageCreated += EventWaiter<MessageCreateEventArgs>.Listener;
 			client.MessageReactionRemoved += ReactionToggleWaiter.Offer;
 			client.MessageReactionAdded += ReactionToggleWaiter.Offer;
-			client.MessageCreated += CreateWaiter.Offer;
 		}
 		
 		public void Activate() {

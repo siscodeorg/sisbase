@@ -152,22 +152,18 @@ namespace sisbase.Interactivity
 		#region Wait Dispatchers
 
 		public async Task<ReactionAddedEventArgs> WaitReactionAdded(Func<ReactionAddedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
-			var waiter = new EventWaiter<MessageReactionAddEventArgs>(e => {
+			var args = await EventWaiter<MessageReactionAddEventArgs>.Wait(e => {
 				if (e.Message.Id != Id) return false;
 				return pred(new ReactionAddedEventArgs(e, this));
 			}, timeout, token);
-			IMC.GetInteractivityManager().ReactionAddWaiter.Register(waiter);
-			var args = await waiter.Task;
 			return new ReactionAddedEventArgs(args, this);
 		}
 		
 		public async Task<ReactionRemovedEventArgs> WaitReactionRemoved(Func<ReactionRemovedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
-			var waiter = new EventWaiter<MessageReactionRemoveEventArgs>(e => {
+			var args = await EventWaiter<MessageReactionRemoveEventArgs>.Wait(e => {
 				if (e.Message.Id != Id) return false;
 				return pred(new ReactionRemovedEventArgs(e, this));
 			}, timeout, token);
-			IMC.GetInteractivityManager().ReactionRemoveWaiter.Register(waiter);
-			var args = await waiter.Task;
 			return new ReactionRemovedEventArgs(args, this);
 		}
 		
@@ -196,22 +192,18 @@ namespace sisbase.Interactivity
 		}
 		
 		public async Task<MessageDeletedEventArgs> WaitMessageDeleted(Func<MessageDeletedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
-			var waiter = new EventWaiter<MessageDeleteEventArgs>(e => {
+			var args = await EventWaiter<MessageDeleteEventArgs>.Wait(e => {
 				if (e.Message.Id != Id) return false;
 				return pred(new MessageDeletedEventArgs(e, this));
 			}, timeout, token);
-			IMC.GetInteractivityManager().MessageDeleteWaiter.Register(waiter);
-			var args = await waiter.Task;
 			return new MessageDeletedEventArgs(args, this);
 		}
 		
 		public async Task<MessageUpdatedEventArgs> WaitMessageEdited(Func<MessageUpdatedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
-			var waiter = new EventWaiter<MessageUpdateEventArgs>(e => {
+			var args = await EventWaiter<MessageUpdateEventArgs>.Wait(e => {
 				if (e.Message.Id != Id) return false;
 				return pred(new MessageUpdatedEventArgs(e, this));
 			}, timeout, token);
-			IMC.GetInteractivityManager().EditWaiter.Register(waiter);
-			var args = await waiter.Task;
 			return new MessageUpdatedEventArgs(args, this);
 		}
 
