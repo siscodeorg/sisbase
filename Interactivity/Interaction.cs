@@ -108,7 +108,7 @@ namespace sisbase.Interactivity {
 		}
 
 		internal async Task<DiscordMessage> WaitNextMessageAsync(Func<DiscordMessage, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
-			var dspargs = await EventWaiter<MessageCreateEventArgs>.Wait(e => 
+			var dspargs = await IMC.GetInteractivityManager().messageCreateWaiter.Wait( e =>
 				    e.Channel == Origin.Channel && e.Author == Origin.Author && pred(e.Message)
 				, timeout, token);
 			return dspargs.Message;

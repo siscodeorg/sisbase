@@ -152,7 +152,7 @@ namespace sisbase.Interactivity
 		#region Wait Dispatchers
 
 		public async Task<ReactionAddedEventArgs> WaitReactionAdded(Func<ReactionAddedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
-			var args = await EventWaiter<MessageReactionAddEventArgs>.Wait(e => {
+			var args = await IMC.GetInteractivityManager().messageReactionAddWaiter.Wait(e => {
 				if (e.Message.Id != Id) return false;
 				return pred(new ReactionAddedEventArgs(e, this));
 			}, timeout, token);
@@ -160,7 +160,7 @@ namespace sisbase.Interactivity
 		}
 		
 		public async Task<ReactionRemovedEventArgs> WaitReactionRemoved(Func<ReactionRemovedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
-			var args = await EventWaiter<MessageReactionRemoveEventArgs>.Wait(e => {
+			var args = await IMC.GetInteractivityManager().messageReactionRemoveWaiter.Wait(e => {
 				if (e.Message.Id != Id) return false;
 				return pred(new ReactionRemovedEventArgs(e, this));
 			}, timeout, token);
@@ -192,7 +192,7 @@ namespace sisbase.Interactivity
 		}
 		
 		public async Task<MessageDeletedEventArgs> WaitMessageDeleted(Func<MessageDeletedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
-			var args = await EventWaiter<MessageDeleteEventArgs>.Wait(e => {
+			var args = await IMC.GetInteractivityManager().messageDeleteWaiter.Wait(e => {
 				if (e.Message.Id != Id) return false;
 				return pred(new MessageDeletedEventArgs(e, this));
 			}, timeout, token);
@@ -200,7 +200,7 @@ namespace sisbase.Interactivity
 		}
 		
 		public async Task<MessageUpdatedEventArgs> WaitMessageEdited(Func<MessageUpdatedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
-			var args = await EventWaiter<MessageUpdateEventArgs>.Wait(e => {
+			var args = await IMC.GetInteractivityManager().messageUpdateWaiter.Wait(e => {
 				if (e.Message.Id != Id) return false;
 				return pred(new MessageUpdatedEventArgs(e, this));
 			}, timeout, token);

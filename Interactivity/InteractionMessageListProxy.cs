@@ -131,7 +131,7 @@ namespace sisbase.Interactivity {
         #region Awaitables
 
         public async Task<ReactionAddedEventArgs> WaitReactionAdded(Func<ReactionAddedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
-            var dspargs = await EventWaiter<MessageReactionAddEventArgs>.Wait(args => { return Get()
+            var dspargs = await IMC.GetInteractivityManager().messageReactionAddWaiter.Wait(args => { return Get()
                 .Where(msg => msg.Id == args.Message.Id)
                 .Any(msg => pred(new ReactionAddedEventArgs(args, msg))); 
             }, timeout, token);
@@ -143,9 +143,9 @@ namespace sisbase.Interactivity {
         }
         
         public async Task<ReactionRemovedEventArgs> WaitReactionRemoved(Func<ReactionRemovedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
-            var dspargs = await EventWaiter<MessageReactionRemoveEventArgs>.Wait(args => { return Get()
+            var dspargs = await IMC.GetInteractivityManager().messageReactionRemoveWaiter.Wait(args => { return Get()
                 .Where(msg => msg.Id == args.Message.Id)
-                .Any(msg => pred(new ReactionRemovedEventArgs(args, msg))); 
+                .Any(msg => pred(new ReactionRemovedEventArgs(args, msg)));
             }, timeout, token);
             foreach (var msg in Get().Where(msg => msg.Id == dspargs.Message.Id)) {
                 return new ReactionRemovedEventArgs(dspargs, msg);
@@ -187,7 +187,7 @@ namespace sisbase.Interactivity {
         }
         
         public async Task<MessageDeletedEventArgs> WaitMessageDeleted(Func<MessageDeletedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
-            var dspargs = await EventWaiter<MessageDeleteEventArgs>.Wait(args => { return Get()
+            var dspargs = await IMC.GetInteractivityManager().messageDeleteWaiter.Wait(args => { return Get()
                 .Where(msg => msg.Id == args.Message.Id)
                 .Any(msg => pred(new MessageDeletedEventArgs(args, msg))); 
             }, timeout, token);
@@ -199,7 +199,7 @@ namespace sisbase.Interactivity {
         }
         
         public async Task<MessageUpdatedEventArgs> WaitMessageEdited(Func<MessageUpdatedEventArgs, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
-            var dspargs = await EventWaiter<MessageUpdateEventArgs>.Wait(args => { return Get()
+            var dspargs = await IMC.GetInteractivityManager().messageUpdateWaiter.Wait(args => { return Get()
                 .Where(msg => msg.Id == args.Message.Id)
                 .Any(msg => pred(new MessageUpdatedEventArgs(args, msg))); 
             }, timeout, token);
