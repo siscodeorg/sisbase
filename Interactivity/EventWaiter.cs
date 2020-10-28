@@ -73,5 +73,15 @@ namespace sisbase.Interactivity {
             waiters = waiters.Except(toRemove).ToList();
             toRemove.ForEach(waiter => waiter.Dispose());
         }
+
+        public Task<T> Wait(Func<T, Task<bool>> pred, TimeSpan timeout = default, CancellationToken token = default) {
+            var waiter = new EventWaiter<T>(pred, timeout, token);
+            Register(waiter);
+            return waiter.Task;
+        }
+
+        public Task<T> Wait(Func<T, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
+            return Wait(e => System.Threading.Tasks.Task.FromResult(pred(e)), timeout, token);
+        }
     }
 }
