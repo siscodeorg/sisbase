@@ -61,7 +61,7 @@ namespace sisbase.Interactivity {
     public class EventWaitHandler<T> where T : AsyncEventArgs {
         private List<EventWaiter<T>> waiters = new List<EventWaiter<T>>();
 
-        public void Register(EventWaiter<T> waiter) {
+        internal void Register(EventWaiter<T> waiter) {
             waiters.Add(waiter);
         }
 
