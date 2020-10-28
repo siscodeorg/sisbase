@@ -33,26 +33,6 @@ namespace sisbase.Interactivity {
             return false;
         }
 
-        internal static EventWaitHandler<T>? Handler;
-
-        public static AsyncEventHandler<T> Listener {
-            get {
-                Handler ??= new EventWaitHandler<T>();
-                return Handler.Offer;
-            }
-        }
-
-        public static async Task<T> Wait(Func<T, Task<bool>> pred, TimeSpan timeout = default, CancellationToken token = default) {
-            if (Handler == null) throw new InvalidOperationException($"The listener for EventWaiter<{typeof(T).Name}> has not been registered");
-            var waiter = new EventWaiter<T>(pred, timeout, token);
-            Handler.Register(waiter);
-            return await waiter.Task;
-        }
-
-        public static Task<T> Wait(Func<T, bool> pred, TimeSpan timeout = default, CancellationToken token = default) {
-            return Wait(e => System.Threading.Tasks.Task.FromResult(pred(e)), timeout, token);
-        }
-
         public void Dispose() {
             token?.Dispose();
         }
