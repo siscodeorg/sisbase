@@ -205,6 +205,21 @@ namespace sisbase.Test.Commands {
             var args = await intr.UserMessages.WaitMessageDeleted((e) => true);
             await intr.SendMessageAsync($"you deleted a message that said: {args.Message.Content}");
         }
+
+        [Command("glog")]
+        public async Task editN(CommandContext ctx) {
+            var intr = ctx.AsInteraction();
+            await intr.SendMessageAsync("Send a message then edit it for as long as you want. Its just git log.");
+            var msg = await intr.GetUserResponseAsync();
+
+            await intr.SendMessageAsync(EmbedBase.OrderedListEmbed(msg.History.Select(x => x.Content).ToList(), "git log"));
+            msg.MessageUpdated += async (e) => {
+                await intr.SendMessageAsync(EmbedBase.OrderedListEmbed(e.After.History.Select(x => x.Content).ToList(), "git log"));
+            };
+
+            await msg.WaitMessageDeleted(e => true);
+            await intr.Close();
+        }
     }
 
     [Group("stubgroup")]
