@@ -7,12 +7,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using static sisbase.Utils.Behaviours;
 
-namespace sisbase.Utils
-{
-	/// <summary>
-	/// Utility for generating consistant embeds
-	/// </summary>
-	public static class EmbedBase
+namespace sisbase.Utils {
+    /// <summary>
+    /// Utility for generating consistant embeds
+    /// </summary>
+    public static class EmbedBase
 	{
 		/// <summary>
 		/// Generates a new group help embed from an specified command <br></br> The comand must be
@@ -20,27 +19,18 @@ namespace sisbase.Utils
 		/// </summary>
 		/// <param name="Command"></param>
 		/// <returns></returns>
-		public static DiscordEmbed GroupHelpEmbed(Command Command)
+		public static DiscordEmbed GroupHelpEmbed(CommandGroup group)
 		{
-			var commands = new List<Command>();
-			CommandGroup cG = null;
-			if (Command is CommandGroup cGroup)
-			{
-				commands = cGroup.Children.ToList();
-				cG = cGroup;
-			}
-			string commandList = "";
-			foreach (var command in commands)
-			{
-				commandList += $"{command.Name} - {command.Description}\n";
-			}
+			var formattedChilren = group.Children.Distinct().Select(x => $"{x.Name} - {x.Description}");
 			var groupHelpEmbed = new DiscordEmbedBuilder();
 			groupHelpEmbed
 				.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
-				.WithDescription(cG?.Description)
-				.AddField("Commands", string.IsNullOrWhiteSpace(commandList) ? "No sub-commands found" : commandList)
-				.WithAuthor($"Group : {cG?.Name} | Help")
+				.WithDescription(group.Description)
+				.WithAuthor($"Group : {group.Name} | Help")
 				.WithColor(DiscordColor.Gray);
+            if (formattedChilren.Any()) {
+				groupHelpEmbed.AddField("Sub-commands", string.Join("\n", formattedChilren));
+            }
 			return groupHelpEmbed.Build();
 		}
 
@@ -53,46 +43,62 @@ namespace sisbase.Utils
 		/// <returns></returns>
 		public static async Task<DiscordEmbed> HelpEmbed(this CommandsNextExtension cne, CommandContext ctx, bool showHidden = false)
 		{
-			var RegisteredCommands = cne.RegisteredCommands.Values.ToList();
-			var groups = new List<CommandGroup>();
-			foreach (var command in RegisteredCommands)
-			{
-				if (command is CommandGroup group)
-				{
-					if (groups.Contains(group)) continue;
-					if ((await group.RunChecksAsync(ctx, true)).Count() > 0) continue;
-					if (group.IsHidden && !showHidden) continue;
-					groups.Add(group);
-				}
-			}
 			var helpBuilder = new DiscordEmbedBuilder();
 			var unk = DiscordEmoji.FromName(SisbaseBot.Instance.Client, ":grey_question:");
-			foreach (var commandGroup in groups)
+			foreach (var group in await cne.GetAllowedGroupsAsync(ctx, showHidden))
 			{
-				var children = commandGroup.Children.ToList();
-				commandGroup.Children.ToList().ForEach(x => RegisteredCommands.Remove(x));
-				RegisteredCommands.Remove(commandGroup);
-				var attributes = commandGroup.CustomAttributes.ToList();
-				bool HasEmoji = attributes.Any(x => x is EmojiAttribute);
-				var emoji = HasEmoji ? ((EmojiAttribute)attributes.Where(x => x is EmojiAttribute).First()).Emoji : unk;
-				helpBuilder.AddField($"{emoji} ・ {commandGroup.Name}", !string.IsNullOrWhiteSpace(commandGroup.Description) ? commandGroup.Description : $"{commandGroup.Name} - STUB : Doesn't have a description.");
+				helpBuilder.AddField($"{group.GetGroupEmoji(unk)} ・ {group.Name}", group.GetGroupDescription());
 			}
-
-			string misc = "";
-			foreach (var command in RegisteredCommands)
-			{
-				if ((await command.RunChecksAsync(ctx, true)).Count() > 0) continue;
-				if (command.IsHidden && !showHidden) continue;
-				misc += $"`{command.Name}` ";
-			}
-
-			helpBuilder.AddField("❓ ・ Miscellaneous ", misc);
+			var topLevel = await cne.GetAllowedTopLevelCommandsAsync(ctx, showHidden);
+			var remainingCommands = topLevel.Select(x => $"`{x.Name}`");
+			if(remainingCommands.Any()) helpBuilder.AddField("❓ ・ Miscellaneous ", string.Join(" ", remainingCommands));
 			helpBuilder
 				.WithDescription($"To see help for a group run {SisbaseBot.Instance.Client.CurrentUser.Mention} `group name`")
 				.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
 				.WithAuthor("Help | Showing all groups")
 				.WithColor(DiscordColor.CornflowerBlue);
 			return helpBuilder.Build();
+		}
+
+		internal static async Task<List<Command>> GetAllowedTopLevelCommandsAsync(this CommandsNextExtension cne, CommandContext ctx, bool hidden) {
+			var commands = cne.RegisteredCommands.Values.ToList().Distinct();
+			var allowedCommands = new List<Command>();
+			foreach (var command in commands.Distinct()) {
+				if (await command.CheckAsync(ctx, hidden))
+					allowedCommands.Add(command);
+			}
+			return allowedCommands.Where(x => !(x is CommandGroup)).ToList();
+		}
+
+		internal static async Task<List<CommandGroup>> GetAllowedGroupsAsync(this CommandsNextExtension cne, CommandContext ctx, bool hidden) {
+			var groups = cne.RegisteredCommands.Values.ToList().OfType<CommandGroup>().Distinct();
+			var allowedGroups = new List<CommandGroup>();
+			foreach (var group in groups) {
+				if (await group.CheckAsync(ctx, hidden))
+					allowedGroups.Add(group);
+			}
+			return allowedGroups;
+		}
+
+		internal static string GetGroupDescription(this CommandGroup group) {
+            if (string.IsNullOrWhiteSpace(group.Description)) {
+				return $"{group.Name} - STUB : Doesn't have a description.";
+            }
+			return group.Description;
+        }
+
+		internal static DiscordEmoji GetGroupEmoji(this CommandGroup group, DiscordEmoji @default) {
+			var query = group.CustomAttributes.FirstOrDefault(x => x is EmojiAttribute);
+			if (query == default) {
+				return @default;
+            }
+			return ((EmojiAttribute)query).Emoji;
+        }
+
+		internal static async Task<bool> CheckAsync(this Command command, CommandContext ctx, bool hidden) {
+			if ((await command.RunChecksAsync(ctx, true)).Count() > 0) return false;
+			if (command.IsHidden && !hidden) return false;
+			return true;
 		}
 
 		/// <summary>
@@ -138,12 +144,8 @@ namespace sisbase.Utils
 		public static DiscordEmbed OrderedListEmbed<T>(List<T> list, string name,
 			CountingBehaviour behaviour = CountingBehaviour.Default)
 		{
-			string data = "";
-			foreach (var item in list)
-			{
-				if (behaviour == CountingBehaviour.Ordinal) data += $"{list.IndexOf(item) + 1}・{item.ToString()}\n";
-				else data += $"{list.IndexOf(item)}・{item.ToString()}\n";
-			}
+			var listData = list.Select(x => $"{GetNumber(list.IndexOf(x),behaviour)}・{x}");
+			string data = string.Join("\n",listData);
 			var orderedListBuilder = new DiscordEmbedBuilder();
 			orderedListBuilder
 				.WithAuthor($"List of : {name}")
@@ -153,16 +155,23 @@ namespace sisbase.Utils
 			return orderedListBuilder.Build();
 		}
 
-		/// <summary>
-		/// Generates a new <see cref="DiscordEmbed"/> with all the items on that list
-		/// </summary>
-		/// <typeparam name="T">The type of said list</typeparam>
-		/// <param name="list">The list</param>
-		/// <param name="name">Name that will be displayed on the embed.</param>
-		/// <returns></returns>
-		public static DiscordEmbed ListEmbed<T>(IEnumerable<T> list, string name)
+        internal static int GetNumber(int num, CountingBehaviour behaviour) => behaviour switch
+        {
+            CountingBehaviour.Ordinal => num + 1,
+            CountingBehaviour.Default => num,
+            _ => num
+        };
+
+        /// <summary>
+        /// Generates a new <see cref="DiscordEmbed"/> with all the items on that list
+        /// </summary>
+        /// <typeparam name="T">The type of said list</typeparam>
+        /// <param name="list">The list</param>
+        /// <param name="name">Name that will be displayed on the embed.</param>
+        /// <returns></returns>
+        public static DiscordEmbed ListEmbed<T>(List<T> list, string name)
 		{
-			string data = list.Aggregate("", (current, item) => current + $"・{item.ToString()}\n");
+			string data = string.Join("\n", list);
 			var listBuilder = new DiscordEmbedBuilder();
 			listBuilder
 				.WithAuthor($"List of : {name}")
@@ -177,50 +186,30 @@ namespace sisbase.Utils
 		/// </summary>
 		/// <param name="command">The command</param>
 		/// <returns></returns>
-		public static DiscordEmbed CommandHelpEmbed(Command command)
-		{
-			if (command.Overloads?.Any() == true)
-			{
-				string use = "";
-				var o = command.Overloads.ToList();
-				var arguments = new List<CommandArgument>();
-				o.RemoveAll(x => x.Arguments.Count == 0);
-				foreach (var overload in o)
-				{
-					string inner = "";
-					var args = overload.Arguments.ToList();
-					foreach (var argument in args)
-					{
-						if (!arguments.Contains(argument))
-						{
-							arguments.Add(argument);
-						}
-						inner += $"`{argument.Name}` ";
-					}
-					use += $"[{command.Name} {inner}] ";
-				}
+		public static DiscordEmbed CommandHelpEmbed(Command command) {
+			var overloads = command.Overloads;
+			var usages = overloads?.Select(overload => overload.GetUsageString(command));
+			var arguments = overloads?.SelectMany(x => x.Arguments)
+				.Distinct()
+				.Select(x => $"`{x.Name}` - **{x.Description}**");
+			var embed = new DiscordEmbedBuilder()
+				.WithAuthor($"Command : {command.Name} | Help")
+				.WithDescription($"Usage : {string.Join(" ", usages)}")
+				.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
+				.WithColor(DiscordColor.Gray);
+			if (arguments.Any())
+				embed.AddField("Arguments", string.Join("\n", arguments));
+			return embed.Build();
+		}
 
-				string argumentExplanation = "";
-				arguments.ForEach(x => argumentExplanation += $"{x.Name} - {x.Description}\n");
-				var commandHelpEmbed = new DiscordEmbedBuilder();
-				commandHelpEmbed
-					.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
-					.AddField("Arguments", argumentExplanation)
-					.WithDescription($"Use : {use}")
-					.WithAuthor($"Command : {command.Name} | Help")
-					.WithColor(DiscordColor.Gray);
-				return commandHelpEmbed.Build();
-			}
-			else
-			{
-				var commandHelpEmbed = new DiscordEmbedBuilder();
-				commandHelpEmbed
-					.WithFooter($"「sisbase」・ {General.GetVersion()}", "https://i.imgur.com/6ovRzR9.png")
-					.WithDescription("This command is a stub and was not implemented yet.")
-					.WithAuthor($"Command : {command.Name} | Help")
-					.WithColor(DiscordColor.Gray);
-				return commandHelpEmbed.Build();
-			}
+		internal static string FormatCommandArgs(this IReadOnlyList<CommandArgument> args) {
+			if (!args.Any()) return string.Empty;
+			return string.Join(" ", args.Select(arg => $"`{arg.Name}`"));
+		}
+
+		internal static string GetUsageString(this CommandOverload overload, Command c) {
+			if (overload.Arguments.FormatCommandArgs() == string.Empty) return $"[{c.Name}]";
+			return $"[{c.Name} {FormatCommandArgs(overload.Arguments)}]";
 		}
 
 		/// <summary>

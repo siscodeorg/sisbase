@@ -51,7 +51,7 @@ namespace sisbase.Commands
 		[GroupCommand]
 		public async Task Command(CommandContext ctx)
 		{
-			var embed = EmbedBase.GroupHelpEmbed(ctx.Command);
+			var embed = EmbedBase.GroupHelpEmbed(ctx.Command as CommandGroup);
 			await ctx.RespondAsync(embed: embed);
 		}
 
@@ -60,7 +60,7 @@ namespace sisbase.Commands
 		public async Task List(CommandContext ctx)
 		{
 			var allSystems = SMC.RegisteredSystems.ToList().Select(x => $"{(x.Value.IsVital() ? "\\⚠️" : "")} {x.Value.Name} - `{x.Key.Assembly.GetName().Name}`");
-			var embed = EmbedBase.ListEmbed(allSystems, "Systems");
+			var embed = EmbedBase.ListEmbed(allSystems.ToList(), "Systems");
 			embed = embed.Mutate(x => x
 				.AddField("Permanently disabled systems [Systems.json]",
 					string.Join("\n",
@@ -129,7 +129,7 @@ namespace sisbase.Commands
 		[GroupCommand]
 		public async Task Command(CommandContext ctx)
 		{
-			var embed = EmbedBase.GroupHelpEmbed(ctx.Command);
+			var embed = EmbedBase.GroupHelpEmbed(ctx.Command as CommandGroup);
 			await ctx.RespondAsync(embed: embed);
 		}
 
