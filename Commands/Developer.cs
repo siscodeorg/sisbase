@@ -11,6 +11,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using sisbase.Systems;
 using DSharpPlus.Interactivity.Extensions;
+using sisbase.CommandsNext;
+using System;
 
 namespace sisbase.Commands
 {
@@ -22,7 +24,7 @@ namespace sisbase.Commands
 	public class Developer : BaseCommandModule
 	{
 		[Command("setMaster")]
-		[RequireOwner,RequireSystem(typeof(MasterServer))]
+		[RequireOwner]
 		public async Task SetMaster(CommandContext ctx)
 		{
 			var guilds = SisbaseBot.Instance.Client.Guilds.Values.ToList();
@@ -46,7 +48,7 @@ namespace sisbase.Commands
 	[Emoji(":computer:")]
 	[Group("system")]
 	[Description("This group configures the systems.")]
-	public class System : BaseCommandModule
+	public class System : SisbaseCommandModule
 	{
 		[GroupCommand]
 		public async Task Command(CommandContext ctx)
@@ -59,63 +61,50 @@ namespace sisbase.Commands
 		[Description("Lists all active systems")]
 		public async Task List(CommandContext ctx)
 		{
-			var allSystems = SMC.RegisteredSystems.ToList().Select(x => $"{(x.Value.IsVital() ? "\\⚠️" : "")} {x.Value.Name} - `{x.Key.Assembly.GetName().Name}`");
-			var embed = EmbedBase.ListEmbed(allSystems.ToList(), "Systems");
-			embed = embed.Mutate(x => x
-				.AddField("Permanently disabled systems [Systems.json]",
-					string.Join("\n",
-						SisbaseBot.Instance.SystemCfg.Systems.Where(kvp => !kvp.Value.Enabled)
-							.Select(kvp => kvp.Key))));
-			await ctx.RespondAsync(embed: embed.Mutate(x => x.WithFooter($"{x.Footer.Text}  | ⚠️ - Vital")));
+			var loadedSystems = SisbaseInstance.SystemManager.Systems;
+			var unloadedSystems = SisbaseInstance.SystemManager.UnloadedSystems;
+			var disabledSystems = SisbaseInstance.SystemCfg.Systems.Where(x => x.Value.Enabled == false);
+			string loadedStr = string.Join("\n", loadedSystems.Select(x => $"{(x.Value.IsVital() ? "⛔" : "")} [{x.Key.Assembly.GetName().Name}] {x.Value.Name} {(string.IsNullOrWhiteSpace(x.Value.Description) ? "" : $"<{x.Value.Description}>")}"));
+			string unloadedStr = string.Join("\n", unloadedSystems.Select(x => $"{x.Key.ToCustomName()}"));
+			string disabledStr = string.Join("\n", disabledSystems.Select(x => x.Key));
+			var embed = EmbedBase.OutputEmbed("")
+				.Mutate(x => x
+					.WithAuthor("Systems - List")
+					.AddField("Loaded Systems",$"{(string.IsNullOrEmpty(loadedStr) ? "No systems loaded." : loadedStr)}")
+					.AddField("Unloaded Systems", $"{(string.IsNullOrEmpty(unloadedStr) ? "No systems unloaded." : unloadedStr)}")
+					.AddField("Permanently Disabled Systems", $"{(string.IsNullOrEmpty(disabledStr) ? "No systems disabled." : disabledStr)}")
+					.WithFooter($"{x.Footer.Text} | ⛔ - Vital System",x.Footer.IconUrl)
+				);
+			await ctx.RespondAsync(embed: embed);
 		}
 
-		[Command("disable")]
-		[Description("Disables and unregisters a system")]
-		public async Task DisableFail(CommandContext ctx) =>
-			await ctx.RespondAsync(embed: EmbedBase.CommandHelpEmbed(ctx.Command));
-		[Command("disable")]
-		public async Task Disable(CommandContext ctx, [DSharpPlus.CommandsNext.Attributes.Description("If the system is to be disabled permanently `true`|`false`")] bool permanent)
-		{
-			var allSystems = SMC.RegisteredSystems.Where(s => !s.Value.IsVital()).Select(k => k.Value.Name).ToList();
-			var embed = EmbedBase.OrderedListEmbed(allSystems, "Systems").Mutate(x =>
-			x.WithTitle("Please select the system you want to disable [number]")
-			 .WithAuthor(null)
-			 .WithColor(DiscordColor.Red));
-			var message = await ctx.RespondAsync(embed: embed);
+		[Command("unload")]
+		[Description("Unloads a system")]
+		public async Task Unload(CommandContext ctx) {
+			var loadedSystems = SisbaseInstance.SystemManager.Systems;
+			var embed = EmbedBase.OrderedListEmbed(loadedSystems.Select(x => x.Value.Name).ToList(), "Systems")
+				.Mutate(x => x.WithAuthor("Please select the system to be unloaded [Number]"));
+			var msg = await ctx.RespondAsync(embed: embed);
 			var response = await ctx.Message.GetNextMessageAsync();
-			if(response.TimedOut) return;
-			var select = response.Result.FirstInt();
-			var systemType = SMC.RegisteredSystems.Where(x => x.Value.Name == allSystems[select]).FirstOrDefault();
-			SMC.Unregister(systemType.Key);
-			if (permanent) {
-				SisbaseBot.Instance.SystemCfg.Systems[systemType.Key.ToCustomName()].Enabled = false;
-				SisbaseBot.Instance.SystemCfg.Update();
+			if (response.TimedOut) {
+				await msg.ModifyAsync(embed: EmbedBase.OutputEmbed("Timed Out."));
+				return;
 			}
-			await message.ModifyAsync(embed: EmbedBase.OutputEmbed($"Successfully unregistered {allSystems[select]} {(permanent?"permanently":"temporarily")}."));
+			var num = Math.Clamp(response.Result.FirstInt(), 0, loadedSystems.Count - 1);
+			var system = loadedSystems.Keys.ToList()[num];
+			var result = await SisbaseInstance.SystemManager.TryUnregisterType(system);
+            if (result) {
+				await msg.ModifyAsync(embed: EmbedBase.OutputEmbed($"{system.ToCustomName()} unloaded successfully!"));
+            } else {
+				await msg.ModifyAsync(embed: EmbedBase.OutputEmbed($"{system.ToCustomName()} could not be unloaded."));
+			}
 		}
 		[Command("reload")]
 		[Description("Reloads the SMC and registers any Systems that weren't registered")]
 		public async Task Reload(CommandContext ctx)
 		{
-			var Data = SisbaseBot.Instance.Systems.Reload();
-			if (Data.Any(k => k.Value.Count > 0))
-			{
-				var Embed = EmbedBase.OutputEmbed("SMC Reloaded. ΔSystem Status:");
-
-				foreach (var kvp in Data)
-				{
-					var i1 = kvp.Value.Select(x => $"{(x.Value ? "✅" : "❌")} - `{x.Key}`").ToList();
-					string i0 = string.Join("\n", i1);
-					string i2 = kvp.Key.GetName().Name;
-					if (string.IsNullOrEmpty(i0)) continue;
-					Embed = Embed.Mutate(x => x.AddField(i2, i0));
-				}
-				await ctx.RespondAsync(embed: Embed);
-			}
-			else
-			{
-				await ctx.RespondAsync(embed: EmbedBase.OutputEmbed("All Systems were already loaded. No new systems were registerd"));
-			}
+			await SisbaseInstance.SystemManager.ReloadTempUnloadedSystems();
+			await ctx.RespondAsync(embed: EmbedBase.OutputEmbed("Reload completed."));
 		}
 	}
 

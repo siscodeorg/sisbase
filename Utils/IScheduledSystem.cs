@@ -6,7 +6,7 @@ namespace sisbase.Utils
 	/// Interface for running a scheduled function on systems
 	/// </summary>
 
-	public interface IScheduledSystem : ISystem
+	public interface IScheduledSystem
 	{
 		/// <summary>
 		/// Timeout for the schedule

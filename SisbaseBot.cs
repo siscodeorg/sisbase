@@ -4,8 +4,10 @@ using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using sisbase.Configuration;
+using sisbase.Systems;
 using sisbase.Utils;
 using System;
 using System.IO;
@@ -54,7 +56,7 @@ namespace sisbase
 		/// <summary>
 		/// The System Managment Controller <br></br> Responsible for registry and unregistry of all Systems.
 		/// </summary>
-		public SMC Systems { get; private set; }
+		public SystemManager SystemManager { get; private set; }
 
 		/// <summary>
 		/// Constructs a new <see cref="SisbaseBot"/> from a given configuration
@@ -94,7 +96,8 @@ namespace sisbase
 				new CommandsNextConfiguration
 				{
 					EnableDefaultHelp = false,
-					PrefixResolver = RTPR
+					PrefixResolver = RTPR,
+					Services = new ServiceCollection().AddSingleton(this).BuildServiceProvider()
 				}
 			);
 			Interactivity = Client.UseInteractivity(
@@ -107,8 +110,8 @@ namespace sisbase
 				}
 			);
 			_cts = new CancellationTokenSource();
-			Systems = new SMC();
-			Systems.RegisterSystems(typeof(SisbaseBot).Assembly);
+			SystemManager = new SystemManager(this);
+			SystemManager.AssemblyQueue.Enqueue(typeof(SisbaseBot).Assembly);
 			CommandsNext.RegisterCommands(typeof(SisbaseBot).Assembly);
 		}
 
@@ -145,7 +148,7 @@ namespace sisbase
 		/// </summary>
 		/// <param name="asm">The assembly</param>
 		public void RegisterBot(Assembly asm)
-		{ Systems.RegisterSystems(asm); CommandsNext.RegisterCommands(asm); }
+		{ SystemManager.AssemblyQueue.Enqueue(asm); CommandsNext.RegisterCommands(asm); }
 
 #pragma warning restore CS1998
 		/// <summary>
@@ -161,7 +164,10 @@ namespace sisbase
 				e.Cancel = true;
 			};
 			await Connect();
-			Client.GuildDownloadCompleted += async (c,a) => { Logger.Log("DSharpPlus","The bot is ready for usage. [GuildDownloadCompleted]");};
+			Client.GuildDownloadCompleted += async (c,a) => {
+				Logger.Log("DSharpPlus","The bot is ready for usage. [GuildDownloadCompleted]");
+				await SystemManager.LoadAssemblyQueue();
+			};
 			await _cts.Token.WhenCanceled();
 		}
 

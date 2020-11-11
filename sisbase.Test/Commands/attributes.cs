@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using sisbase.Attributes;
+using sisbase.Systems.Attributes;
 using sisbase.Test.Systems;
 using sisbase.Utils;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace sisbase.Test.Commands
 		public async Task oniisanTest(CommandContext ctx) => await ctx.RespondAsync(embed: EmbedBase.OutputEmbed("This is the master server."));
 
 		//With the RequireSystem attribute commands can only be executed if an event with that type is found on the SMC.
-		[RequireSystem(typeof(Ping))]
+		[Requires(typeof(Ping))]
 		[Command("checkPing")]
 		public async Task checkPingSystem(CommandContext ctx) => await ctx.RespondAsync(embed: EmbedBase.OutputEmbed("Ping System is online! Commmand executed."));
 

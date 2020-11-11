@@ -1,4 +1,5 @@
-﻿using sisbase.Utils;
+﻿using sisbase.Systems;
+using sisbase.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,7 +16,7 @@ namespace sisbase.Attributes
 
     public static class VitalExtensions
     {
-        public static bool IsVital(this ISystem t)
+        public static bool IsVital(this BaseSystem t)
          => t.GetType().GetCustomAttribute<VitalAttribute>() != null;
     }
 }

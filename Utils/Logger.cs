@@ -1,4 +1,5 @@
 ﻿using sisbase.Attributes;
+using sisbase.Systems;
 using System;
 using color = System.ConsoleColor;
 using stdout = System.Console;
@@ -21,7 +22,7 @@ namespace sisbase.Utils
 		/// </summary>
 		/// <param name="s">The system , usually used as an extension method</param>
 		/// <param name="message">The message that would be logged</param>
-		public static void Log(this ISystem s, string message)
+		public static void Log(this BaseSystem s, string message)
 		{
 			WriteDate();
 			s.Status.Write();
@@ -37,7 +38,7 @@ namespace sisbase.Utils
 		/// </summary>
 		/// <param name="s">The system , usually used as an extension method</param>
 		/// <param name="message">The message that would be logged</param>
-		public static void Warn(this ISystem s, string message)
+		public static void Warn(this BaseSystem s, string message)
 		{
 			WriteDate();
 			s.Status.Write();

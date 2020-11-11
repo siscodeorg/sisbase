@@ -1,17 +1,15 @@
-﻿using sisbase.Utils;
+﻿using sisbase.Systems;
+using sisbase.Utils;
 using System;
+using System.Threading.Tasks;
 
 namespace sisbase.Test.Systems
 {
-	public class TimedSystem : ISystem, IScheduledSystem
+	public class TimedSystem : BaseSystem, IScheduledSystem
 	{
-		public string Name { get; set; }
-		public string Description { get; set; }
-		public bool Status { get; set; }
-
 		public TimeSpan Timeout { get; private set; }
 
-		public void Activate()
+		public override async Task Activate()
 		{
 			Name = "TimedSystem";
 			Description = "A dummy System to test the scheduler";
@@ -19,14 +17,12 @@ namespace sisbase.Test.Systems
 			Timeout = TimeSpan.FromMinutes(1);
 		}
 
-		public void Deactivate()
+		public override async Task Deactivate()
 		{
 			Name = null;
 			Description = null;
 			Status = false;
 		}
-
-		public void Execute() => Logger.Log(this, "Command Executed from Execute()");
 
 		public Action RunContinuous => new Action(() =>
 		{
