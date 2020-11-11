@@ -1,0 +1,24 @@
+name: docs
+on:
+  push:
+    branches: [ stable, gh-pages ]
+jobs:
+    docfx:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v2
+        - name: fetch
+          run: git fetch origin
+        - name: switch branch to gh-pages
+          run: git switch gh-pages
+        - name: reset branch to stable
+          run: git reset --hard origin/stable
+        - uses: nikeee/docfx-action@v1.0.0
+          name: Build Documentation
+          with:
+            args: Documentation/docfx.json
+        - uses: maxheld83/ghpages@master
+          name: Publish docs on gh-pages
+          env:
+            BUILD_DIR: Documentation/_site
+            GH_PAT: ${{ secrets.GH_PAT }}
