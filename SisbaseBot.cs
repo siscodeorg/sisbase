@@ -3,6 +3,8 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
+using DSharpPlus.Interactivity.Extensions;
+using Microsoft.Extensions.Logging;
 using sisbase.Configuration;
 using sisbase.Utils;
 using System;
@@ -85,7 +87,7 @@ namespace sisbase
 				{
 					AutoReconnect = true,
 					Token = SisbaseConfiguration.Data.Token,
-					UseInternalLogHandler = false
+					MinimumLogLevel = LogLevel.Information
 				}
 			);
 			CommandsNext = Client.UseCommandsNext(
@@ -159,13 +161,12 @@ namespace sisbase
 				e.Cancel = true;
 			};
 			await Connect();
-			Client.GuildDownloadCompleted += async (e) => { Logger.Log("DSharpPlus","The bot is ready for usage. [GuildDownloadCompleted]");};
+			Client.GuildDownloadCompleted += async (c,a) => { Logger.Log("DSharpPlus","The bot is ready for usage. [GuildDownloadCompleted]");};
 			await _cts.Token.WhenCanceled();
 		}
 
 		public void Stop() => _cts.Cancel();
 
-	
 		internal Task Connect()
 			=> Client.ConnectAsync();
 

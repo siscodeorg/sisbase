@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using sisbase.Systems;
+using DSharpPlus.Interactivity.Extensions;
 
 namespace sisbase.Commands
 {

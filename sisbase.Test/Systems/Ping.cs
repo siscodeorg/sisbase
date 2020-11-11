@@ -23,11 +23,11 @@ namespace sisbase.Test.Systems
 			client.MessageCreated += MessageCreated;
 		}
 
-		private async Task MessageCreated(MessageCreateEventArgs e)
+		private async Task MessageCreated(DiscordClient c, MessageCreateEventArgs e)
 		{
 			if (e.Message.Content == "bot gives ping")
 			{
-				await e.Message.RespondAsync($"Ping : **{e.Client.Ping}ms**");
+				await e.Message.RespondAsync($"Ping : **{c.Ping}ms**");
 				this.Log($"{e.Message.Author.Username} requested the ping");
 			}
 		}
